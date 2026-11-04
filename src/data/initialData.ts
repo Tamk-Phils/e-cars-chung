@@ -3,827 +3,6 @@ import type { Vehicle, Post, Review } from "../types";
 
 export const INITIAL_VEHICLES: Vehicle[] = [
   {
-    "id": "bn-lucid-air-sapphire-2026",
-    "slug": "2026-lucid-air-sapphire-tri-motor",
-    "name": "2026 Lucid Air Sapphire Tri-Motor",
-    "condition": "Brand New",
-    "make": "Lucid",
-    "model": "Air Sapphire",
-    "year": 2026,
-    "price": 249000,
-    "sale_price": 244500,
-    "down_payment": 25000,
-    "mileage": "7 miles",
-    "transmission": "Single-Speed Planetary Reduction",
-    "exterior_color": "Sapphire Blue Metallic",
-    "interior_color": "Sapphire Theme Mojave Leather & Alcantara",
-    "fuel_type": "Electric",
-    "body_type": "Sedan",
-    "engine": "Tri-Motor Powertrain (1,234 HP, 0-60 in 1.89s, Top Speed 205 mph)",
-    "drivetrain": "All-Wheel Drive with Torque Vectoring",
-    "vin": "7FCRG1E57TA001928",
-    "title_status": "MSO / Brand New",
-    "trim": "Sapphire Ultra-Performance",
-    "description": "The fastest four-door sedan in the world. 1,234 horsepower, 427-mile EPA range, carbon ceramic brakes, track-tuned aero package, Surreal Sound Pro 21-speaker system, and glass canopy roof.",
-    "features": [
-      "1,234 HP Tri-Motor Powertrain",
-      "Carbon Ceramic Brakes",
-      "Surreal Sound Pro 21-Speaker Audio",
-      "DreamDrive Pro with LiDAR",
-      "34-inch 5K Curved Glass Display",
-      "Glass Canopy Windshield"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1617469767053-d3b523a0b982?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -10,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-cadillac-escalade-v-2026",
-    "slug": "2026-cadillac-escalade-v-series",
-    "name": "2026 Cadillac Escalade-V Series 4WD",
-    "condition": "Brand New",
-    "make": "Cadillac",
-    "model": "Escalade-V",
-    "year": 2026,
-    "price": 154200,
-    "sale_price": null,
-    "down_payment": 15000,
-    "mileage": "12 miles",
-    "transmission": "10-Speed Automatic with TapShift",
-    "exterior_color": "Black Raven Metallic",
-    "interior_color": "Dark Auburn Semi-Aniline Leather with Zebra Wood",
-    "fuel_type": "Gasoline",
-    "body_type": "SUV",
-    "engine": "6.2L Hand-Built Supercharged V8 (682 HP, 653 lb-ft)",
-    "drivetrain": "Full-Time Active All-Wheel Drive",
-    "vin": "1GYS4HKJ9TR918231",
-    "title_status": "MSO / Clean Title",
-    "trim": "V-Series High Performance",
-    "description": "The pinnacle of American luxury performance. Hand-built 682hp supercharged V8, 38-inch curved OLED diagonal display, AKG Studio Reference 36-speaker sound system, Super Cruise hands-free driving, and Magnetic Ride Control 4.0.",
-    "features": [
-      "Super Cruise Hands-Free Driving",
-      "AKG Studio Reference 36-Speaker Audio",
-      "38-Inch Curved OLED Display",
-      "Magnetic Ride Control 4.0 + Air Suspension",
-      "Night Vision Infrared Camera",
-      "Panoramic Sunroof with Power Shade"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -9,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-mustang-dark-horse-2026",
-    "slug": "2026-ford-mustang-dark-horse",
-    "name": "2026 Ford Mustang Dark Horse Handling Pack",
-    "condition": "Brand New",
-    "make": "Ford",
-    "model": "Mustang Dark Horse",
-    "year": 2026,
-    "price": 64980,
-    "sale_price": 62900,
-    "down_payment": 6500,
-    "mileage": "15 miles",
-    "transmission": "TREMEC 6-Speed Manual with Rev Matching",
-    "exterior_color": "Blue Ember Metallic (Color-Shift)",
-    "interior_color": "Deep Indigo Blue Leather & Dinamica Suede",
-    "fuel_type": "Gasoline",
-    "body_type": "Coupe",
-    "engine": "Gen-4 5.0L Coyote V8 Naturally Aspirated (500 HP)",
-    "drivetrain": "Rear-Wheel Drive with Torsen 3.73 Diff",
-    "vin": "1FA6P8CF4R5298101",
-    "title_status": "MSO / Brand New",
-    "trim": "Handling Package Premium",
-    "description": "Brand new 2026 Mustang Dark Horse featuring TREMEC 6-speed with titanium 3D-printed shift ball, MagneRide Damping System, active valve performance dual exhaust, and Brembo 6-piston front brake calipers.",
-    "features": [
-      "TREMEC 6-Speed Manual Transmission",
-      "MagneRide Adaptive Suspension",
-      "Handling Package with Front Splitter & Gurney Flap",
-      "B&O Sound System by Bang & Olufsen",
-      "Active Valve Dual Exhaust with Track Mode",
-      "13.2-Inch Center Screen with Unreal Engine Graphics"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -8,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-mercedes-maybach-s580-2026",
-    "slug": "2026-mercedes-maybach-s580-4matic",
-    "name": "2026 Mercedes-Maybach S 580 4MATIC Luxury",
-    "condition": "Brand New",
-    "make": "Mercedes-Benz",
-    "model": "Maybach S-Class",
-    "year": 2026,
-    "price": 198900,
-    "sale_price": null,
-    "down_payment": 20000,
-    "mileage": "10 miles",
-    "transmission": "9G-TRONIC 9-Speed Automatic",
-    "exterior_color": "Two-Tone High-Tech Silver / Nautical Blue",
-    "interior_color": "Exclusive Nappa Leather Silver Grey Pearl / Black",
-    "fuel_type": "Hybrid",
-    "body_type": "Sedan",
-    "engine": "4.0L V8 Biturbo with EQ Boost 48V Mild Hybrid (496 HP)",
-    "drivetrain": "4MATIC All-Wheel Drive with 10-degree Rear Steering",
-    "vin": "W1K6G8GB5TN029481",
-    "title_status": "MSO / Brand New",
-    "trim": "Maybach Executive Rear Seat Package",
-    "description": "Ultra-exclusive first-class luxury. Reclining rear executive lounge seats with calf rest massage, refrigerator compartment, silver champagne flutes, Burmester High-End 4D sound, and motorized comfort rear doors.",
-    "features": [
-      "Executive Rear Seat Lounge with Calf Massage",
-      "Burmester High-End 4D Surround Sound",
-      "Rear Axle Steering (Up to 10 Degrees)",
-      "Two-Tone Manufaktur Exterior Finish",
-      "Electrically Operated Comfort Rear Doors",
-      "E-ACTIVE BODY CONTROL Suspension"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -7,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-rivian-r1s-2026",
-    "slug": "2026-rivian-r1s-ascent-quad-motor",
-    "name": "2026 Rivian R1S Ascent Quad-Motor AWD",
-    "condition": "Brand New",
-    "make": "Rivian",
-    "model": "R1S",
-    "year": 2026,
-    "price": 119900,
-    "sale_price": 115900,
-    "down_payment": 12000,
-    "mileage": "16 miles",
-    "transmission": "Independent 4-Motor Vectoring Drive",
-    "exterior_color": "Rivian Blue",
-    "interior_color": "Ocean Coast + Dark Mountain Ash Wood",
-    "fuel_type": "Electric",
-    "body_type": "SUV",
-    "engine": "In-House Quad-Motor (1,025 HP, 0-60 in 2.6s, 410 mi Range)",
-    "drivetrain": "Quad-Motor All-Wheel Drive",
-    "vin": "7FCTGAAA3TN004921",
-    "title_status": "MSO / Factory New",
-    "trim": "Ascent Edition Max Pack",
-    "description": "Second-generation 2026 Rivian R1S Ascent with redesigned electrical architecture, heat pump, 1,025 hp quad motors, electrochromic dynamic glass roof, enhanced Rivian Autonomy Platform with 11 cameras and 5 radars.",
-    "features": [
-      "1,025 HP In-House Quad Motor Drive",
-      "Dynamic Electrochromic Tinting Glass Roof",
-      "Rivian Elevation Audio with Dolby Atmos",
-      "Hydraulic Roll Control & Air Suspension (15\" Ground Clearance)",
-      "Gear Guard Live Remote Monitoring",
-      "3-Row 7-Passenger Seating"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1546614042-7df3c24c9e5d?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -6,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-genesis-gv80-coupe-2026",
-    "slug": "2026-genesis-gv80-coupe-e-supercharger",
-    "name": "2026 Genesis GV80 Coupe 3.5T E-Supercharger",
-    "condition": "Brand New",
-    "make": "Genesis",
-    "model": "GV80 Coupe",
-    "year": 2026,
-    "price": 85750,
-    "sale_price": null,
-    "down_payment": 8500,
-    "mileage": "14 miles",
-    "transmission": "8-Speed Automatic with Sport Paddle Shifters",
-    "exterior_color": "Bering Blue Gloss",
-    "interior_color": "Smoky Green / Vanilla Beige Nappa Leather",
-    "fuel_type": "Gasoline",
-    "body_type": "SUV",
-    "engine": "3.5L Twin-Turbo V6 with 48V Electric Supercharger (409 HP)",
-    "drivetrain": "AWD with Electronic Limited-Slip Differential",
-    "vin": "KMUHC4AC7TU019284",
-    "title_status": "MSO / Brand New",
-    "trim": "Prestige Package",
-    "description": "Brand new 2026 Genesis GV80 Coupe featuring a stunning 27-inch combined OLED display, Bang & Olufsen 18-speaker audio, Genesis Digital Key 2, sport exhaust note control, and real carbon fiber interior trim.",
-    "features": [
-      "27-Inch Integrated OLED Display",
-      "Bang & Olufsen 18-Speaker Sound",
-      "Electronically Controlled Suspension with Road Preview",
-      "E-LSD Rear Differential",
-      "Monobloc Brembo Front Brakes",
-      "Power Door Closers (Soft-Close)"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1626668893632-683a48e718b5?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1534093607318-f025413f49cb?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": false,
-    "sort_order": -5,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-dodge-charger-daytona-2026",
-    "slug": "2026-dodge-charger-daytona-scat-pack",
-    "name": "2026 Dodge Charger Daytona Scat Pack Stage 2",
-    "condition": "Brand New",
-    "make": "Dodge",
-    "model": "Charger Daytona",
-    "year": 2026,
-    "price": 73190,
-    "sale_price": 69990,
-    "down_payment": 7000,
-    "mileage": "18 miles",
-    "transmission": "PowerShot Direct Drive e-AWD",
-    "exterior_color": "Peel Out Orange",
-    "interior_color": "Black Nappa / Suede with Demonic Red Stitching",
-    "fuel_type": "Electric",
-    "body_type": "Coupe",
-    "engine": "Dual 335 kW Electric Motors (670 HP, 627 lb-ft in PowerShot)",
-    "drivetrain": "Standard All-Wheel Drive with Mechanical Limited-Slip Rear",
-    "vin": "2C3CDZF94TR892019",
-    "title_status": "MSO / Clean Factory Title",
-    "trim": "Track Package Stage 2",
-    "description": "The world's only electric muscle car. Equipped with patent-pending Fratzonic Chambered Exhaust delivering 126dB real exhaust rumble, Donut Mode, Drift Mode, Launch Control, and staggered 305/325 Goodyear Eagle F1 tires.",
-    "features": [
-      "Fratzonic Chambered Exhaust (126 dB V8 Tone)",
-      "PowerShot 40-HP Boost Button",
-      "Donut Mode, Drift Mode & Line Lock",
-      "Brembo 6-Piston 16-inch Front Brakes",
-      "Alpine 18-Speaker Audio System",
-      "R-Wing Patent Front Pass-Through Aero"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1618843479619-f5e8a4a50d22?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -4,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-toyota-rav4-prime-2026",
-    "slug": "2026-toyota-rav4-prime-xse",
-    "name": "2026 Toyota RAV4 Prime XSE Plug-In Hybrid",
-    "condition": "Brand New",
-    "make": "Toyota",
-    "model": "RAV4 Prime",
-    "year": 2026,
-    "price": 49850,
-    "sale_price": 48200,
-    "down_payment": 5000,
-    "mileage": "11 miles",
-    "transmission": "Electronically Controlled Continuously Variable (eCVT)",
-    "exterior_color": "Supersonic Red with Midnight Black Metallic Roof",
-    "interior_color": "Black SofTex with Red Accents & Stitching",
-    "fuel_type": "Hybrid",
-    "body_type": "SUV",
-    "engine": "2.5L 4-Cylinder Plug-In Hybrid (302 HP, 42 miles EV Range)",
-    "drivetrain": "Electronic On-Demand All-Wheel Drive (AWD)",
-    "vin": "JTMEB3FV7TJ094821",
-    "title_status": "MSO / Clean Factory Title",
-    "trim": "XSE Premium Package",
-    "description": "The quickest 4-door Toyota next to Supra (0-60 in 5.5s). 42 miles of pure electric driving range and 94 MPGe combined, head-up display, panoramic glass roof, ventilated front seats, and 6.6 kW onboard charger.",
-    "features": [
-      "42-Mile Pure Electric Driving Range",
-      "302 Combined Hybrid Horsepower",
-      "Panoramic Glass Moonroof",
-      "10.5-inch Toyota Audio Multimedia",
-      "JBL 11-Speaker 800W Sound System",
-      "Head-Up Display & Digital Rearview Mirror"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": false,
-    "sort_order": -3,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-bmw-m3-touring-2026",
-    "slug": "2026-bmw-m3-competition-touring",
-    "name": "2026 BMW M3 Competition Touring xDrive",
-    "condition": "Brand New",
-    "make": "BMW",
-    "model": "M3 Touring",
-    "year": 2026,
-    "price": 112000,
-    "sale_price": 108500,
-    "down_payment": 11000,
-    "mileage": "10 miles",
-    "transmission": "8-Speed M Steptronic with Drivelogic",
-    "exterior_color": "Frozen Pure Grey II Metallic",
-    "interior_color": "Silverstone / Black Full Merino Leather",
-    "fuel_type": "Gasoline",
-    "body_type": "Wagon",
-    "engine": "3.0L M TwinPower Turbo High-Rev S58 (523 HP)",
-    "drivetrain": "M xDrive Intelligent All-Wheel Drive",
-    "vin": "WBA33AZ09TN029184",
-    "title_status": "MSO / Brand New",
-    "trim": "Competition Touring",
-    "description": "The long-awaited high-performance wagon. 523 horsepower, 0-60 in 3.5s, large practical cargo area with opening rear window glass, M carbon ceramic brakes, M sport exhaust, and adaptive M suspension.",
-    "features": [
-      "M Carbon Ceramic Brakes",
-      "M xDrive AWD with Pure RWD Mode",
-      "Harman Kardon Surround Sound",
-      "BMW Curved Display with M OS 8.5",
-      "Carbon Exterior Mirror Caps & Diffuser",
-      "Adaptive M Suspension"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1597687210367-a4915552d886?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -2,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-range-rover-sv-2026",
-    "slug": "2026-range-rover-sv-autobiography",
-    "name": "2026 Land Rover Range Rover SV Long Wheelbase",
-    "condition": "Brand New",
-    "make": "Land Rover",
-    "model": "Range Rover SV",
-    "year": 2026,
-    "price": 234000,
-    "sale_price": null,
-    "down_payment": 24000,
-    "mileage": "15 miles",
-    "transmission": "8-Speed Automatic with CommandShift 2",
-    "exterior_color": "Sunrise Copper Satin with Corinthian Bronze Roof",
-    "interior_color": "SV Intrepid Perlino Semi-Aniline Leather & Ceramic Controls",
-    "fuel_type": "Hybrid",
-    "body_type": "SUV",
-    "engine": "4.4L Twin-Turbocharged V8 with 48V MHEV (606 HP)",
-    "drivetrain": "All-Wheel Drive with Active Rear Locking Differential",
-    "vin": "SALWR2V48TA918231",
-    "title_status": "MSO / Brand New",
-    "trim": "SV Signature Suite LWB",
-    "description": "The pinnacle of British luxury motoring. Long wheelbase with four-seat SV Signature Suite featuring an electrically deployable Club Table, refrigerator with Dartington crystal glassware, 1,600W Meridian Signature Sound, and white ceramic gear selector.",
-    "features": [
-      "SV Signature Suite with Electrically Deployable Club Table",
-      "Meridian Signature 35-Speaker Sound System (1600W)",
-      "All-Wheel Steering & Electronic Air Suspension",
-      "Touch-Pro Ceramic Interior Controls",
-      "Executive Class Comfort-Plus Rear Massage Seats",
-      "Active Noise Cancellation Headrest Speakers"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -1,
-    "created_at": "2026-11-02T14:50:21.066Z"
-  },
-  {
-    "id": "bn-porsche-911-gt3-2026",
-    "slug": "2026-porsche-911-gt3-rs",
-    "name": "2026 Porsche 911 GT3 RS Weissach",
-    "condition": "Brand New",
-    "make": "Porsche",
-    "model": "911 GT3 RS",
-    "year": 2026,
-    "price": 268500,
-    "sale_price": 259000,
-    "down_payment": 25000,
-    "mileage": "12 miles (Factory Delivery)",
-    "transmission": "7-Speed Dual-Clutch PDK",
-    "exterior_color": "Guards Red with Carbon Accents",
-    "interior_color": "Black Leather & Race-Tex w/ Red Stitching",
-    "fuel_type": "Gasoline",
-    "body_type": "Coupe",
-    "engine": "4.0L Naturally Aspirated Boxer-6 (518 HP)",
-    "drivetrain": "Rear-Wheel Drive (RWD)",
-    "vin": "WP0AF2A97TS298101",
-    "title_status": "MSO (Manufacturer Statement of Origin)",
-    "trim": "Weissach Package",
-    "description": "Factory fresh 2026 Porsche 911 GT3 RS equipped with the complete Weissach package, magnesium lightweight forged wheels, front-axle lift system, and ceramic composite brakes (PCCB). Unregistered with full 4-year factory warranty.",
-    "features": [
-      "Weissach Carbon Package",
-      "PCCB Carbon Ceramic Brakes",
-      "Front Axle Lift System",
-      "Bose Surround Sound System",
-      "Chrono Package with Lap Trigger",
-      "Full Bucket Carbon Racing Seats"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -20,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-tesla-model-s-plaid-2026",
-    "slug": "2026-tesla-model-s-plaid-tri-motor",
-    "name": "2026 Tesla Model S Plaid Tri-Motor",
-    "condition": "Brand New",
-    "make": "Tesla",
-    "model": "Model S Plaid",
-    "year": 2026,
-    "price": 89990,
-    "sale_price": 87490,
-    "down_payment": 8500,
-    "mileage": "15 miles",
-    "transmission": "Single-Speed Direct Drive",
-    "exterior_color": "Ultra Red",
-    "interior_color": "Cream Premium Interior with Walnut",
-    "fuel_type": "Electric",
-    "body_type": "Sedan",
-    "engine": "Tri-Motor All-Wheel Drive (1,020 HP, 0-60 in 1.99s)",
-    "drivetrain": "All-Wheel Drive (Dual Rear + Front)",
-    "vin": "5YJSA1E67TF981240",
-    "title_status": "MSO / Clean Factory Title",
-    "trim": "Plaid 1020HP Edition",
-    "description": "Brand new 2026 Tesla Model S Plaid with Full Self-Driving Capability Supervised, 21-inch Arachnid Wheels, Yoke Steering option, 396 miles EPA estimated range, and sub-2 second acceleration.",
-    "features": [
-      "Full Self-Driving (Supervised)",
-      "21\" Arachnid Wheels",
-      "1020 Horsepower Tri-Motor",
-      "Tri-Zone Climate with HEPA",
-      "17\" Cinematic Touchscreen + Rear Display",
-      "Active Noise Canceling Sound"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -19,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-mercedes-amg-g63-2026",
-    "slug": "2026-mercedes-amg-g63-suv",
-    "name": "2026 Mercedes-AMG G 63 SUV Edition 55",
-    "condition": "Brand New",
-    "make": "Mercedes-Benz",
-    "model": "G 63 AMG",
-    "year": 2026,
-    "price": 189900,
-    "sale_price": null,
-    "down_payment": 19000,
-    "mileage": "8 miles",
-    "transmission": "AMG SPEEDSHIFT TCT 9-Speed",
-    "exterior_color": "Obsidian Black Metallic",
-    "interior_color": "G manufaktur Bengal Red / Black Nappa",
-    "fuel_type": "Gasoline",
-    "body_type": "SUV",
-    "engine": "Handcrafted 4.0L V8 Biturbo w/ Hybrid Assist (577 HP)",
-    "drivetrain": "Permanent 4MATIC All-Wheel Drive (3 Differential Locks)",
-    "vin": "W1NYX7DE2TX189420",
-    "title_status": "MSO / Factory New",
-    "trim": "AMG Night Package II",
-    "description": "Iconic 2026 Mercedes-AMG G63 in Obsidian Black with 22-inch AMG forged cross-spoke wheels, AMG carbon fiber trim, dual side exhaust pipes, Burmester high-end 3D sound, and luxury massaging seats.",
-    "features": [
-      "Triple Locking Differentials",
-      "Burmester 3D Surround Sound",
-      "AMG Night Package II",
-      "G Manufaktur Interior Package",
-      "22-Inch Forged Matte Black Wheels",
-      "Active Multicontour Front Seats"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1520031441872-265e4ff70366?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -18,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-bmw-m4-competition-2026",
-    "slug": "2026-bmw-m4-competition-xdrive",
-    "name": "2026 BMW M4 Competition Coupe xDrive",
-    "condition": "Brand New",
-    "make": "BMW",
-    "model": "M4 Competition",
-    "year": 2026,
-    "price": 88700,
-    "sale_price": 84900,
-    "down_payment": 8000,
-    "mileage": "10 miles",
-    "transmission": "8-Speed M Steptronic with Drivelogic",
-    "exterior_color": "Isle of Man Green Metallic",
-    "interior_color": "Kyalami Orange / Black Extended Merino Leather",
-    "fuel_type": "Gasoline",
-    "body_type": "Coupe",
-    "engine": "3.0L BMW M TwinPower Turbo Inline-6 (523 HP)",
-    "drivetrain": "M xDrive Intelligent All-Wheel Drive",
-    "vin": "WBA43AZ00TC829311",
-    "title_status": "MSO / Factory New",
-    "trim": "Competition xDrive",
-    "description": "Fresh 2026 BMW M4 Competition featuring the updated Curved Display with iDrive 8.5, M Carbon Bucket Seats, Carbon Exterior Package, M Driver Package with raised top speed, and adaptive M suspension.",
-    "features": [
-      "M Carbon Bucket Seats",
-      "M xDrive AWD with 2WD Drift Mode",
-      "Carbon Fiber Roof & Exterior Pack",
-      "Harman Kardon Surround Sound",
-      "Head-Up Display",
-      "Laserlight Headlamps"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -17,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-chevrolet-corvette-z06-2026",
-    "slug": "2026-chevrolet-corvette-z06-3lz",
-    "name": "2026 Chevrolet Corvette Z06 3LZ Coupe",
-    "condition": "Brand New",
-    "make": "Chevrolet",
-    "model": "Corvette Z06",
-    "year": 2026,
-    "price": 124900,
-    "sale_price": null,
-    "down_payment": 12000,
-    "mileage": "6 miles",
-    "transmission": "8-Speed Dual-Clutch Automatic",
-    "exterior_color": "Torch Red",
-    "interior_color": "Jet Black with Adrenaline Red Stitching",
-    "fuel_type": "Gasoline",
-    "body_type": "Coupe",
-    "engine": "5.5L Flat-Plane Crank V8 LT6 (670 HP, 8600 RPM Redline)",
-    "drivetrain": "Rear-Wheel Drive (RWD)",
-    "vin": "1G1YG2D33T5109842",
-    "title_status": "MSO / Brand New",
-    "trim": "3LZ Premium Luxury",
-    "description": "The highest-revving naturally aspirated V8 in production. Brand new 2026 Z06 with Z07 Performance Package, carbon fiber ground effects, carbon ceramic Brembo brakes, and Michelin Pilot Sport Cup 2R tires.",
-    "features": [
-      "Z07 Performance Package",
-      "Carbon Ceramic Matrix Brakes",
-      "Bose Performance 14-Speaker Audio",
-      "Performance Data Recorder (PDR)",
-      "Removable Carbon Roof Panel",
-      "Heated & Ventilated GT2 Seats"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -16,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-toyota-land-cruiser-2026",
-    "slug": "2026-toyota-land-cruiser-first-edition",
-    "name": "2026 Toyota Land Cruiser First Edition",
-    "condition": "Brand New",
-    "make": "Toyota",
-    "model": "Land Cruiser",
-    "year": 2026,
-    "price": 76500,
-    "sale_price": 74200,
-    "down_payment": 7500,
-    "mileage": "18 miles",
-    "transmission": "8-Speed Electronically Controlled Automatic",
-    "exterior_color": "Trail Dust / Grayscape Two-Tone",
-    "interior_color": "Black Leather Trimmed with Heritage Badging",
-    "fuel_type": "Hybrid",
-    "body_type": "SUV",
-    "engine": "i-FORCE MAX 2.4L Turbocharged Hybrid (326 HP, 465 lb-ft)",
-    "drivetrain": "Full-Time 4WD with Locking Center & Rear Differentials",
-    "vin": "JTEAA2FA5TJ018492",
-    "title_status": "MSO / Clean Factory Title",
-    "trim": "First Edition Limited",
-    "description": "Brand new 2026 Toyota Land Cruiser First Edition featuring iconic round LED headlights, rock rails, full underbody skid plates, Multi-Terrain Select, Crawl Control, and 14-speaker JBL Premium audio.",
-    "features": [
-      "i-FORCE MAX Hybrid Powertrain",
-      "Full-Time 4WD w/ Dual Lockers",
-      "Stabilizer Disconnect Mechanism",
-      "12.3-inch Multimedia Display",
-      "JBL 14-Speaker Audio System",
-      "Multi-Terrain Monitor 360 Camera"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -15,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-audi-rs6-avant-2026",
-    "slug": "2026-audi-rs6-avant-performance",
-    "name": "2026 Audi RS 6 Avant Performance",
-    "condition": "Brand New",
-    "make": "Audi",
-    "model": "RS 6 Avant",
-    "year": 2026,
-    "price": 132500,
-    "sale_price": null,
-    "down_payment": 13000,
-    "mileage": "14 miles",
-    "transmission": "8-Speed Tiptronic Sport Automatic",
-    "exterior_color": "Nardo Gray",
-    "interior_color": "Valcona Leather with RS Honeycomb Stitching",
-    "fuel_type": "Hybrid",
-    "body_type": "Wagon",
-    "engine": "4.0L Twin-Turbo V8 with 48V Mild Hybrid (621 HP)",
-    "drivetrain": "quattro All-Wheel Drive with Sport Differential",
-    "vin": "WAUZZZF27TN082341",
-    "title_status": "MSO / Brand New",
-    "trim": "Performance Edition",
-    "description": "The ultimate super wagon. Brand new 2026 Audi RS6 Avant Performance delivering 621 hp, RS sport exhaust system, Bang & Olufsen 3D Advanced sound, carbon optic exterior package, and dynamic all-wheel steering.",
-    "features": [
-      "Dynamic All-Wheel Steering",
-      "RS Adaptive Air Suspension",
-      "Bang & Olufsen Advanced 3D Audio",
-      "Carbon Optic Package",
-      "HD Matrix-Design LED Headlights",
-      "Panoramic Glass Sunroof"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -14,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-ford-f150-lightning-2026",
-    "slug": "2026-ford-f150-lightning-platinum",
-    "name": "2026 Ford F-150 Lightning Platinum",
-    "condition": "Brand New",
-    "make": "Ford",
-    "model": "F-150 Lightning",
-    "year": 2026,
-    "price": 84990,
-    "sale_price": 79900,
-    "down_payment": 8000,
-    "mileage": "22 miles",
-    "transmission": "Single-Speed Automatic AWD",
-    "exterior_color": "Star White Metallic Tri-Coat",
-    "interior_color": "Nirvana Leather Black / Medium Dark Slate",
-    "fuel_type": "Electric",
-    "body_type": "Truck",
-    "engine": "Dual eMotors Extended-Range Battery (580 HP, 775 lb-ft)",
-    "drivetrain": "Electronic Full-Time 4WD",
-    "vin": "1FT6W1EV3TW198302",
-    "title_status": "MSO / Clean Factory Title",
-    "trim": "Platinum SuperCrew",
-    "description": "Brand new 2026 all-electric Ford F-150 Lightning Platinum. Equipped with Pro Power Onboard 9.6kW generator, Ford BlueCruise hands-free highway driving, Mega Power Frunk, and Max Trailer Tow Package.",
-    "features": [
-      "Ford BlueCruise Hands-Free Driving",
-      "Pro Power Onboard 9.6kW Generator",
-      "Mega Power Front Trunk (400L)",
-      "B&O Unleashed 18-Speaker Audio",
-      "Twin-Panel Panoramic Moonroof",
-      "15.5-Inch Portrait Touchscreen"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1575089976121-8ed7b2a54265?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": false,
-    "sort_order": -13,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-lexus-lc500-2026",
-    "slug": "2026-lexus-lc-500-convertible",
-    "name": "2026 Lexus LC 500 Convertible Bespoke",
-    "condition": "Brand New",
-    "make": "Lexus",
-    "model": "LC 500",
-    "year": 2026,
-    "price": 107300,
-    "sale_price": null,
-    "down_payment": 11000,
-    "mileage": "11 miles",
-    "transmission": "10-Speed Direct-Shift Automatic",
-    "exterior_color": "Structural Blue Metallic",
-    "interior_color": "Toasted Caramel Semi-Aniline Leather",
-    "fuel_type": "Gasoline",
-    "body_type": "Convertible",
-    "engine": "5.0L Naturally Aspirated V8 (471 HP)",
-    "drivetrain": "Rear-Wheel Drive (RWD) with Torsen LSD",
-    "vin": "JTHHW5BY8TA009182",
-    "title_status": "MSO / Brand New",
-    "trim": "Bespoke Build Edition",
-    "description": "Masterpiece of luxury grand touring. Brand new 2026 Lexus LC 500 Convertible with 4-layer power soft-top, neck heaters, 915-watt Mark Levinson Reference audio, dynamic active sport exhaust, and forged 21-inch alloy wheels.",
-    "features": [
-      "Mark Levinson 13-Speaker 915W Audio",
-      "4-Layer Noise-Insulating Soft Top",
-      "Neck Heaters & Climate Concierge",
-      "Torsen Limited-Slip Rear Differential",
-      "Triple-Beam LED Headlamps",
-      "Head-Up Display"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": false,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -12,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
-    "id": "bn-hyundai-ioniq5n-2026",
-    "slug": "2026-hyundai-ioniq-5-n",
-    "name": "2026 Hyundai Ioniq 5 N Track Edition",
-    "condition": "Brand New",
-    "make": "Hyundai",
-    "model": "Ioniq 5 N",
-    "year": 2026,
-    "price": 66100,
-    "sale_price": 64500,
-    "down_payment": 6500,
-    "mileage": "9 miles",
-    "transmission": "N e-Shift Simulated 8-Speed DCT",
-    "exterior_color": "Performance Blue Matte",
-    "interior_color": "N Black Alcantara with Performance Blue Accents",
-    "fuel_type": "Electric",
-    "body_type": "SUV",
-    "engine": "Dual High-Output Electric Motors (641 HP in N Grin Boost)",
-    "drivetrain": "All-Wheel Drive (N Torque Distribution)",
-    "vin": "KM8KRDA49TU291048",
-    "title_status": "MSO / Clean Factory Title",
-    "trim": "Track Ready Performance",
-    "description": "The award-winning high performance electric crossover. Brand new 2026 Ioniq 5 N with N e-Shift paddle shifters that replicate dual-clutch transmission shifts and rev pops, N Drift Optimizer, and 84 kWh battery.",
-    "features": [
-      "N Grin Boost (641 Horsepower)",
-      "N e-Shift Paddle Controlled Gear Shifts",
-      "N Active Sound+ Engine Simulator",
-      "N Drift Optimizer & Launch Control",
-      "Track-Tuned Electronically Controlled Suspension",
-      "21\" Forged Aluminum Wheels"
-    ],
-    "images": [
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80"
-    ],
-    "is_hot_deal": true,
-    "is_sold": false,
-    "is_featured": true,
-    "sort_order": -11,
-    "created_at": "2026-11-02T14:45:40.944Z"
-  },
-  {
     "id": "f4f15cbf-5a41-450c-abca-7e9a5737405c",
     "slug": "2015-infiniti-q50-awd-f4f15cbf",
     "name": "2015 Infiniti Q50 AWD",
@@ -867,7 +46,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 20,
+    "sort_order": 0,
     "created_at": "2026-03-18T08:33:51.096008+00:00"
   },
   {
@@ -916,7 +95,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 21,
+    "sort_order": 1,
     "created_at": "2026-03-18T09:43:14.768877+00:00"
   },
   {
@@ -975,7 +154,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 22,
+    "sort_order": 2,
     "created_at": "2026-03-28T12:41:11.901023+00:00"
   },
   {
@@ -1028,7 +207,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 23,
+    "sort_order": 3,
     "created_at": "2026-03-18T09:36:46.916795+00:00"
   },
   {
@@ -1079,7 +258,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 24,
+    "sort_order": 4,
     "created_at": "2026-03-18T10:03:00.587967+00:00"
   },
   {
@@ -1129,7 +308,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 25,
+    "sort_order": 5,
     "created_at": "2026-03-18T10:11:49.217106+00:00"
   },
   {
@@ -1180,7 +359,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 26,
+    "sort_order": 6,
     "created_at": "2026-03-18T10:19:23.595011+00:00"
   },
   {
@@ -1231,7 +410,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 27,
+    "sort_order": 7,
     "created_at": "2026-03-18T10:24:07.368842+00:00"
   },
   {
@@ -1282,7 +461,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 28,
+    "sort_order": 8,
     "created_at": "2026-03-18T10:27:18.231808+00:00"
   },
   {
@@ -1331,7 +510,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 29,
+    "sort_order": 9,
     "created_at": "2026-03-18T10:30:06.875398+00:00"
   },
   {
@@ -1379,7 +558,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 30,
+    "sort_order": 10,
     "created_at": "2026-03-18T10:41:55.290077+00:00"
   },
   {
@@ -1428,7 +607,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 31,
+    "sort_order": 11,
     "created_at": "2026-03-18T10:50:34.804966+00:00"
   },
   {
@@ -1477,7 +656,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 32,
+    "sort_order": 12,
     "created_at": "2026-03-18T10:54:32.954219+00:00"
   },
   {
@@ -1526,7 +705,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 33,
+    "sort_order": 13,
     "created_at": "2026-03-18T10:45:21.696535+00:00"
   },
   {
@@ -1576,7 +755,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 34,
+    "sort_order": 14,
     "created_at": "2026-03-18T11:04:01.441839+00:00"
   },
   {
@@ -1625,7 +804,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 35,
+    "sort_order": 15,
     "created_at": "2026-03-18T13:52:17.58637+00:00"
   },
   {
@@ -1679,7 +858,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 36,
+    "sort_order": 16,
     "created_at": "2026-03-18T13:55:21.78073+00:00"
   },
   {
@@ -1727,7 +906,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 37,
+    "sort_order": 17,
     "created_at": "2026-03-18T13:57:45.453308+00:00"
   },
   {
@@ -1777,7 +956,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 38,
+    "sort_order": 18,
     "created_at": "2026-03-18T14:02:35.968929+00:00"
   },
   {
@@ -1832,7 +1011,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 39,
+    "sort_order": 19,
     "created_at": "2026-03-24T11:03:47.935444+00:00"
   },
   {
@@ -1879,7 +1058,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 40,
+    "sort_order": 20,
     "created_at": "2026-03-24T11:07:08.871236+00:00"
   },
   {
@@ -1930,7 +1109,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 41,
+    "sort_order": 21,
     "created_at": "2026-03-24T11:11:08.633204+00:00"
   },
   {
@@ -1981,7 +1160,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 42,
+    "sort_order": 22,
     "created_at": "2026-03-24T11:18:07.32409+00:00"
   },
   {
@@ -2030,7 +1209,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 43,
+    "sort_order": 23,
     "created_at": "2026-03-24T12:10:44.341489+00:00"
   },
   {
@@ -2079,7 +1258,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 44,
+    "sort_order": 24,
     "created_at": "2026-03-24T12:14:37.285577+00:00"
   },
   {
@@ -2131,7 +1310,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 45,
+    "sort_order": 25,
     "created_at": "2026-03-24T12:18:30.925615+00:00"
   },
   {
@@ -2176,7 +1355,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 46,
+    "sort_order": 26,
     "created_at": "2026-03-24T12:22:07.589796+00:00"
   },
   {
@@ -2227,7 +1406,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 47,
+    "sort_order": 27,
     "created_at": "2026-03-24T13:00:27.525615+00:00"
   },
   {
@@ -2273,7 +1452,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 48,
+    "sort_order": 28,
     "created_at": "2026-03-24T13:08:54.991215+00:00"
   },
   {
@@ -2324,7 +1503,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 49,
+    "sort_order": 29,
     "created_at": "2026-03-24T13:15:18.518074+00:00"
   },
   {
@@ -2371,7 +1550,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 50,
+    "sort_order": 30,
     "created_at": "2026-03-24T13:19:28.552008+00:00"
   },
   {
@@ -2423,7 +1602,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 51,
+    "sort_order": 31,
     "created_at": "2026-03-24T13:24:48.589949+00:00"
   },
   {
@@ -2472,7 +1651,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 52,
+    "sort_order": 32,
     "created_at": "2026-03-24T13:28:53.279582+00:00"
   },
   {
@@ -2522,7 +1701,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 53,
+    "sort_order": 33,
     "created_at": "2026-03-24T13:33:16.972473+00:00"
   },
   {
@@ -2571,7 +1750,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 54,
+    "sort_order": 34,
     "created_at": "2026-03-24T13:39:03.541278+00:00"
   },
   {
@@ -2625,7 +1804,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 55,
+    "sort_order": 35,
     "created_at": "2026-03-24T13:48:55.516344+00:00"
   },
   {
@@ -2682,7 +1861,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 56,
+    "sort_order": 36,
     "created_at": "2026-03-24T13:53:42.69243+00:00"
   },
   {
@@ -2741,7 +1920,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 57,
+    "sort_order": 37,
     "created_at": "2026-03-24T14:01:14.721828+00:00"
   },
   {
@@ -2801,7 +1980,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 58,
+    "sort_order": 38,
     "created_at": "2026-03-24T16:07:48.822371+00:00"
   },
   {
@@ -2861,7 +2040,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 59,
+    "sort_order": 39,
     "created_at": "2026-03-24T16:16:00.445754+00:00"
   },
   {
@@ -2913,7 +2092,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 60,
+    "sort_order": 40,
     "created_at": "2026-03-24T16:20:05.363089+00:00"
   },
   {
@@ -2964,7 +2143,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 61,
+    "sort_order": 41,
     "created_at": "2026-03-24T11:14:45.854019+00:00"
   },
   {
@@ -3012,7 +2191,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 62,
+    "sort_order": 42,
     "created_at": "2026-03-24T12:55:17.185562+00:00"
   },
   {
@@ -3071,7 +2250,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 63,
+    "sort_order": 43,
     "created_at": "2026-03-27T13:31:12.417134+00:00"
   },
   {
@@ -3125,7 +2304,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 64,
+    "sort_order": 44,
     "created_at": "2026-03-27T13:35:17.648393+00:00"
   },
   {
@@ -3175,7 +2354,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 65,
+    "sort_order": 45,
     "created_at": "2026-03-27T13:39:29.415909+00:00"
   },
   {
@@ -3225,7 +2404,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 66,
+    "sort_order": 46,
     "created_at": "2026-03-27T13:42:34.059509+00:00"
   },
   {
@@ -3280,7 +2459,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 67,
+    "sort_order": 47,
     "created_at": "2026-03-28T12:44:21.345176+00:00"
   },
   {
@@ -3340,7 +2519,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 68,
+    "sort_order": 48,
     "created_at": "2026-03-28T12:48:17.957934+00:00"
   },
   {
@@ -3391,7 +2570,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 69,
+    "sort_order": 49,
     "created_at": "2026-03-31T14:01:20.626142+00:00"
   },
   {
@@ -3442,7 +2621,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 70,
+    "sort_order": 50,
     "created_at": "2026-03-31T14:04:50.649984+00:00"
   },
   {
@@ -3493,7 +2672,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 71,
+    "sort_order": 51,
     "created_at": "2026-03-31T14:16:59.435171+00:00"
   },
   {
@@ -3543,7 +2722,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 72,
+    "sort_order": 52,
     "created_at": "2026-04-02T14:42:34.426873+00:00"
   },
   {
@@ -3593,7 +2772,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 73,
+    "sort_order": 53,
     "created_at": "2026-04-02T14:46:08.2983+00:00"
   },
   {
@@ -3644,7 +2823,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 74,
+    "sort_order": 54,
     "created_at": "2026-04-05T04:09:45.012881+00:00"
   },
   {
@@ -3691,7 +2870,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 75,
+    "sort_order": 55,
     "created_at": "2026-04-16T15:59:53.314532+00:00"
   },
   {
@@ -3742,7 +2921,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 76,
+    "sort_order": 56,
     "created_at": "2026-04-16T16:10:20.066079+00:00"
   },
   {
@@ -3791,7 +2970,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 77,
+    "sort_order": 57,
     "created_at": "2026-04-16T16:15:10.997785+00:00"
   },
   {
@@ -3841,7 +3020,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 78,
+    "sort_order": 58,
     "created_at": "2026-04-16T16:19:05.977993+00:00"
   },
   {
@@ -3892,7 +3071,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": true,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 79,
+    "sort_order": 59,
     "created_at": "2026-04-16T16:24:14.18901+00:00"
   },
   {
@@ -3944,7 +3123,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": true,
-    "sort_order": 80,
+    "sort_order": 60,
     "created_at": "2026-04-16T16:27:28.244829+00:00"
   },
   {
@@ -4006,7 +3185,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 81,
+    "sort_order": 61,
     "created_at": "2026-04-16T16:32:41.818416+00:00"
   },
   {
@@ -4056,7 +3235,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 82,
+    "sort_order": 62,
     "created_at": "2026-04-25T10:48:02.913431+00:00"
   },
   {
@@ -4105,7 +3284,7 @@ export const INITIAL_VEHICLES: Vehicle[] = [
     "is_hot_deal": false,
     "is_sold": false,
     "is_featured": false,
-    "sort_order": 83,
+    "sort_order": 63,
     "created_at": "2026-04-28T19:47:24.536334+00:00"
   }
 ];

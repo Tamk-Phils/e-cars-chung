@@ -349,7 +349,7 @@ export const CheckoutModal: React.FC = () => {
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: '8px' }}>
                   3. DELIVERY METHOD
                 </label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="checkout-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div
                     onClick={() => setDeliveryOption('Nationwide Home Delivery')}
                     style={{
@@ -457,7 +457,7 @@ export const CheckoutModal: React.FC = () => {
 
                 {paymentMethod === 'Credit Card (Stripe simulation)' && (
                   <div style={{ background: 'var(--bg-card)', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '10px' }}>
+                    <div className="checkout-form-row" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '10px' }}>
                       <div>
                         <label style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'block', marginBottom: '2px' }}>
                           Card Number (Simulated)

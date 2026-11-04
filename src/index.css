@@ -337,6 +337,18 @@ button, input, select, textarea {
   .vehicle-details-layout {
     grid-template-columns: 1fr !important;
   }
+  .finance-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .editorial-spotlight-card {
+    grid-template-columns: 1fr !important;
+  }
+  .top-hours, .top-delivery {
+    display: none !important;
+  }
 }
 
 /* Mobile Small Devices (< 768px) */
@@ -361,6 +373,16 @@ button, input, select, textarea {
   .vehicle-gallery-stage {
     height: 280px !important;
   }
+  .order-details-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .hero-search-card {
+    padding: 20px 16px !important;
+  }
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Ultra Small Screens (< 640px) */
@@ -373,6 +395,18 @@ button, input, select, textarea {
     height: 200px !important;
   }
   .admin-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .contact-form-row {
+    grid-template-columns: 1fr !important;
+  }
+  .review-form-row {
+    grid-template-columns: 1fr !important;
+  }
+  .checkout-form-row {
+    grid-template-columns: 1fr !important;
+  }
+  .order-progress-grid {
     grid-template-columns: 1fr !important;
   }
 }

@@ -108,13 +108,19 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= INITIAL_VEHICLES.length) {
-          return parsed;
+        if (Array.isArray(parsed)) {
+          // If cached vehicles have old demo/synthetic items or length mismatch, purge and reset
+          const hasOldDemo = parsed.some((v: any) => v.id && (v.id.startsWith('bn-') || v.id.startsWith('veh-')));
+          if (!hasOldDemo && parsed.length === INITIAL_VEHICLES.length) {
+            return parsed;
+          }
         }
       } catch (e) {
         console.error('Failed to parse cached vehicles', e);
       }
     }
+    // Set to clean 64 authentic vehicles
+    localStorage.setItem('uc_vehicles', JSON.stringify(INITIAL_VEHICLES));
     return INITIAL_VEHICLES;
   });
 

@@ -1,5 +1,7 @@
 export type VehicleCondition = 'Brand New' | 'Certified Pre-Owned' | 'Used' | 'Bank Seized / Repo';
 
+export type Currency = 'USD' | 'EUR' | 'GBP';
+
 export interface Vehicle {
   id: string;
   slug: string;

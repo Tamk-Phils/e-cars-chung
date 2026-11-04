@@ -57,6 +57,7 @@ export const Hero: React.FC = () => {
       {/* Hero Banner with Highway Drive Background */}
       <div
         id="hero-search"
+        className="hero-banner-container"
         style={{
           position: 'relative',
           minHeight: '520px',
@@ -72,8 +73,10 @@ export const Hero: React.FC = () => {
         <div className="container" style={{ position: 'relative', zIndex: 5 }}>
           {/* Floating White Card */}
           <div
+            className="hero-search-card"
             style={{
               maxWidth: '430px',
+              width: '100%',
               background: '#ffffff',
               borderRadius: 'var(--radius-xl)',
               padding: '28px 24px',
@@ -358,6 +361,7 @@ export const Hero: React.FC = () => {
           {/* Card 1: Browse free offers */}
           <div
             onClick={() => navigate('/inventory?hotDeals=true')}
+            className="editorial-spotlight-card"
             style={{
               background: '#ffffff',
               border: '1px solid #e5e7eb',
@@ -412,6 +416,7 @@ export const Hero: React.FC = () => {
           {/* Card 2: 8 Compact SUVs, only 1 champion */}
           <div
             onClick={() => navigate('/research')}
+            className="editorial-spotlight-card"
             style={{
               background: '#ffffff',
               border: '1px solid #e5e7eb',

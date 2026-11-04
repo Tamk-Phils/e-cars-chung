@@ -111,7 +111,7 @@ export const OrdersPage: React.FC = () => {
 
             {/* Visual 4-Step Progress Bar */}
             <div style={{ margin: '28px 0 36px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', textAlign: 'center', position: 'relative' }}>
+              <div className="order-progress-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', textAlign: 'center', position: 'relative' }}>
                 {/* Step 1: Deposit */}
                 <div>
                   <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#059669', color: '#fff', margin: '0 auto 8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -151,7 +151,7 @@ export const OrdersPage: React.FC = () => {
             </div>
 
             {/* Vehicle & Customer Details Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', background: '#f9fafb', borderRadius: 'var(--radius-lg)', padding: '24px', border: '1px solid #e5e7eb' }}>
+            <div className="order-details-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', background: '#f9fafb', borderRadius: 'var(--radius-lg)', padding: '24px', border: '1px solid #e5e7eb' }}>
               <div>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase' }}>Reserved Vehicle</span>
                 <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#111827', margin: '4px 0 10px' }}>
