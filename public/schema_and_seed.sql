@@ -1,0 +1,1421 @@
+-- =========================================================================
+-- USED CARS & BRAND NEW CARS E-COMMERCE PLATFORM SQL SCHEMA & SEED DATA
+-- Generated for UsedCars.com Migration to Supabase / PostgreSQL
+-- =========================================================================
+
+-- DROP existing tables if recreating completely (optional, commented out)
+-- DROP TABLE IF EXISTS public.orders CASCADE;
+-- DROP TABLE IF EXISTS public.reviews CASCADE;
+-- DROP TABLE IF EXISTS public.posts CASCADE;
+-- DROP TABLE IF EXISTS public.vehicles CASCADE;
+
+-- 1. VEHICLES TABLE (TEXT types used to avoid ERROR 22001 value too long)
+CREATE TABLE IF NOT EXISTS public.vehicles (
+  id TEXT PRIMARY KEY,
+  slug TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  condition TEXT NOT NULL DEFAULT 'Used',
+  make TEXT NOT NULL,
+  model TEXT NOT NULL,
+  year INTEGER NOT NULL,
+  price NUMERIC(12, 2) NOT NULL,
+  sale_price NUMERIC(12, 2),
+  down_payment NUMERIC(12, 2),
+  mileage TEXT,
+  transmission TEXT,
+  exterior_color TEXT,
+  interior_color TEXT,
+  fuel_type TEXT,
+  body_type TEXT,
+  engine TEXT,
+  drivetrain TEXT,
+  vin TEXT,
+  title_status TEXT,
+  trim TEXT,
+  description TEXT,
+  features TEXT[],
+  images TEXT[],
+  is_hot_deal BOOLEAN DEFAULT FALSE,
+  is_sold BOOLEAN DEFAULT FALSE,
+  is_featured BOOLEAN DEFAULT FALSE,
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Alter columns to TEXT in case table was previously created with VARCHAR(100):
+ALTER TABLE IF EXISTS public.vehicles 
+  ALTER COLUMN make TYPE TEXT,
+  ALTER COLUMN model TYPE TEXT,
+  ALTER COLUMN condition TYPE TEXT,
+  ALTER COLUMN mileage TYPE TEXT,
+  ALTER COLUMN transmission TYPE TEXT,
+  ALTER COLUMN exterior_color TYPE TEXT,
+  ALTER COLUMN interior_color TYPE TEXT,
+  ALTER COLUMN fuel_type TYPE TEXT,
+  ALTER COLUMN body_type TYPE TEXT,
+  ALTER COLUMN drivetrain TYPE TEXT,
+  ALTER COLUMN title_status TYPE TEXT,
+  ALTER COLUMN trim TYPE TEXT,
+  ALTER COLUMN vin TYPE TEXT;
+
+-- 2. POSTS TABLE
+CREATE TABLE IF NOT EXISTS public.posts (
+  id TEXT PRIMARY KEY,
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  excerpt TEXT,
+  content TEXT,
+  cover_image TEXT,
+  category TEXT,
+  keywords TEXT[],
+  author TEXT DEFAULT 'UsedCars Editorial',
+  read_minutes INTEGER DEFAULT 5,
+  is_published BOOLEAN DEFAULT TRUE,
+  published_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. REVIEWS TABLE
+CREATE TABLE IF NOT EXISTS public.reviews (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  location TEXT,
+  rating INTEGER NOT NULL DEFAULT 5,
+  body TEXT NOT NULL,
+  vehicle_bought TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4. ORDERS & RESERVATIONS TABLE
+CREATE TABLE IF NOT EXISTS public.orders (
+  id TEXT PRIMARY KEY,
+  order_number TEXT UNIQUE NOT NULL,
+  status TEXT DEFAULT 'Pending',
+  customer_name TEXT NOT NULL,
+  customer_email TEXT NOT NULL,
+  customer_phone TEXT,
+  customer_address TEXT,
+  customer_city TEXT,
+  customer_state TEXT,
+  customer_zip TEXT,
+  vehicle_id TEXT REFERENCES public.vehicles(id) ON DELETE SET NULL,
+  vehicle_name TEXT,
+  order_type TEXT,
+  amount NUMERIC(12, 2),
+  payment_method TEXT,
+  delivery_option TEXT,
+  has_trade_in BOOLEAN DEFAULT FALSE,
+  trade_in_details TEXT,
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS and Grant Permissions for Supabase Anon & Authenticated Roles
+ALTER TABLE public.vehicles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow public read access to vehicles" ON public.vehicles;
+CREATE POLICY "Allow public read access to vehicles" ON public.vehicles FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public write access to vehicles" ON public.vehicles;
+CREATE POLICY "Allow public write access to vehicles" ON public.vehicles FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow public read access to posts" ON public.posts;
+CREATE POLICY "Allow public read access to posts" ON public.posts FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public write access to posts" ON public.posts;
+CREATE POLICY "Allow public write access to posts" ON public.posts FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow public read access to reviews" ON public.reviews;
+CREATE POLICY "Allow public read access to reviews" ON public.reviews FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public write access to reviews" ON public.reviews;
+CREATE POLICY "Allow public write access to reviews" ON public.reviews FOR ALL USING (true);
+
+DROP POLICY IF EXISTS "Allow public read access to orders" ON public.orders;
+CREATE POLICY "Allow public read access to orders" ON public.orders FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Allow public write access to orders" ON public.orders;
+CREATE POLICY "Allow public write access to orders" ON public.orders FOR ALL USING (true);
+
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;
+
+-- =========================================================================
+-- SEED VEHICLES (Total: 51)
+-- =========================================================================
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-lucid-air-sapphire-2026', '2026-lucid-air-sapphire-tri-motor', '2026 Lucid Air Sapphire Tri-Motor', 'Brand New', 'Lucid', 'Air Sapphire', 2026, 249000, 244500, 25000, '7 miles', 'Single-Speed Planetary Reduction', 'Sapphire Blue Metallic', 'Sapphire Theme Mojave Leather & Alcantara', 'Electric', 'Sedan', 'Tri-Motor Powertrain (1,234 HP, 0-60 in 1.89s, Top Speed 205 mph)', 'All-Wheel Drive with Torque Vectoring', '7FCRG1E57TA001928', 'MSO / Brand New', 'Sapphire Ultra-Performance', 'The fastest four-door sedan in the world. 1,234 horsepower, 427-mile EPA range, carbon ceramic brakes, track-tuned aero package, Surreal Sound Pro 21-speaker system, and glass canopy roof.', ARRAY['1,234 HP Tri-Motor Powertrain', 'Carbon Ceramic Brakes', 'Surreal Sound Pro 21-Speaker Audio', 'DreamDrive Pro with LiDAR', '34-inch 5K Curved Glass Display', 'Glass Canopy Windshield']::TEXT[], ARRAY['https://images.unsplash.com/photo-1617469767053-d3b523a0b982?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, TRUE, -10
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-cadillac-escalade-v-2026', '2026-cadillac-escalade-v-series', '2026 Cadillac Escalade-V Series 4WD', 'Brand New', 'Cadillac', 'Escalade-V', 2026, 154200, NULL, 15000, '12 miles', '10-Speed Automatic with TapShift', 'Black Raven Metallic', 'Dark Auburn Semi-Aniline Leather with Zebra Wood', 'Gasoline', 'SUV', '6.2L Hand-Built Supercharged V8 (682 HP, 653 lb-ft)', 'Full-Time Active All-Wheel Drive', '1GYS4HKJ9TR918231', 'MSO / Clean Title', 'V-Series High Performance', 'The pinnacle of American luxury performance. Hand-built 682hp supercharged V8, 38-inch curved OLED diagonal display, AKG Studio Reference 36-speaker sound system, Super Cruise hands-free driving, and Magnetic Ride Control 4.0.', ARRAY['Super Cruise Hands-Free Driving', 'AKG Studio Reference 36-Speaker Audio', '38-Inch Curved OLED Display', 'Magnetic Ride Control 4.0 + Air Suspension', 'Night Vision Infrared Camera', 'Panoramic Sunroof with Power Shade']::TEXT[], ARRAY['https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -9
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-mustang-dark-horse-2026', '2026-ford-mustang-dark-horse', '2026 Ford Mustang Dark Horse Handling Pack', 'Brand New', 'Ford', 'Mustang Dark Horse', 2026, 64980, 62900, 6500, '15 miles', 'TREMEC 6-Speed Manual with Rev Matching', 'Blue Ember Metallic (Color-Shift)', 'Deep Indigo Blue Leather & Dinamica Suede', 'Gasoline', 'Coupe', 'Gen-4 5.0L Coyote V8 Naturally Aspirated (500 HP)', 'Rear-Wheel Drive with Torsen 3.73 Diff', '1FA6P8CF4R5298101', 'MSO / Brand New', 'Handling Package Premium', 'Brand new 2026 Mustang Dark Horse featuring TREMEC 6-speed with titanium 3D-printed shift ball, MagneRide Damping System, active valve performance dual exhaust, and Brembo 6-piston front brake calipers.', ARRAY['TREMEC 6-Speed Manual Transmission', 'MagneRide Adaptive Suspension', 'Handling Package with Front Splitter & Gurney Flap', 'B&O Sound System by Bang & Olufsen', 'Active Valve Dual Exhaust with Track Mode', '13.2-Inch Center Screen with Unreal Engine Graphics']::TEXT[], ARRAY['https://images.unsplash.com/photo-1584345604476-8ec5e12e42dd?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -8
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-mercedes-maybach-s580-2026', '2026-mercedes-maybach-s580-4matic', '2026 Mercedes-Maybach S 580 4MATIC Luxury', 'Brand New', 'Mercedes-Benz', 'Maybach S-Class', 2026, 198900, NULL, 20000, '10 miles', '9G-TRONIC 9-Speed Automatic', 'Two-Tone High-Tech Silver / Nautical Blue', 'Exclusive Nappa Leather Silver Grey Pearl / Black', 'Hybrid', 'Sedan', '4.0L V8 Biturbo with EQ Boost 48V Mild Hybrid (496 HP)', '4MATIC All-Wheel Drive with 10-degree Rear Steering', 'W1K6G8GB5TN029481', 'MSO / Brand New', 'Maybach Executive Rear Seat Package', 'Ultra-exclusive first-class luxury. Reclining rear executive lounge seats with calf rest massage, refrigerator compartment, silver champagne flutes, Burmester High-End 4D sound, and motorized comfort rear doors.', ARRAY['Executive Rear Seat Lounge with Calf Massage', 'Burmester High-End 4D Surround Sound', 'Rear Axle Steering (Up to 10 Degrees)', 'Two-Tone Manufaktur Exterior Finish', 'Electrically Operated Comfort Rear Doors', 'E-ACTIVE BODY CONTROL Suspension']::TEXT[], ARRAY['https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, TRUE, -7
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-rivian-r1s-2026', '2026-rivian-r1s-ascent-quad-motor', '2026 Rivian R1S Ascent Quad-Motor AWD', 'Brand New', 'Rivian', 'R1S', 2026, 119900, 115900, 12000, '16 miles', 'Independent 4-Motor Vectoring Drive', 'Rivian Blue', 'Ocean Coast + Dark Mountain Ash Wood', 'Electric', 'SUV', 'In-House Quad-Motor (1,025 HP, 0-60 in 2.6s, 410 mi Range)', 'Quad-Motor All-Wheel Drive', '7FCTGAAA3TN004921', 'MSO / Factory New', 'Ascent Edition Max Pack', 'Second-generation 2026 Rivian R1S Ascent with redesigned electrical architecture, heat pump, 1,025 hp quad motors, electrochromic dynamic glass roof, enhanced Rivian Autonomy Platform with 11 cameras and 5 radars.', ARRAY['1,025 HP In-House Quad Motor Drive', 'Dynamic Electrochromic Tinting Glass Roof', 'Rivian Elevation Audio with Dolby Atmos', 'Hydraulic Roll Control & Air Suspension (15" Ground Clearance)', 'Gear Guard Live Remote Monitoring', '3-Row 7-Passenger Seating']::TEXT[], ARRAY['https://images.unsplash.com/photo-1546614042-7df3c24c9e5d?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -6
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-genesis-gv80-coupe-2026', '2026-genesis-gv80-coupe-e-supercharger', '2026 Genesis GV80 Coupe 3.5T E-Supercharger', 'Brand New', 'Genesis', 'GV80 Coupe', 2026, 85750, NULL, 8500, '14 miles', '8-Speed Automatic with Sport Paddle Shifters', 'Bering Blue Gloss', 'Smoky Green / Vanilla Beige Nappa Leather', 'Gasoline', 'SUV', '3.5L Twin-Turbo V6 with 48V Electric Supercharger (409 HP)', 'AWD with Electronic Limited-Slip Differential', 'KMUHC4AC7TU019284', 'MSO / Brand New', 'Prestige Package', 'Brand new 2026 Genesis GV80 Coupe featuring a stunning 27-inch combined OLED display, Bang & Olufsen 18-speaker audio, Genesis Digital Key 2, sport exhaust note control, and real carbon fiber interior trim.', ARRAY['27-Inch Integrated OLED Display', 'Bang & Olufsen 18-Speaker Sound', 'Electronically Controlled Suspension with Road Preview', 'E-LSD Rear Differential', 'Monobloc Brembo Front Brakes', 'Power Door Closers (Soft-Close)']::TEXT[], ARRAY['https://images.unsplash.com/photo-1626668893632-683a48e718b5?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1534093607318-f025413f49cb?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, FALSE, -5
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-dodge-charger-daytona-2026', '2026-dodge-charger-daytona-scat-pack', '2026 Dodge Charger Daytona Scat Pack Stage 2', 'Brand New', 'Dodge', 'Charger Daytona', 2026, 73190, 69990, 7000, '18 miles', 'PowerShot Direct Drive e-AWD', 'Peel Out Orange', 'Black Nappa / Suede with Demonic Red Stitching', 'Electric', 'Coupe', 'Dual 335 kW Electric Motors (670 HP, 627 lb-ft in PowerShot)', 'Standard All-Wheel Drive with Mechanical Limited-Slip Rear', '2C3CDZF94TR892019', 'MSO / Clean Factory Title', 'Track Package Stage 2', 'The world''s only electric muscle car. Equipped with patent-pending Fratzonic Chambered Exhaust delivering 126dB real exhaust rumble, Donut Mode, Drift Mode, Launch Control, and staggered 305/325 Goodyear Eagle F1 tires.', ARRAY['Fratzonic Chambered Exhaust (126 dB V8 Tone)', 'PowerShot 40-HP Boost Button', 'Donut Mode, Drift Mode & Line Lock', 'Brembo 6-Piston 16-inch Front Brakes', 'Alpine 18-Speaker Audio System', 'R-Wing Patent Front Pass-Through Aero']::TEXT[], ARRAY['https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1618843479619-f5e8a4a50d22?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -4
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-toyota-rav4-prime-2026', '2026-toyota-rav4-prime-xse', '2026 Toyota RAV4 Prime XSE Plug-In Hybrid', 'Brand New', 'Toyota', 'RAV4 Prime', 2026, 49850, 48200, 5000, '11 miles', 'Electronically Controlled Continuously Variable (eCVT)', 'Supersonic Red with Midnight Black Metallic Roof', 'Black SofTex with Red Accents & Stitching', 'Hybrid', 'SUV', '2.5L 4-Cylinder Plug-In Hybrid (302 HP, 42 miles EV Range)', 'Electronic On-Demand All-Wheel Drive (AWD)', 'JTMEB3FV7TJ094821', 'MSO / Clean Factory Title', 'XSE Premium Package', 'The quickest 4-door Toyota next to Supra (0-60 in 5.5s). 42 miles of pure electric driving range and 94 MPGe combined, head-up display, panoramic glass roof, ventilated front seats, and 6.6 kW onboard charger.', ARRAY['42-Mile Pure Electric Driving Range', '302 Combined Hybrid Horsepower', 'Panoramic Glass Moonroof', '10.5-inch Toyota Audio Multimedia', 'JBL 11-Speaker 800W Sound System', 'Head-Up Display & Digital Rearview Mirror']::TEXT[], ARRAY['https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, FALSE, -3
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-bmw-m3-touring-2026', '2026-bmw-m3-competition-touring', '2026 BMW M3 Competition Touring xDrive', 'Brand New', 'BMW', 'M3 Touring', 2026, 112000, 108500, 11000, '10 miles', '8-Speed M Steptronic with Drivelogic', 'Frozen Pure Grey II Metallic', 'Silverstone / Black Full Merino Leather', 'Gasoline', 'Wagon', '3.0L M TwinPower Turbo High-Rev S58 (523 HP)', 'M xDrive Intelligent All-Wheel Drive', 'WBA33AZ09TN029184', 'MSO / Brand New', 'Competition Touring', 'The long-awaited high-performance wagon. 523 horsepower, 0-60 in 3.5s, large practical cargo area with opening rear window glass, M carbon ceramic brakes, M sport exhaust, and adaptive M suspension.', ARRAY['M Carbon Ceramic Brakes', 'M xDrive AWD with Pure RWD Mode', 'Harman Kardon Surround Sound', 'BMW Curved Display with M OS 8.5', 'Carbon Exterior Mirror Caps & Diffuser', 'Adaptive M Suspension']::TEXT[], ARRAY['https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1597687210367-a4915552d886?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -2
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-range-rover-sv-2026', '2026-range-rover-sv-autobiography', '2026 Land Rover Range Rover SV Long Wheelbase', 'Brand New', 'Land Rover', 'Range Rover SV', 2026, 234000, NULL, 24000, '15 miles', '8-Speed Automatic with CommandShift 2', 'Sunrise Copper Satin with Corinthian Bronze Roof', 'SV Intrepid Perlino Semi-Aniline Leather & Ceramic Controls', 'Hybrid', 'SUV', '4.4L Twin-Turbocharged V8 with 48V MHEV (606 HP)', 'All-Wheel Drive with Active Rear Locking Differential', 'SALWR2V48TA918231', 'MSO / Brand New', 'SV Signature Suite LWB', 'The pinnacle of British luxury motoring. Long wheelbase with four-seat SV Signature Suite featuring an electrically deployable Club Table, refrigerator with Dartington crystal glassware, 1,600W Meridian Signature Sound, and white ceramic gear selector.', ARRAY['SV Signature Suite with Electrically Deployable Club Table', 'Meridian Signature 35-Speaker Sound System (1600W)', 'All-Wheel Steering & Electronic Air Suspension', 'Touch-Pro Ceramic Interior Controls', 'Executive Class Comfort-Plus Rear Massage Seats', 'Active Noise Cancellation Headrest Speakers']::TEXT[], ARRAY['https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, TRUE, -1
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-porsche-911-gt3-2026', '2026-porsche-911-gt3-rs', '2026 Porsche 911 GT3 RS Weissach', 'Brand New', 'Porsche', '911 GT3 RS', 2026, 268500, 259000, 25000, '12 miles (Factory Delivery)', '7-Speed Dual-Clutch PDK', 'Guards Red with Carbon Accents', 'Black Leather & Race-Tex w/ Red Stitching', 'Gasoline', 'Coupe', '4.0L Naturally Aspirated Boxer-6 (518 HP)', 'Rear-Wheel Drive (RWD)', 'WP0AF2A97TS298101', 'MSO (Manufacturer Statement of Origin)', 'Weissach Package', 'Factory fresh 2026 Porsche 911 GT3 RS equipped with the complete Weissach package, magnesium lightweight forged wheels, front-axle lift system, and ceramic composite brakes (PCCB). Unregistered with full 4-year factory warranty.', ARRAY['Weissach Carbon Package', 'PCCB Carbon Ceramic Brakes', 'Front Axle Lift System', 'Bose Surround Sound System', 'Chrono Package with Lap Trigger', 'Full Bucket Carbon Racing Seats']::TEXT[], ARRAY['https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, TRUE, -20
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-tesla-model-s-plaid-2026', '2026-tesla-model-s-plaid-tri-motor', '2026 Tesla Model S Plaid Tri-Motor', 'Brand New', 'Tesla', 'Model S Plaid', 2026, 89990, 87490, 8500, '15 miles', 'Single-Speed Direct Drive', 'Ultra Red', 'Cream Premium Interior with Walnut', 'Electric', 'Sedan', 'Tri-Motor All-Wheel Drive (1,020 HP, 0-60 in 1.99s)', 'All-Wheel Drive (Dual Rear + Front)', '5YJSA1E67TF981240', 'MSO / Clean Factory Title', 'Plaid 1020HP Edition', 'Brand new 2026 Tesla Model S Plaid with Full Self-Driving Capability Supervised, 21-inch Arachnid Wheels, Yoke Steering option, 396 miles EPA estimated range, and sub-2 second acceleration.', ARRAY['Full Self-Driving (Supervised)', '21" Arachnid Wheels', '1020 Horsepower Tri-Motor', 'Tri-Zone Climate with HEPA', '17" Cinematic Touchscreen + Rear Display', 'Active Noise Canceling Sound']::TEXT[], ARRAY['https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -19
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-mercedes-amg-g63-2026', '2026-mercedes-amg-g63-suv', '2026 Mercedes-AMG G 63 SUV Edition 55', 'Brand New', 'Mercedes-Benz', 'G 63 AMG', 2026, 189900, NULL, 19000, '8 miles', 'AMG SPEEDSHIFT TCT 9-Speed', 'Obsidian Black Metallic', 'G manufaktur Bengal Red / Black Nappa', 'Gasoline', 'SUV', 'Handcrafted 4.0L V8 Biturbo w/ Hybrid Assist (577 HP)', 'Permanent 4MATIC All-Wheel Drive (3 Differential Locks)', 'W1NYX7DE2TX189420', 'MSO / Factory New', 'AMG Night Package II', 'Iconic 2026 Mercedes-AMG G63 in Obsidian Black with 22-inch AMG forged cross-spoke wheels, AMG carbon fiber trim, dual side exhaust pipes, Burmester high-end 3D sound, and luxury massaging seats.', ARRAY['Triple Locking Differentials', 'Burmester 3D Surround Sound', 'AMG Night Package II', 'G Manufaktur Interior Package', '22-Inch Forged Matte Black Wheels', 'Active Multicontour Front Seats']::TEXT[], ARRAY['https://images.unsplash.com/photo-1520031441872-265e4ff70366?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, TRUE, -18
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-bmw-m4-competition-2026', '2026-bmw-m4-competition-xdrive', '2026 BMW M4 Competition Coupe xDrive', 'Brand New', 'BMW', 'M4 Competition', 2026, 88700, 84900, 8000, '10 miles', '8-Speed M Steptronic with Drivelogic', 'Isle of Man Green Metallic', 'Kyalami Orange / Black Extended Merino Leather', 'Gasoline', 'Coupe', '3.0L BMW M TwinPower Turbo Inline-6 (523 HP)', 'M xDrive Intelligent All-Wheel Drive', 'WBA43AZ00TC829311', 'MSO / Factory New', 'Competition xDrive', 'Fresh 2026 BMW M4 Competition featuring the updated Curved Display with iDrive 8.5, M Carbon Bucket Seats, Carbon Exterior Package, M Driver Package with raised top speed, and adaptive M suspension.', ARRAY['M Carbon Bucket Seats', 'M xDrive AWD with 2WD Drift Mode', 'Carbon Fiber Roof & Exterior Pack', 'Harman Kardon Surround Sound', 'Head-Up Display', 'Laserlight Headlamps']::TEXT[], ARRAY['https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -17
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-chevrolet-corvette-z06-2026', '2026-chevrolet-corvette-z06-3lz', '2026 Chevrolet Corvette Z06 3LZ Coupe', 'Brand New', 'Chevrolet', 'Corvette Z06', 2026, 124900, NULL, 12000, '6 miles', '8-Speed Dual-Clutch Automatic', 'Torch Red', 'Jet Black with Adrenaline Red Stitching', 'Gasoline', 'Coupe', '5.5L Flat-Plane Crank V8 LT6 (670 HP, 8600 RPM Redline)', 'Rear-Wheel Drive (RWD)', '1G1YG2D33T5109842', 'MSO / Brand New', '3LZ Premium Luxury', 'The highest-revving naturally aspirated V8 in production. Brand new 2026 Z06 with Z07 Performance Package, carbon fiber ground effects, carbon ceramic Brembo brakes, and Michelin Pilot Sport Cup 2R tires.', ARRAY['Z07 Performance Package', 'Carbon Ceramic Matrix Brakes', 'Bose Performance 14-Speaker Audio', 'Performance Data Recorder (PDR)', 'Removable Carbon Roof Panel', 'Heated & Ventilated GT2 Seats']::TEXT[], ARRAY['https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, TRUE, -16
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-toyota-land-cruiser-2026', '2026-toyota-land-cruiser-first-edition', '2026 Toyota Land Cruiser First Edition', 'Brand New', 'Toyota', 'Land Cruiser', 2026, 76500, 74200, 7500, '18 miles', '8-Speed Electronically Controlled Automatic', 'Trail Dust / Grayscape Two-Tone', 'Black Leather Trimmed with Heritage Badging', 'Hybrid', 'SUV', 'i-FORCE MAX 2.4L Turbocharged Hybrid (326 HP, 465 lb-ft)', 'Full-Time 4WD with Locking Center & Rear Differentials', 'JTEAA2FA5TJ018492', 'MSO / Clean Factory Title', 'First Edition Limited', 'Brand new 2026 Toyota Land Cruiser First Edition featuring iconic round LED headlights, rock rails, full underbody skid plates, Multi-Terrain Select, Crawl Control, and 14-speaker JBL Premium audio.', ARRAY['i-FORCE MAX Hybrid Powertrain', 'Full-Time 4WD w/ Dual Lockers', 'Stabilizer Disconnect Mechanism', '12.3-inch Multimedia Display', 'JBL 14-Speaker Audio System', 'Multi-Terrain Monitor 360 Camera']::TEXT[], ARRAY['https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -15
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-audi-rs6-avant-2026', '2026-audi-rs6-avant-performance', '2026 Audi RS 6 Avant Performance', 'Brand New', 'Audi', 'RS 6 Avant', 2026, 132500, NULL, 13000, '14 miles', '8-Speed Tiptronic Sport Automatic', 'Nardo Gray', 'Valcona Leather with RS Honeycomb Stitching', 'Hybrid', 'Wagon', '4.0L Twin-Turbo V8 with 48V Mild Hybrid (621 HP)', 'quattro All-Wheel Drive with Sport Differential', 'WAUZZZF27TN082341', 'MSO / Brand New', 'Performance Edition', 'The ultimate super wagon. Brand new 2026 Audi RS6 Avant Performance delivering 621 hp, RS sport exhaust system, Bang & Olufsen 3D Advanced sound, carbon optic exterior package, and dynamic all-wheel steering.', ARRAY['Dynamic All-Wheel Steering', 'RS Adaptive Air Suspension', 'Bang & Olufsen Advanced 3D Audio', 'Carbon Optic Package', 'HD Matrix-Design LED Headlights', 'Panoramic Glass Sunroof']::TEXT[], ARRAY['https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, TRUE, -14
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-ford-f150-lightning-2026', '2026-ford-f150-lightning-platinum', '2026 Ford F-150 Lightning Platinum', 'Brand New', 'Ford', 'F-150 Lightning', 2026, 84990, 79900, 8000, '22 miles', 'Single-Speed Automatic AWD', 'Star White Metallic Tri-Coat', 'Nirvana Leather Black / Medium Dark Slate', 'Electric', 'Truck', 'Dual eMotors Extended-Range Battery (580 HP, 775 lb-ft)', 'Electronic Full-Time 4WD', '1FT6W1EV3TW198302', 'MSO / Clean Factory Title', 'Platinum SuperCrew', 'Brand new 2026 all-electric Ford F-150 Lightning Platinum. Equipped with Pro Power Onboard 9.6kW generator, Ford BlueCruise hands-free highway driving, Mega Power Frunk, and Max Trailer Tow Package.', ARRAY['Ford BlueCruise Hands-Free Driving', 'Pro Power Onboard 9.6kW Generator', 'Mega Power Front Trunk (400L)', 'B&O Unleashed 18-Speaker Audio', 'Twin-Panel Panoramic Moonroof', '15.5-Inch Portrait Touchscreen']::TEXT[], ARRAY['https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1575089976121-8ed7b2a54265?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, FALSE, -13
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-lexus-lc500-2026', '2026-lexus-lc-500-convertible', '2026 Lexus LC 500 Convertible Bespoke', 'Brand New', 'Lexus', 'LC 500', 2026, 107300, NULL, 11000, '11 miles', '10-Speed Direct-Shift Automatic', 'Structural Blue Metallic', 'Toasted Caramel Semi-Aniline Leather', 'Gasoline', 'Convertible', '5.0L Naturally Aspirated V8 (471 HP)', 'Rear-Wheel Drive (RWD) with Torsen LSD', 'JTHHW5BY8TA009182', 'MSO / Brand New', 'Bespoke Build Edition', 'Masterpiece of luxury grand touring. Brand new 2026 Lexus LC 500 Convertible with 4-layer power soft-top, neck heaters, 915-watt Mark Levinson Reference audio, dynamic active sport exhaust, and forged 21-inch alloy wheels.', ARRAY['Mark Levinson 13-Speaker 915W Audio', '4-Layer Noise-Insulating Soft Top', 'Neck Heaters & Climate Concierge', 'Torsen Limited-Slip Rear Differential', 'Triple-Beam LED Headlamps', 'Head-Up Display']::TEXT[], ARRAY['https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80']::TEXT[], FALSE, FALSE, TRUE, -12
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bn-hyundai-ioniq5n-2026', '2026-hyundai-ioniq-5-n', '2026 Hyundai Ioniq 5 N Track Edition', 'Brand New', 'Hyundai', 'Ioniq 5 N', 2026, 66100, 64500, 6500, '9 miles', 'N e-Shift Simulated 8-Speed DCT', 'Performance Blue Matte', 'N Black Alcantara with Performance Blue Accents', 'Electric', 'SUV', 'Dual High-Output Electric Motors (641 HP in N Grin Boost)', 'All-Wheel Drive (N Torque Distribution)', 'KM8KRDA49TU291048', 'MSO / Clean Factory Title', 'Track Ready Performance', 'The award-winning high performance electric crossover. Brand new 2026 Ioniq 5 N with N e-Shift paddle shifters that replicate dual-clutch transmission shifts and rev pops, N Drift Optimizer, and 84 kWh battery.', ARRAY['N Grin Boost (641 Horsepower)', 'N e-Shift Paddle Controlled Gear Shifts', 'N Active Sound+ Engine Simulator', 'N Drift Optimizer & Launch Control', 'Track-Tuned Electronically Controlled Suspension', '21" Forged Aluminum Wheels']::TEXT[], ARRAY['https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80']::TEXT[], TRUE, FALSE, TRUE, -11
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '00deb0f0-0d06-4227-bd28-047a6b45c9e7', '1979-mazda-titan-widelow', '1979 Mazda Titan WideLow', 'Bank Seized / Repo', 'Mazda', 'Mazda Titan WideLow', 1979, 2000, NULL, 200, '17800 miles', 'Manual', 'Blue', 'Brown', 'Diesel', 'Truck', '2.5L Diesel I4', 'Rear-wheel drive', 'EXR15-47565', 'Clean Title', 'Executive / Premium Trim', '
+No Reserve JDM Heavy-Duty Dually Truck, Diesel Power, 4-Speed Manual, U.S. Title
+Price: $2000
+Down payment: $200
+Model: Titan
+Mileage
+17,800 Miles Shown (5-digit odo)
+VIN
+EXR15-47565
+Engine: 2.5L Diesel I4
+Drivetrain: Rear-wheel drive
+Transmission: Manual (4-Speed)
+Body Style: Truck
+Exterior Color: Blue
+Interior Color: Brown
+Title Status: Clean ', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-0-1787875597478.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-1-1787875597479.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-2-1787875597480.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-3-1787875597481.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-4-1787875597482.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-5-1787875597483.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-6-1787875597484.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-7-1787875597485.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-8-1787875597486.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-9-1787875597487.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-10-1787875597488.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-11-1787875597491.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-12-1787875597491.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/00deb0f0-0d06-4227-bd28-047a6b45c9e7/1979-mazda-titan-widelow-13-1787875597492.jpeg']::TEXT[], TRUE, FALSE, TRUE, 0
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'abbffa37-755f-4ab1-9961-53c98e9a6617', '2016-bmw-m5-competition-package', '2016 BMW M5 Competition Package', 'Bank Seized / Repo', 'BMW', 'BMW M5 Competition Package', 2016, 9500, NULL, 950, '65300 miles', 'Automatic', 'Monte Carlo BlueMetallic', 'Silverstone', 'Gasoline', 'Sedan', '4.4L Turbocharged V8', 'Rear-wheel drive', 'WBSFV9C50GG343411', 'Clean Title', 'Executive / Premium Trim', '
+575-hp Twin-Turbo V8, Monte Carlo Blue, Executive Package
+Model: F10 M5
+Mileage: 65,300
+VIN
+WBSFV9C50GG343411
+Engine
+4.4L Turbocharged V8
+Drivetrain: Rear-wheel drive
+Transmission: Automatic (7-Speed)
+Body Style: Sedan
+Exterior Color: Monte Carlo BlueMetallic
+Interior Color: Silverstone
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-0-1787875693716.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-1-1787875693718.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-2-1787875693720.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-3-1787875693722.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-4-1787875693723.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-5-1787875693725.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-6-1787875693727.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-7-1787875693729.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-8-1787875693730.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-9-1787875693732.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-10-1787875693734.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-11-1787875693737.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-12-1787875693739.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/abbffa37-755f-4ab1-9961-53c98e9a6617/2016-bmw-m5-competition-package-13-1787875693741.jpeg']::TEXT[], TRUE, FALSE, TRUE, 1
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '7cf1bd49-9212-4640-abdc-5048abc7d140', '2012-hyundai-equus-signature', '2012 Hyundai Equus Signature', 'Bank Seized / Repo', 'Hyundai', 'Hyundai Equus Signature', 2012, 5000, NULL, 500, '70000 miles', 'Automatic', 'Granite Gray Metallic', 'Jet Black', 'Gasoline', 'Sedan', '5.0L V8', 'Rear-wheel drive', 'KMHGH4JHXCU046625', 'Clean Title', 'Executive / Premium Trim', '70k Miles, 429-hp V8, Highly Equipped Flagship Hyundai Luxury Sedan
+Model: Equus
+Mileage: 70,000 Miles Shown
+VIN
+KMHGH4JHXCU046625
+Engine: 5.0L V8
+Drivetrain: Rear-wheel drive
+Transmission: Automatic (8-Speed)
+Body Style: Sedan
+Exterior Color: Granite Gray Metallic
+Interior Color: Jet Black
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-0-1787876049175.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-1-1787876049176.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-2-1787876049176.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-3-1787876049176.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-4-1787876049177.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-5-1787876049177.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-6-1787876049178.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-7-1787876049178.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-8-1787876049179.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-9-1787876049179.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-10-1787876049180.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-11-1787876049181.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-12-1787876049181.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-13-1787876049182.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-14-1787876049182.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7cf1bd49-9212-4640-abdc-5048abc7d140/2012-hyundai-equus-signature-15-1787876049183.jpeg']::TEXT[], TRUE, FALSE, TRUE, 2
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'bf60dc6a-6d54-4665-9125-79a1fc32842d', '2015-jaguar-f-type-s-convertible', '2015 Jaguar F-Type S Convertible', 'Bank Seized / Repo', 'Jaguar', 'Jaguar F-Type S Convertible', 2015, 15000, NULL, 1500, '63,400miles', 'Automatic', 'Stratus Gray Metallic', 'Jet/Brogue', 'Gasoline', 'Convertible', '5.0L Supercharged V8', 'Rear-wheel drive', 'SAJWA6GL1FMK20051', 'Clean Title', 'Executive / Premium Trim', '495-hp Supercharged V8, Performance Package, Mostly Warm Climate-Owned
+Model: F-Type
+Mileage: 63,400
+VIN
+SAJWA6GL1FMK20051
+Engine
+5.0L Supercharged V8
+Drivetrain: Rear-wheel drive
+Transmission: Automatic (8-Speed)
+Body Style: Convertible
+Exterior Color: Stratus Gray Metallic
+Interior Color: Jet/Brogue
+Title Status:Clean ', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-0-1787875573555.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-1-1787875573559.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-2-1787875573561.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-3-1787875573563.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-4-1787875573564.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-5-1787875573566.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-6-1787875573568.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-7-1787875573569.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-8-1787875573571.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-9-1787875573574.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-10-1787875573576.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-11-1787875573579.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-12-1787875573582.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-13-1787875573584.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-14-1787875573586.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-15-1787875573588.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/bf60dc6a-6d54-4665-9125-79a1fc32842d/2015-jaguar-f-type-s-convertible-16-1787875573590.jpeg']::TEXT[], TRUE, FALSE, TRUE, 3
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '127b9bbf-0068-41bc-95ad-d7490d773d4b', '2017-honda-civic-si-sedan', '2017 Honda Civic Si Sedan', 'Bank Seized / Repo', 'Honda', 'Honda Civic Si Sedan', 2017, 16000, NULL, 1600, '29000 miles', 'Manual', 'Rallye Red', 'Black', 'Gasoline', 'Sedan', '1.5L Turbocharged I4', 'Front-wheel drive', '2HGFC1E58HH706881', 'Clean Title', 'Executive / Premium Trim', '29k Miles, 1 Owner, 6-Speed Manual, Mostly Unmodified
+Model: Civic
+Mileage: 29,200
+VIN
+2HGFC1E58HH706881
+Engine: 1.5L Turbocharged I4
+Drivetrain: Front-wheel drive
+Transmission: Manual (6-Speed)
+Body Style: Sedan
+Exterior Color: Rallye Red
+Interior Color: Black
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-0-1787875666550.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-1-1787875666552.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-2-1787875666556.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-3-1787875666557.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-4-1787875666558.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-5-1787875666559.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-6-1787875666560.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-7-1787875666561.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-8-1787875666562.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-9-1787875666563.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-10-1787875666564.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-11-1787875666565.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-12-1787875666566.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-13-1787875666567.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-14-1787875666567.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-15-1787875666569.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/127b9bbf-0068-41bc-95ad-d7490d773d4b/2017-honda-civic-si-sedan-16-1787875666570.jpeg']::TEXT[], TRUE, FALSE, TRUE, 4
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '0deb37db-50f2-46c8-9d8c-b1af9d080f85', '2020-chevrolet-camaro-lt-coupe', '2020 Chevrolet Camaro LT Coupe', 'Bank Seized / Repo', 'Chevrolet', 'Chevrolet Camaro LT Coupe', 2020, 17000, NULL, 1700, '8400 miles', 'Automatic', 'Rally Green Metallic', 'Jet Black', 'Gasoline', 'Coupe', '3.6L V6', 'Rear-wheel drive', '1G1FB1RS7L0106473', 'Clean Title', 'Executive / Premium Trim', '8k Miles, Rally Green Metallic, RS Package, Unmodified
+Model: Camaro
+Mileage: 8,400
+VIN
+1G1FB1RS7L0106473
+Engine: 3.6L V6
+Drivetrain: Rear-wheel drive
+Transmission: Automatic (10-Speed)
+Body Style: Coupe
+Exterior Color: Rally Green Metallic
+Interior Color: Jet Black
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-0-1787876022819.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-1-1787876022820.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-2-1787876022822.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-3-1787876022824.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-4-1787876022825.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-5-1787876022827.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-6-1787876022828.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-7-1787876022830.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-8-1787876022831.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-9-1787876022832.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-10-1787876022833.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-11-1787876022835.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-12-1787876022836.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-13-1787876022837.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-14-1787876022838.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-15-1787876022839.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-16-1787876022840.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/0deb37db-50f2-46c8-9d8c-b1af9d080f85/2020-chevrolet-camaro-lt-coupe-17-1787876022841.jpeg']::TEXT[], TRUE, FALSE, TRUE, 5
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'd6c4784c-6a81-44e9-920e-80246c31d233', '2024-ford-f-150-raptor-r', '2024 Ford F-150 Raptor R', 'Bank Seized / Repo', 'Ford', 'Ford F-150 Raptor R', 2024, 95000, NULL, 9500, '90 miles', 'Automatic', 'Agate Black Metallic', 'Black', 'Gasoline', 'Truck', '5.2L Supercharged V8', '4WD/AWD', '1FTFW1RJ3RFA86232', 'Clean Title', 'Executive / Premium Trim', '~90 Miles, 720-hp Supercharged V8, 4WD, Unmodified
+Model: F-150 Raptor
+Mileage: 90
+VIN
+1FTFW1RJ3RFA86232
+Engine
+5.2L Supercharged V8
+Drivetrain: 4WD/AWD
+Transmission: Automatic (10-Speed)
+Body Style: Truck
+Exterior Color: Agate Black Metallic
+Interior Color: Black
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-0-1787875618761.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-1-1787875618763.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-2-1787875618765.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-3-1787875618767.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-4-1787875618769.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-5-1787875618772.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-6-1787875618774.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-7-1787875618777.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-8-1787875618779.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-9-1787875618783.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-10-1787875618784.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-11-1787875618786.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-12-1787875618788.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d6c4784c-6a81-44e9-920e-80246c31d233/2024-ford-f-150-raptor-r-13-1787875618791.jpeg']::TEXT[], TRUE, FALSE, TRUE, 6
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'dafb13ff-b813-4675-88db-15b87d7721e9', '2015-bmw-x5-xdrive35d', '2015 BMW X5 xDrive35d', 'Bank Seized / Repo', 'BMW', 'BMW X5 xDrive35d', 2015, 13000, NULL, 1300, '103,000 miles', 'Automatic', 'Black Sapphire Metallic', 'Black', 'Diesel', 'SUV/ Crossover', '3.0L Turbodiesel I6', '4WD/AWD', '5UXKS4C56F0N05906', 'Clean Title', 'Executive / Premium Trim', 'Turbodiesel 6-Cylinder, AWD, M Sport Package, Mostly Unmodified
+Model: X5
+Mileage: 103,600
+VIN
+5UXKS4C56F0N05906
+Engine
+3.0L Turbodiesel I6
+Drivetrain: 4WD/AWD
+Transmission: Automatic (8-Speed)
+Body Style: SUV/Crossover
+Exterior Color: Black Sapphire Metallic
+Interior Color: Black
+Title Status:Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-0-1787876002831.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-1-1787876002834.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-2-1787876002836.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-3-1787876002838.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-4-1787876002839.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-5-1787876002841.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-6-1787876002843.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-7-1787876002846.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-8-1787876002849.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-9-1787876002851.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-10-1787876002852.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-11-1787876002854.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-12-1787876002856.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-13-1787876002857.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-14-1787876002858.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-15-1787876002860.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-16-1787876002862.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dafb13ff-b813-4675-88db-15b87d7721e9/2015-bmw-x5-xdrive35d-17-1787876002864.jpeg']::TEXT[], TRUE, FALSE, TRUE, 7
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '65900de5-1e3e-435e-8079-b4a6e1bbf68e', 'aventador2018lamborghini2018', 'Aventador2018Lamborghini2018', 'Bank Seized / Repo', 'Unknown', 'Aventador2018Lamborghini2018', 2024, 30000, NULL, 3000, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'Coupe', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX12', 'Clean Title', 'Executive / Premium Trim', '* Mileage: 1,404 miles
+* Transmission: Automatic
+* Exterior Color: Purple
+* Interior Color: Black
+* Fuel Type: Gasoline
+* Seats: 2
+* Trim: S Coupe 2D
+* Title: Clean title
+* Condition: No significant damage or issues #Lamborghini2018 #Aventador2018 #Lambo2018 #LuxuryCars #SupercarLife', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_8ac63100-f057-4bdd-81f0-44a4c7947bde_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_e81f80c0-f8c3-46df-8721-5a9a690b1840_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_6c6a7003-7647-4ffa-92d8-cfafad39c46f_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_a0e01ce0-f9ba-40a4-9f88-68b38d7ce90d_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_b9796660-0acd-49b9-be84-412d18c8fc19_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_73216080-5bd0-4310-a4f5-eb994e8bf880_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_99a3d99e-783a-49b7-ae87-8d15e625c6c1_.jpg']::TEXT[], TRUE, FALSE, FALSE, 8
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '266d41fb-83f0-4114-a68d-850810747b9c', 'maseratifansgrecale2023', 'MaseratiFansGrecale2023', 'Bank Seized / Repo', 'Unknown', 'MaseratiFansGrecale2023', 2024, 8000, NULL, 800, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'SUV', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX13', 'Clean Title', 'Executive / Premium Trim', '* Mileage: 35,600 kilometers
+* Transmission: Automatic
+* Exterior Color: Blue
+* Interior Color: Black
+* Fuel Type: Gasoline
+* Ownership: 1 owner #LuxuryCars2023 #SUV2023 #MaseratiFans #Grecale2023 #FutureCars', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_b30dccb4-1d89-407c-ae6b-486cc2845753_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_da3d5a9c-92bd-47d6-8e61-1e4db8d374ec_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_7d0f453d-64d1-42d0-bc58-4f9a9f6f2194_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_6f8d7b1d-da3e-4730-a5a7-81bdbde564da_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_ef472bdc-d1d8-4152-a604-2f05f0a1ec94_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_883fcf28-8c8f-4415-95ce-ae7b4d042d83_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_6df7aaae-c283-4a23-9e1a-6f3e61d41d6b_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_af818016-2088-4cd4-85d9-815531eb861e_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_6781d490-f650-40aa-b47e-def9f0f44fa0_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_f4148a01-4478-4948-8bbf-64ed53f0d8b2_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_5a1fd94a-40c7-4c28-816c-3711c37a105c_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_c754283d-5e8c-47c4-b7ca-da7a8c799200_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_bacf66f0-48c4-4a04-b6be-26316474387a_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_ae2695ad-c91a-445d-a7fe-f5b0c0ceb6d2_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_88d99f54-a731-4b5f-9a67-794b47445ba0_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_8824fd1f-b238-4e3b-ae7d-6cc2d9c004ae_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_fdf5ff71-6a7f-4ae3-9a35-3dd0f1e211dc_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_4dfa1e83-df94-4e58-a71b-27c0efe833ce_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_d66de5c1-d2bc-45b6-ac17-5733d8633544_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_84f04c64-8d2a-446f-ab08-72efc1c14b5b_.jpg']::TEXT[], TRUE, FALSE, FALSE, 9
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'e950bcd9-586b-402f-9e98-f4f1dccaf7e1', 'mercedesbenzlifestyleg-63-amg-4matic-sport-utility-4d', 'MercedesBenzLifestyleG 63 AMG 4MATIC Sport Utility 4D', 'Bank Seized / Repo', 'Unknown', 'MercedesBenzLifestyleG 63 AMG 4MATIC Sport Utility 4D', 2024, 12000, NULL, 1200, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'SUV', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX14', 'Clean Title', 'Executive / Premium Trim', '* Mileage: 65,000 miles
+* Transmission: Automatic
+* Exterior Color: Red
+* Interior Color: Black
+* Fuel Type: Gasoline
+* Trim: G 63 AMG 4MATIC Sport Utility 4D #LuxurySUV2020 #GClassGoals #2020CarEnvy #MercedesBenzLifestyle #GClassUpgrade', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_157fcacb-5984-43b2-af9b-4f8a6a53ee3f_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_83841966-768d-4b91-bc6a-5a7964dcb2b6_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_2093cded-747b-4f45-a1e0-4c9eff82d3e7_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_db92d792-4f3f-46fa-ba2e-9e69c19fd791_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_5d6f2199-c3fb-4cd6-8e0b-4da2f84fb73d_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_52af1186-9aa6-42c2-ab97-1f027cea371d_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_df9d91b4-8f3d-48de-9725-e1e5bd37b46f_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_76ad6af6-68c6-4072-a769-352c3d7aad34_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_d62429e4-e91d-40ce-84f0-b52ea2f3ee5b_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_438671fe-66fa-4330-b52c-79f3bf49d75a_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_03f0e846-528e-418f-ae06-eda4daadee8c_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_4e3f4ea1-6bb9-465a-b0d2-5dfb564bddef_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_f7db0bcc-a6f4-4ff4-87f2-c7c74ab2f1c1_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_fbfa9335-54ee-44d8-8a50-3711514093b2_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_b45f9d9b-4c28-4962-a217-5bc81f4cb41f_.jpg']::TEXT[], TRUE, FALSE, FALSE, 10
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'fdf6619e-11fc-4073-9532-016adbe59e45', 'mercedesbenz2015s-550-4matic-sedan-4d', 'MercedesBenz2015S 550 4MATIC Sedan 4D', 'Bank Seized / Repo', 'Unknown', 'MercedesBenz2015S 550 4MATIC Sedan 4D', 2024, 3700, NULL, 370, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'Sedan', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX15', 'Clean Title', 'Executive / Premium Trim', '* Mileage: 78,000 miles
+* Transmission: Automatic
+* Exterior Color: Black
+* Interior Color: Black
+* Fuel Economy: 16 MPG city / 26 MPG highway / 19 MPG combined
+* Seats: 5
+* Trim: S 550 4MATIC Sedan 4D #MercedesBenz2015 #SClass2015 #LuxuryCar #MercedesLifestyle #SClassGoals', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_f59f29b4-f89b-4b17-bf41-a5e84210dcb6_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_da2124bc-83b7-4feb-ab1a-974cad73f8c0_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_87f1fc02-a795-424c-9d26-beb0ed26e760_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_dfecb3d9-9840-4c2d-a5cf-155ccec54103_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_d3b4d183-f9a0-4037-ab1a-3544eef83c58_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_47febb5f-a277-4771-bb90-546c2c0d4949_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_1084c605-5797-4b26-87c1-5db24fb58fb0_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_beae0146-b589-4782-b8db-ced8128374a3_.jpg']::TEXT[], TRUE, FALSE, FALSE, 11
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '4ecbcb50-a951-47dc-8c52-6d6187e5ebaa', '2024mercedesbenzglc', '2024MercedesBenzGLC', 'Bank Seized / Repo', 'Mercedes-Benz', 'MercedesBenzGLC', 2024, 8000, NULL, 800, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'SUV', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX16', 'Clean Title', 'Executive / Premium Trim', '* Mileage: 7,059 miles
+* Transmission: Automatic
+* Exterior Color: Red
+* Interior Color: Black
+* Fuel Type: Gasoline
+* Trim: 300 AMG Package #2024MercedesBenzGLC #LuxurySUV2024 #MercedesGLC2024 #NewGLCModel #2024CarGoals', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_4da0ee23-4699-4ea6-89fe-415b154a4503_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_87d8250a-1d95-4e53-b1b3-0290e80f4e4a_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_a18dc717-95d0-4c62-a54b-eefd5c79c9e5_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_96f7f422-90c3-4896-b2b9-261645fbf249_-1.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_d0d2fd51-6cba-4b16-a446-fde0276877ba_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_8186ce31-d1de-4762-b27c-77662f79fe79_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_ec47bc5a-a4bd-497b-be06-63ed16281911_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_5ea78b21-fcfd-4e1c-9c52-e0cf872b32b0_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_fe9ae610-759b-4ef2-9351-b4d617037559_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_ab31b23a-e3fd-442f-a0c5-0414b9d8d064_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_b509bd31-301b-483f-bf77-b0194867bc5c_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_9d6aa60f-aa95-42dc-b50a-22c11ac0ecdd_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_af062f1e-4b11-4346-95b3-33521845d265_.jpg']::TEXT[], TRUE, FALSE, FALSE, 12
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'a531ebfa-d45a-4765-b1d7-c83c3559d5c6', '2017dodge', '2017Dodge', 'Bank Seized / Repo', 'Dodge', 'Dodge', 2017, 12000, NULL, 1200, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'Sedan', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX17', 'Clean Title', 'Executive / Premium Trim', '* Mileage: 2,644 miles
+* Transmission: Automatic
+* Exterior Color: Blue
+* Interior Color: Black
+* Fuel Type: Gasoline
+* Trim: ACR Extreme
+* Title: Clean title
+* Condition: No significant damage or issues #DodgeViper #2017Dodge #ViperNation #FastCars #AmericanMuscle', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_15f5c370-a01a-4a75-b2b6-6a95de98aa1a_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_461bf4c0-0055-459f-b1e5-75c9f38ab833_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_be809afe-3b44-42d0-bea2-44338fc7ed70_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_6081c050-0bed-46b0-b99d-0e314d21897c_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_ddfa36c8-6390-41de-9d5d-fc2cf01ae678_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_432025a1-c666-4a11-aa87-22999bace34f_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_a49adba9-91b6-4404-a545-e6bcdc4fd2bf_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_3ed5673f-7fbe-4685-b350-12602dbfea64_.jpg']::TEXT[], TRUE, FALSE, FALSE, 13
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '1555a926-9020-4e70-8737-9f57bf15a261', '2025fordf150', '2025FordF150', 'Bank Seized / Repo', 'Ford', 'F150', 2025, 13000, NULL, 1300, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'Truck', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX18', 'Clean Title', 'Executive / Premium Trim', '* Mileage: 1,325 miles
+* Transmission: Automatic
+* Exterior Color: Black
+* Interior Color: Black
+* Fuel Type: Gasoline
+* Trim: Raptor R
+* Title: Clean title
+* Condition: No significant damage or issues #2025FordF150 #RaptorR #FordTrucks #TruckGoals #2025RaptorR', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_01bfb054-8298-4fee-a2d9-70b56b86bcde_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_994d88f4-0613-44d8-bcef-8009e2170a21_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_56c954e2-9cf0-496e-871d-542fa84a13cd_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_1b50f687-f74e-42e5-9501-974a06818d1c_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_e203e5ea-0acc-48a1-a0da-54b01db0c058_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_4c5a99e2-7a69-472b-9316-2182e76729e0_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_6c5a9e7d-b975-4470-a99f-da19f23d0dc9_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_9898812e-03d9-4523-9d06-731001b48df9_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_a3073804-20d8-4d38-baab-232328abc46a_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_47bfe6f1-6de1-4871-9a90-e57be49f45c4_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_941cdb91-1de0-43e5-ab04-5b6370ec3758_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_576a5e24-8d1a-4b8f-8799-7f34a6b70e01_.jpg']::TEXT[], TRUE, FALSE, FALSE, 14
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '4e9ebc92-5e79-481d-be44-a549bcdab6ab', '2020porscheporsche-taycan-turbo-s', '2020PorschePorsche Taycan Turbo S', 'Bank Seized / Repo', 'Porsche', 'Porsche Taycan Turbo S', 2020, 7000, NULL, 700, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Electric', 'Sedan', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX19', 'Clean Title', 'Executive / Premium Trim', '* Mileage: 46,254 miles
+* Transmission: Automatic
+* Exterior Color: White
+* Interior Color: Black
+* Fuel Type: Electric
+* Trim: Porsche Taycan Turbo S #2020Porsche #PorscheTaycan #LuxuryCars #ElectricVehicle #PorschePerformance', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_5ccad4a4-8add-464e-9764-7570577edb31_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_13d802b0-d076-479e-9eb0-d46999c6d930_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_344364d5-9d29-4871-be7a-bca67d39e80b_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_be87091d-1b3b-4487-a9b3-5e4c8e319004_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_953217ea-5069-4cda-9c4e-43299d77cc80_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_384cf989-d1e3-4ebb-b698-4479ae6c1a24_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_8967c499-2f04-40c5-adca-b9471f06974f_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_b53b37ac-1200-4e8c-a7ae-1403ee09f9b7_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_5a48563b-a960-4e18-8013-1d0f2eb54cf6_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_0b6a7c35-1692-45d3-b6a1-d8352835d2fd_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_006a7cde-e93a-41c1-96de-0ac91d46189a_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_24206899-2362-4344-a5d9-1c9bdec35dab_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_d04c0eab-517a-4ee5-a0c2-b9654f2790b8_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_1c640e65-4dc3-4953-ac97-9e9894d3630f_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_61a07faa-766f-4f05-b046-60c906365ea7_.jpg']::TEXT[], TRUE, FALSE, FALSE, 15
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'f211728a-2c01-42ea-ad4a-6be114e0921e', '2024-toyota-tundra-hybrid-trd-pro-clean-title-e2-9c-85', '2024 Toyota Tundra Hybrid TRD PRO Clean title ✅', 'Bank Seized / Repo', 'Toyota', 'Toyota Tundra Hybrid TRD PRO Clean title ✅', 2024, 8500, NULL, 850, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Hybrid', 'Sedan', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX1A', 'Clean Title', 'Executive / Premium Trim', '2024 Toyota Tundra Hybrid TRD PRO Clean title ✅ Super low miles: 16,230 Comes with the warranty Accessories: Running Boards Bed Liner Tonneau Cover Fully loaded TRD PRO trim: Dual Electric Seats/Heated and Ventilated Seats/Premium Sound System/Navigation/360 View Camera/Front and Back Up Camera/Blindspot Monitors/Digital Rear View Mirror/Power Sliding Window/Leather/Wireless Apple CarPlay and Android Auto etc.. We do shipping state to state 🚚 We do financing &#8211; ✅', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_8c2706e6-bc93-4391-9127-6179cc9e14f2_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_25764c87-9861-4881-b6f3-f23a97394c27_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_81314473-31c8-43a1-9f22-04d8b3594f33_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_e50d3520-a080-415c-baba-c954e158abef_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_27122cab-eb26-45ea-819d-8b065735d048_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_3dc505ca-1f50-44d0-ba88-eaaa988433f5_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_6cb6518e-1231-4b97-890f-f20295b49ab5_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_79d2e798-575a-4ec5-be67-3a8d5a79a4d9_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_4080d79f-e8ea-442e-9a03-0660cc9e6293_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_e84f6195-9304-4174-ad52-e0907e75509c_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_9f50645f-881a-4c56-88e1-37c4808efc35_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_0a1bb2e3-6ff7-410e-bf1f-e341a7554b54_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_516b9f3a-f129-4e25-87ba-c5619f968fad_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_8d391bb0-ac46-451a-888e-e849bc638934_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_79331a8e-5ca2-43f7-a8a8-0c38d193cb99_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_d9dee768-4897-4db0-a90a-89a3760a2420_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_6ed1a6b3-973d-40ca-af24-734b3e855cb9_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bankrepossessedcars0404_cb0cac5d-0776-4a30-aa3d-7763fa978ced_.jpg']::TEXT[], TRUE, FALSE, FALSE, 16
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'd40af085-fb8b-4cf9-abe8-8307704f1e4b', '2023-bmw-xm-sports-activity', '2023 BMW XM Sports Activity', 'Bank Seized / Repo', 'BMW', 'BMW XM Sports Activity', 2023, 13800, NULL, 1380, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'SUV', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX1B', 'Clean Title', 'Executive / Premium Trim', '2023 BMW XM Sports Activity Vehicle JUST $500A MONTH S ONLYY 8K MILES Carbon Black Metallic Exterior with Sakhir Orange/Black Leather Interior !! #bankseizedcarsforsale #BMWXM #LuxurySUV #automotiveinnovation #fyp', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_0e61d31f-9c8c-4ed6-858b-9b813d1b6b7d_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_c18ecca4-a057-41a0-8b4e-b8a57b639903_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_595cf7c1-1c74-4634-824d-c6504e07b25c_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_2d9789f3-4af1-402a-82e2-6d685015b734_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_c1462c04-e506-4434-949a-383f83c38f0e_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_faa41579-3b7a-48c0-9cc7-6b99e58540fb_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_b6c16232-15f2-4006-b3c3-f4d6a1c5757f_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_80e78508-41cc-485e-8be1-cba4907e609a_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_a29a21b9-f860-4864-9b28-6499e35a349d_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_471ad0a9-8ec5-4ff7-b66d-2030b511f93c_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_294a73d2-af7c-4aa6-88d0-3223f5e6ec4b_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_a641adbb-2d1b-44e6-9833-0841cb57bba7_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_1ddfe370-6457-454f-a4a1-7d72cd958361_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_17caaa46-043e-48bd-bd50-b4ce44b1c36e_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_ebaa988c-a90f-4d0b-b0fc-08fe361db3d8_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_723da6c2-bce6-44e4-a63e-6040c556cbd6_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_d1ea818b-a002-4481-8ef2-cacea00159ad_.jpg']::TEXT[], TRUE, FALSE, FALSE, 17
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'be76d88b-e8d0-4cdb-96ab-88114ed8eef6', '2017-ford-focus-st', '2017 Ford Focus ST', 'Bank Seized / Repo', 'Ford', 'Ford Focus ST', 2017, 1000, NULL, 100, '63300 miles', 'Automatic', 'Triple Yellow', 'Charcoal Black', 'Gasoline', 'Hatchback', '2.0L Turbocharged I4', 'Front-wheel drive', '1FADP3L99HL332124', 'Clean Title', 'Executive / Premium Trim', '
+6-Speed Manual, ST2 Package, Mostly Unmodified, Triple Yellow
+$10000
+Down: $1000
+Model: Focus
+Mileage: 63,300
+VIN
+1FADP3L99HL332124
+Engine
+2.0L Turbocharged I4
+Drivetrain: Front-wheel drive
+Transmission: Manual (6-Speed )
+Body Style: Hatchback
+Exterior Color: Triple Yellow
+Interior Color: Charcoal Black
+Title Status:Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-0-1787875641430.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-1-1787875641431.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-2-1787875641434.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-3-1787875641435.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-4-1787875641437.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-5-1787875641439.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-6-1787875641441.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-7-1787875641445.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-8-1787875641447.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-9-1787875641449.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-10-1787875641453.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-11-1787875641455.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-12-1787875641459.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-13-1787875641464.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-14-1787875641466.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/be76d88b-e8d0-4cdb-96ab-88114ed8eef6/2017-ford-focus-st-15-1787875641468.jpeg']::TEXT[], TRUE, FALSE, TRUE, 18
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '14709418-b1ab-46a0-ac95-4576ec4a694f', '2022-audi-rs7-solar-orange-black-maxton-design-body-kit-vossen-23-inch-hf7-wheels-hr-springs-xpel-window', '2022 Audi RS7 • Solar Orange •Black -Maxton Design Body Kit -Vossen 23 Inch HF7 Wheels -H&R Springs -Xpel Window', 'Bank Seized / Repo', 'Audi', 'RS7 Sportback', 2022, 13999, NULL, 1400, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'Sedan', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX1D', 'Clean Title', 'Executive / Premium Trim', '2022 Audi RS7 • Solar Orange •Black -Maxton Design Body Kit -Vossen 23 Inch HF7 Wheels -H&amp;R Springs -Xpel Window Tint 8K Miles, Clean Title Price: $14k • Financing Offered •Trade-Ins Accepted #bankseizedcarsforsale #AudiRS7 #LuxuryCars #performanceautomobile #fyp', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_1cc861b6-7460-4fb8-ae1c-1b4c2d283b42_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_7c8bb476-635a-4baa-9bc8-a22a4a527f29_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_beed97ae-91bb-4c06-a268-c840ae823037_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_a8b3b77f-fa66-4f3e-8545-07715215c994_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_b40a98b9-b2cc-4cf5-8dc1-96e0c2dd1e37_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_ae4aeffc-aef4-4779-bfaf-8f52bd0fe221_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_7627357b-3975-4806-9206-c9cfdd4ef5b1_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_3d52de78-7058-4179-bf88-4b1293045d69_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_7bbefbf9-e0c6-44ba-b29f-ad27141ac60e_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_12d29e2a-532a-4de0-b208-88d13e6bfee5_.jpg']::TEXT[], TRUE, FALSE, FALSE, 19
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '462ac3de-69d1-4241-9126-bd1aaa866bc5', 'bmw328i328i-xdrive-sedan-4d', 'BMW328i328i xDrive Sedan 4D', 'Bank Seized / Repo', 'Unknown', 'BMW328i328i xDrive Sedan 4D', 2024, 6500, NULL, 650, '15,000 miles', 'Automatic', 'Metallic Silver', 'Black Leather', 'Gasoline', 'Sedan', '3.0L Turbocharged Inline-6', 'Rear-Wheel Drive / AWD', '1HGCR2F8XXXXXXX1E', 'Clean Title', 'Executive / Premium Trim', 'Mileage Transmission Exterior color Interior color Safety rating Fuel type Fuel economy Seats Trim Clean title Driven 130,680 miles Automatic Blue Black 5/5 NHTSA safety rating Gasoline 22.0 MPG city • 34.0 MPG highway • 26.0 MPG combined 5 328i xDrive Sedan 4D This vehicle has no significant damage or problems. #bankseizedcarsforsale #BMW328i #LuxurySedan #carenthusiast #fyp', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_b6a198b1-0d4b-45d9-b959-c65fd1aa3124_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_a870381a-eee6-4811-958a-c4c7bdf8a673_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_fe8bdd4b-8723-48d2-9563-fdf47f12be55_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_ba4eaee3-e2b7-41d1-a500-afee802a1b8e_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_b6279150-7a92-4c55-9b98-a58a32e78020_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_c797d34b-39cb-43c9-9779-485ca51ac8ec_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_0269886a-8e6c-4a09-8652-2873f29e5839_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_c5e341cb-4a79-4db0-981b-e64346efc532_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_13ec638f-5e81-40ee-aeff-c7b8d55df3d8_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_5d5a3c90-d6c9-45a5-8567-d1169dde6ad2_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_bcf054d1-8a02-4866-b363-af5ef7d71f56_.jpg', 'https://bankseizedcars.online/wp-content/uploads/2026/08/AhaTok_bank.seized.cars_9d1bdf72-c529-4cf2-93ac-cc4bfba6d10c_.jpg']::TEXT[], TRUE, FALSE, FALSE, 20
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '3e8d767a-5c8e-4006-ac20-9acab7d12a08', '2008-ford-mustang-shelby-gt-convertible', '2008 Ford Mustang Shelby GT Convertible', 'Bank Seized / Repo', 'Ford', 'Ford Mustang Shelby GT Convertible', 2008, 7500, NULL, 750, '12300 miles', 'Manual', 'Vista Blue Clearcoat', 'Dark Charcoal', 'Gasoline', 'Convertible', '4.6L V8', 'Rear-wheel drive', '1ZVHT85H785138685', 'Clean Title', 'Executive / Premium Trim', '12k Miles, 5-Speed Manual, 4.6L V8 Power,
+Model: Mustang
+Mileage: 12,300
+VIN
+1ZVHT85H785138685
+Engine: 4.6L V8
+Drivetrain: Rear-wheel drive
+Transmission: Manual (5-Speed)
+Body Style: Convertible
+Exterior Color: Vista Blue Clearcoat
+Interior Color: Dark Charcoal
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-0-1787875984629.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-1-1787875984630.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-2-1787875984631.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-3-1787875984632.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-4-1787875984633.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-5-1787875984633.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-6-1787875984634.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-7-1787875984635.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-8-1787875984636.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-9-1787875984637.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-10-1787875984638.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-11-1787875984639.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-12-1787875984640.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-13-1787875984641.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-14-1787875984642.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/3e8d767a-5c8e-4006-ac20-9acab7d12a08/2008-ford-mustang-shelby-gt-convertible-15-1787875984643.jpeg']::TEXT[], TRUE, FALSE, TRUE, 21
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '7a18a196-b798-4fd9-bc4e-f1d817fa2e35', '2013-toyota-tacoma-trd-sport-double-cab-4x4', '2013 Toyota Tacoma TRD Sport Double Cab 4x4', 'Bank Seized / Repo', 'Toyota', 'Toyota Tacoma TRD Sport Double Cab 4x4', 2013, 6000, NULL, 600, '220100 miles', 'Automatic', 'Super White', 'Graphite', 'Gasoline', 'Truck', '4.0L V6', '4WD/AWD', '3TMMU4FN5DM060097', 'Clean Title', 'Executive / Premium Trim', '1 Owner, V6 Power, 4WD, Mostly Unmodified
+Model:Tacoma
+Mileage:220,100
+VIN
+3TMMU4FN5DM060097
+Engine:4.0L V6
+Drivetrain:4WD/AWD
+Transmission:Automatic (5-Speed)
+Body Style:Truck
+Exterior Color:Super White
+Interior Color:Graphite
+Title Status:Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-0-1787875966114.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-1-1787875966115.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-2-1787875966116.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-3-1787875966117.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-4-1787875966117.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-5-1787875966118.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-6-1787875966119.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-7-1787875966121.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-8-1787875966121.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-9-1787875966122.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-10-1787875966123.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-11-1787875966124.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/7a18a196-b798-4fd9-bc4e-f1d817fa2e35/2013-toyota-tacoma-trd-sport-double-cab-4x4-12-1787875966125.jpeg']::TEXT[], TRUE, FALSE, TRUE, 22
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'd1c52096-4461-4a51-b654-a7ef3abdc0a8', '2017-jaguar-f-type-r-coupe', '2017 Jaguar F-Type R Coupe', 'Bank Seized / Repo', 'Jaguar', '2017 Jaguar F-Type R Coupe', 2027, 13000, NULL, 1300, '69100 miles', 'Automatic', 'Corris Grey', 'Jet', 'Gasoline', 'Coupe', '5.0L Supercharged V8', '4WD/AWD', 'SAJWJ6DL4HMK35876', 'Clean Title', 'Executive / Premium Trim', '550-hp Supercharged V8, AWD, Warm Climate-Owned, Unmodified
+Model: F-Type
+Mileage: 69,100
+VIN
+SAJWJ6DL4HMK35876
+Engine
+5.0L Supercharged V8
+Drivetrain:4WD/AWD
+Transmission:Automatic (8-Speed)
+Body Style:Coupe
+Exterior Color:Corris Grey
+Interior Color:Jet
+Title Status:Clean
+The car is in good condition, drives excellently and we do in-house financing with no credit checks. ', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-0-1787875942504.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-1-1787875942505.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-2-1787875942506.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-3-1787875942506.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-4-1787875942507.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-5-1787875942507.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-6-1787875942508.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-7-1787875942509.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-8-1787875942509.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-9-1787875942510.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-10-1787875942511.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-11-1787875942512.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-12-1787875942513.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d1c52096-4461-4a51-b654-a7ef3abdc0a8/2017-jaguar-f-type-r-coupe-13-1787875942514.jpeg']::TEXT[], TRUE, FALSE, TRUE, 23
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'dbe77bfb-5e10-4c42-8cca-9808522086c7', '2007-jeep-grand-cherokee-srt8', '2007 Jeep Grand Cherokee SRT8', 'Bank Seized / Repo', 'Jeep', 'Jeep Grand Cherokee SRT8', 2007, 4000, NULL, 400, '91100 miles', 'Automatic', 'Black', 'Medium slate gray', 'Gasoline', 'SUV/Crossover', '6.1L V8', '4WD/AWD', '1J8HR78367C631563', 'Clean Title', 'Executive / Premium Trim', '6.1-Liter Hemi V8 Power, AWD, Mostly Unmodified
+Model: Grand Cherokee
+Savmƙþ
+Mileage: 91,100
+VIN
+1J8HR78367C631563
+Engine: 6.1L V8
+Drivetrain: 4WD/AWD
+Transmission: Automatic (5-Speed)
+Body Style: SUV/Crossover
+Exterior Color: Black
+Interior Color: Medium Slate Gray
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-0-1787875906089.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-1-1787875906090.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-2-1787875906091.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-3-1787875906092.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-4-1787875906093.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-5-1787875906094.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-6-1787875906095.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-7-1787875906097.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-8-1787875906098.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-9-1787875906098.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-10-1787875906099.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-11-1787875906100.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-12-1787875906101.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/dbe77bfb-5e10-4c42-8cca-9808522086c7/2007-jeep-grand-cherokee-srt8-13-1787875906102.jpeg']::TEXT[], TRUE, FALSE, TRUE, 24
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  'd700fb99-90b3-436a-b51c-1acb81eb06d3', '1995-lexus-sc-300-1jz-gte-swap', '1995 Lexus SC 300 1JZ-GTE Swap', 'Bank Seized / Repo', 'Lexus', 'Lexus SC 300 1JZ-GTE Swap', 1995, 3500, NULL, 350, '150100', 'Manual', 'Renaissance Red', 'Brown/Black', 'Gasoline', 'Coupe', '2.5L Turbocharged I6', 'Rear-wheel drive', 'JT8JZ31C9S0025078', 'Clean Title', 'Executive / Premium Trim', '5-Speed Manual and 1JZ-GTE Swaps, Precision PT6766 Turbo, Mostly Southern-Owned
+Model: SC
+Mileage: 140,100 Miles
+VIN
+JT8JZ31C9S0025078
+Engine
+2.5L Turbocharged I6
+Drivetrain: Rear-wheel drive
+Transmission: Manual (5-Speed)
+Body Style: Coupe
+Exterior Color:  Renaissance Red
+Interior Color: Brown/Black
+Title Status:Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-0-1787875866307.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-1-1787875866309.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-2-1787875866311.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-3-1787875866313.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-4-1787875866315.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-5-1787875866316.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-6-1787875866317.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-7-1787875866319.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-8-1787875866321.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-9-1787875866322.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-10-1787875866324.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-11-1787875866325.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/d700fb99-90b3-436a-b51c-1acb81eb06d3/1995-lexus-sc-300-1jz-gte-swap-12-1787875866328.jpeg']::TEXT[], TRUE, FALSE, TRUE, 25
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '539b8d32-ecae-4d06-a0a7-464c90070cc4', '2016-dodge-challenger-r-t', '2016 Dodge Challenger R/T', 'Bank Seized / Repo', 'Dodge', 'Dodge Challenger R/T', 2016, 10000, NULL, 1000, '44,000 miles', 'Manual', 'Granite Crystal Metallic', 'Black', 'Gasoline', 'Coupe', '5.7L Supercharged V8', 'Rear-wheel drive', '2C3CDZBT4GH102313', 'Clean Title', 'Executive / Premium Trim', 'ProCharger Supercharger Kit, 6-Speed Manual, 44k Miles, Track Modifications
+Model: Challenger
+Mileage: 44,200
+VIN
+2C3CDZBT4GH102313
+Engine
+5.7L Supercharged V8
+Drivetrain: Rear-wheel drive
+Transmission: Manual (6-Speed)
+Body Style: Coupe
+Exterior Color: Granite Crystal Metallic
+Interior Color: Black
+Title Status: Clean ', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-0-1787875833774.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-1-1787875833776.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-2-1787875833777.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-3-1787875833779.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-4-1787875833780.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-5-1787875833783.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-6-1787875833785.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-7-1787875833787.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-8-1787875833789.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-9-1787875833790.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-10-1787875833795.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-11-1787875833797.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/539b8d32-ecae-4d06-a0a7-464c90070cc4/2016-dodge-challenger-r-t-12-1787875833798.jpeg']::TEXT[], TRUE, FALSE, TRUE, 26
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '51b992e4-79fa-4406-bbbc-e7f1fc49281c', '2016-audi-a7-tdi-premium-plus', '2016 Audi A7 TDI Premium Plus', 'Bank Seized / Repo', 'Audi', 'Audi A7 TDI Premium Plus', 2016, 8500, NULL, 850, '80900 miles', 'Automatic', 'Tornado Gray Metallic', 'Black', 'Diesel', 'Sedan', '3.0L Turbodiesel V6', '4WD/AWD', 'WAUWMAFC9GN013541', 'Clean Title', 'Executive / Premium Trim', '
+Final Model Year, Turbodiesel V6, Unmodified, Mostly California-Owned
+Model: A7
+Mileage: 80,900
+VIN
+WAUWMAFC9GN013541
+Engine
+3.0L Turbodiesel V6
+Drivetrain: 4WD/AWD
+Transmission: Automatic (8-Speed)
+Body Style: Sedan
+Exterior Color: Tornado Gray Metallic
+Interior Color:Black
+Title Status:Clean ', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-0-1787875797204.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-1-1787875797205.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-2-1787875797207.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-3-1787875797208.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-4-1787875797210.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-5-1787875797212.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-6-1787875797214.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-7-1787875797216.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-8-1787875797217.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-9-1787875797220.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-10-1787875797222.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-11-1787875797224.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-12-1787875797226.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-13-1787875797227.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/51b992e4-79fa-4406-bbbc-e7f1fc49281c/2016-audi-a7-tdi-premium-plus-14-1787875797230.jpeg']::TEXT[], TRUE, FALSE, TRUE, 27
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '029439f8-3a4b-45c5-a59d-bc6389e2ce16', '2017-infiniti-q60-3-0t-premium-awd-coupe', '2017 Infiniti Q60 3.0T Premium AWD Coupe', 'Bank Seized / Repo', 'Infiniti', 'Infiniti Q60 3.0T Premium AWD Coupe', 2017, 8000, NULL, 800, '86800 miles', 'Automatic', 'White Pearl Tricoat', 'Black', 'Gasoline', 'Coupe', '3.0L Turbocharged V6', '4WD/AWD', 'JN1EV7EL3HM554661', 'Clean Title', 'Executive / Premium Trim', '
+300-hp Twin-Turbo V6, Premium Plus Package, White Pearl
+Make: Infiniti
+Model: Q60
+Mileage: 86,800
+VIN
+JN1EV7EL3HM554661
+Engine: 3.0L Turbocharged V6
+Drivetrain: 4WD/AWD
+Transmission: Automatic (7-Speed)
+Body Style: Coupe
+Exterior Color: White Pearl Tricoat
+Interior Color: Black
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-0-1787875770520.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-1-1787875770522.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-2-1787875770523.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-3-1787875770525.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-4-1787875770528.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-5-1787875770530.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-6-1787875770534.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-7-1787875770535.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-8-1787875770538.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-9-1787875770540.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-10-1787875770544.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-11-1787875770547.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-12-1787875770549.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-13-1787875770551.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-14-1787875770552.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/029439f8-3a4b-45c5-a59d-bc6389e2ce16/2017-infiniti-q60-3-0t-premium-awd-coupe-15-1787875770558.jpeg']::TEXT[], TRUE, FALSE, TRUE, 28
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '9155095c-f94c-493b-9952-d896b78101e5', '2019-honda-civic-si-sedan', '2019 Honda Civic Si Sedan', 'Bank Seized / Repo', 'Honda', 'Honda Civic Si Sedan', 2019, 8000, NULL, 800, '56300 miles', 'Manual', 'Modern Steel Metallic', 'Black', 'Gasoline', 'Sedan', '1.5L Turbocharged I4', 'Front-wheel drive', '2HGFC1E50KH701827', 'Clean Title', 'Executive / Premium Trim', '6-Speed Manual
+Model: Civic
+Mileage: 56,300
+VIN
+2HGFC1E50KH701827
+Engine
+1.5L Turbocharged I4
+Drivetrain: Front-wheel drive
+Transmission: Manual (6-Speed)
+Body Style: Sedan
+Exterior Color: Modern Steel Metallic
+Interior Color: Black
+Title Status: Clean', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-0-1787875743480.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-1-1787875743482.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-2-1787875743484.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-3-1787875743485.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-4-1787875743488.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-5-1787875743490.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-6-1787875743494.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-7-1787875743497.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-8-1787875743500.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-9-1787875743502.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-10-1787875743505.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-11-1787875743508.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-12-1787875743510.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/9155095c-f94c-493b-9952-d896b78101e5/2019-honda-civic-si-sedan-13-1787875743513.jpeg']::TEXT[], TRUE, FALSE, TRUE, 29
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+INSERT INTO public.vehicles (id, slug, name, condition, make, model, year, price, sale_price, down_payment, mileage, transmission, exterior_color, interior_color, fuel_type, body_type, engine, drivetrain, vin, title_status, trim, description, features, images, is_hot_deal, is_sold, is_featured, sort_order) VALUES (
+  '96d5abb4-60c1-4a0f-94dd-582effd40ab6', '2009-dodge-challenger-srt8', '2009 Dodge Challenger SRT8', 'Bank Seized / Repo', 'Dodge', 'Dodge Challenger SRT8', 2009, 5500, NULL, 550, '49,000 miles', 'Manual', 'Brilliant Black', 'Crystal:Pearl Coat', 'Gasoline', 'Coupe', '6.1L V8', 'Rear-wheel drive', '2B3LJ74W39H624757', 'Clean Title', 'Executive / Premium Trim', '49k Miles, 6-Speed Manual, 6.1L HEMI V8, Performance Modifications
+Model: Challenger
+Mileage: 49,100
+VIN
+2B3LJ74W39H624757
+Engine: 6.1L V8
+Drivetrain: Rear-wheel drive
+Transmission: Manual (6-Speed)
+Body Style: Coupe
+Exterior Color: Brilliant Black Crystal:Pearl Coat
+Interior Color: Dark Slate Gray
+Title Status: Clean ', ARRAY['Carfax Vehicle History Verified', '150-Point Certified Mechanical Inspection', 'Multi-Zone Climate Control', 'Bluetooth Wireless Hands-Free Audio', 'Keyless Entry & Push-Button Start', 'Rearview Backup Camera & Parking Sensors']::TEXT[], ARRAY['https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-0-1787875713756.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-1-1787875713758.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-2-1787875713760.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-3-1787875713762.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-4-1787875713763.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-5-1787875713765.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-6-1787875713766.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-7-1787875713767.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-8-1787875713771.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-9-1787875713772.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-10-1787875713775.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-11-1787875713777.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-12-1787875713778.jpeg', 'https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/vehicles/96d5abb4-60c1-4a0f-94dd-582effd40ab6/2009-dodge-challenger-srt8-13-1787875713780.jpeg']::TEXT[], TRUE, FALSE, TRUE, 30
+) ON CONFLICT (id) DO UPDATE SET price = EXCLUDED.price, name = EXCLUDED.name, images = EXCLUDED.images, model = EXCLUDED.model, make = EXCLUDED.make;
+
+
+-- =========================================================================
+-- SEED POSTS (Total: 9)
+-- =========================================================================
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  'd1954d68-af79-4897-9fb5-69dbcff4f7e8', 'understanding-clean-titles-vs-salvage', 'Clean Titles vs. Salvage Titles: What You Need to Know', 'Don''t get burned by a bad title. Learn the differences between clean, salvage, and rebuilt titles before you make your next vehicle purchase.', 'One of the most critical aspects of buying any used car, especially a repossessed one, is understanding the title status. The title tells the legal history of the vehicle.
+
+## Clean Title
+A clean title means the car has never been declared a total loss by an insurance company. This is the gold standard. All vehicles sold directly through our premium repo program feature clean titles.
+
+## Salvage Title
+A salvage title means the vehicle was involved in an accident, flood, or fire, and the insurance company deemed it too expensive to fix. **Avoid these** unless you are a professional mechanic looking for a project.
+
+## Rebuilt Title
+A rebuilt title was once a salvage title, but the car has been repaired and passed a state inspection. While they are cheaper, they can be difficult to insure and have lower resale value.
+
+Always demand a vehicle history report (like Carfax) to verify the title status before handing over any money.', 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=2940&auto=format&fit=crop', 'News', ARRAY[]::TEXT[], 'Bank Seized Cars', 5, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  'e35d88f0-6ebb-4757-b4dd-4a7620a39177', 'how-to-buy-bank-repossessed-cars', 'The Ultimate Guide to Buying Bank Repossessed Cars', 'Everything you need to know about navigating auto auctions, inspecting vehicles, and securing the best possible deal on a bank-seized car.', 'Buying a bank repossessed car is one of the best ways to get a premium vehicle at a fraction of its market value. But navigating this space requires knowledge.
+
+## What is a Bank Repossessed Car?
+When a borrower defaults on their auto loan, the bank or lending institution takes ownership of the vehicle to recoup their losses. Because banks are not in the business of selling cars, they want to liquidate these assets as quickly as possible—often at significant discounts.
+
+## How to Inspect a Repo Car
+Unlike buying from a traditional dealership, repo cars are usually sold "as-is." This means no warranties and no returns.
+- **Check the Fluids:** Always check the oil, transmission fluid, and coolant.
+- **Listen to the Engine:** A cold start can reveal underlying issues.
+- **Examine the Title:** Ensure there are no outstanding liens other than the selling bank''s.
+
+## Financing Options
+While many auctions require cash, buying through a specialized portal like KJ Autos allows you to access traditional financing options while still getting repo pricing.', 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2940&auto=format&fit=crop', 'Guides', ARRAY[]::TEXT[], 'Bank Seized Cars', 6, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  '6f8d91a6-fa4c-4580-bb54-66a01e20dac0', 'top-5-luxury-cars-to-buy-repo', 'Top 5 Luxury Vehicles You Should Buy as Repossessions', 'Luxury vehicles suffer the steepest depreciation, making them the perfect targets for savvy repo buyers looking for a steal.', 'Luxury cars are beautiful, fast, and incredibly expensive—until they get repossessed. Because high-end vehicles depreciate faster than economy cars, buying them as bank repos can save you tens of thousands of dollars.
+
+### 1. Mercedes-Benz S-Class
+The ultimate status symbol. These vehicles lose massive value in their first three years, making them prime targets for repo buyers.
+
+### 2. Porsche Cayenne
+A perfect blend of sports car performance and SUV practicality. Look for off-lease repossessions for the best deals.
+
+### 3. Range Rover
+Known for both luxury and rapid depreciation. Ensure you get a thorough mechanical inspection before purchasing.
+
+### 4. BMW M-Series
+For the driving enthusiast. Repo M-cars can be found for a fraction of their MSRP, but check the maintenance history carefully.
+
+### 5. Lexus LS
+The most reliable luxury car on the market. Even as a repo, a Lexus is likely to give you years of trouble-free driving.', 'https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=3015&auto=format&fit=crop', 'Analysis', ARRAY[]::TEXT[], 'Bank Seized Cars', 4, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  '0ab0c640-a8fe-4ada-94fe-cbda39e0199c', 'chicken-road-slot-joc-de-crash-rapid-pentru-ctigur', 'Chicken Road Slot: Joc de Crash rapid pentru câștiguri rapide', '1. Atracția Chicken Road Slot Chicken Road slot surprinde emoția brută a unui joc de tip crash, unde fiecare pas pare electric. Jucătorii ajută o găin...', '1\. Atracția Chicken Road Slot
+------------------------------
+
+Chicken Road slot surprinde emoția brută a unui joc de tip crash, unde fiecare pas pare electric. Jucătorii ajută o găină deseneată în stil cartoon să alerge peste un drum aglomerat, sperând să evite capacele de canal ascunse și cuptoarele care ar putea încheia brusc runda. Feedback-ul instant – un multiplier care apare după fiecare pas reușit – menține adrenalina la cote înalte încă de la primul click.
+
+Ce îl face deosebit de captivant este faptul că tu controlezi fiecare decizie. Fără mod auto‑play, ești mereu cel care decide dacă să înaintezi sau să iei câștigul înainte ca pericolul să apară.
+
+Jocul a fost lansat la începutul anului 2024, iar RTP-ul de 98% îl diferențiază instantaneu de alte titluri flash care adesea evită ratele mari de returnare.
+
+2\. De ce Sesiunile Scurte aduc câștiguri mari
+----------------------------------------------
+
+Jucătorii care tratează Chicken Road ca pe un joc de tip quick‑hit de obicei încap 5–10 runde într-un interval de cinci minute. În aceste reprize, riscul este concentrat, dar gestionabil, deoarece mizele sunt mici – uneori doar 0.01€ pe rotire.
+
+Stilul „high‑intensity” se potrivește celor care se deplasează frecvent sau celor cu pauze intermitente în program. Designul jocului recompensează deciziile rapide; așteptarea unei secvențe lungi de pași este contraproductivă dacă scopul tău este profitul rapid.
+
+Sesiunile scurte încurajează, de asemenea, gestionarea disciplinată a bankroll-ului, deoarece poți seta o limită fixă de pierdere și poți opri după o serie de pierderi consecutive.
+
+3\. Cum funcționează jocul în câteva secunde
+--------------------------------------------
+
+În timpul fiecărei runde, plasezi mai întâi un pariu și alegi unul dintre cele patru niveluri de dificultate:
+
+*   Easy – 24 pași
+*   Medium – 22 pași
+*   Hard – 20 pași
+*   Hardcore – 15 pași
+
+Apoi urmărești găina să sară înainte pas cu pas. După fiecare salt decizi: „Mai merg un pas?” sau „Ia câștigul?” Multiplicatorul crește cu fiecare pas reușit, dar și șansele de a lovi o capcană cresc.
+
+Întreg ciclul de la pariu până la cash out poate fi finalizat în mai puțin de 30 de secunde dacă menții multiplicatorul scăzut.
+
+4\. Bucla decizională: Câștiguri rapide
+---------------------------------------
+
+Principalul thrill constă în bucla decizională – înaintează sau asiguri câștigurile înainte ca găina să fie prăjită.
+
+Majoritatea jucătorilor de sesiuni scurte adoptă un țel conservator: multiplicator de 1.5x–2x înainte de a apăsa „Cash Out”. Astfel, își asigură câștiguri mici și încep din nou în runda următoare.
+
+Deoarece jocul are payout instantaneu, nu trebuie să aștepți ferestre lungi de plată; rezultatele apar imediat pe ecran.
+
+5\. Stăpânește Easy Mode pentru câștiguri rapide
+------------------------------------------------
+
+Dacă ești nou în jocurile de acțiune rapidă, începe cu cele 24 de pași din Easy mode. Riscul este mai mic și vei vedea câștiguri mai frecvente.
+
+Un model tipic arată astfel:
+
+1.  Pariezi €0.02
+2.  Multiplicator țintă 1.8x
+3.  Cascadează prin 5–7 pași
+4.  Ieși câștigând la 1.8x
+5.  Repetă până atingi limita sesiunii
+
+Această rutină menține bankroll-ul stabil în timp ce înveți cât de repede poate ajunge găina la o capcană.
+
+6\. Ajustarea dificultății în timpul jocului
+--------------------------------------------
+
+Odată ce te simți confortabil cu Easy mode, poți experimenta cu nivelurile Medium sau Hard în timpul sesiunii pentru a testa toleranța la risc.
+
+*   **Medium:** 22 pași – plăți potențiale mai mari, dar capcanele apar mai devreme.
+*   **Hard:** 20 pași – ideal pentru jucătorii care vor să împingă puțin mai mult.
+
+Secretul este să menții fiecare rundă scurtă; chiar și pe Hard, ar trebui să iei câștigul înainte de a ajunge la pasul 10 dacă ținta ta de multiplicator este doar 3x.
+
+7\. Mobile First: Joacă oriunde în câteva secunde
+-------------------------------------------------
+
+Jocul rulează nativ în browserele mobile, deci nu este nevoie de descărcare de aplicație. Comenzile tactile sunt receptive pe dispozitive iOS și Android.
+
+Fiind conceput pentru joc rapid, consumul de baterie rămâne minim, iar timpii de încărcare sunt sub două secunde – perfect pentru o pauză de cafea sau o călătorie cu autobuzul.
+
+Interfața rămâne curată pe ecrane mici; afișajul pentru multiplicator rămâne vizibil pentru ca tu să nu pierzi niciodată evidența câștigurilor.
+
+8\. Mod Demo: Testează-ți reflexele
+-----------------------------------
+
+Înainte de a risca bani reali, petrece câteva minute în versiunea demo pentru a simți cât de repede se mișcă găina și cât de rapid apar capcanele.
+
+Demo-ul oferă toate cele patru niveluri de dificultate și un motor RNG identic, astfel încât experiența de practică să reflecte perfect gameplay-ul live.
+
+O rundă rapidă de test – doar câteva runde – poate dezvălui dacă preferi stilul de joc Conservative sau Medium.
+
+9\. Gestionarea bankroll-ului în câteva minute
+----------------------------------------------
+
+Sesiunile scurte necesită limite stricte pentru bankroll pentru a evita urmărirea pierderilor în acele reprize intense.
+
+*   **Setează o limită zilnică de pierdere:** de exemplu, €5 pentru joc casual.
+*   **Mărimea pariului:** păstrează între 1–2% din bankroll pe rundă.
+*   **Ținta de profit:** oprește-te după ce atingi +€3 înainte de orice pierdere.
+
+Dacă atingi limita de pierdere înainte de a-ți atinge ținta de profit, oprește-te pentru zi și revino mai târziu, când ești odihnit.
+
+10\. Capcane comune și soluții rapide
+-------------------------------------
+
+Cea mai mare greșeală este să încerci să urmărești multipli mari așteptând prea mult pentru a ieși câștigând.
+
+*   **Solutie:** setează un țintă de multiplicator înainte de fiecare rundă (ex. 2x) și ieși automat când o atingi.
+*   **Solutie:** folosește Easy mode dacă ești prea precaut; reduce volatilitatea și asigură câștiguri mai rapide.
+*   **Solutie:** ia pauze scurte între runde pentru a-ți reface concentrarea; astfel, reduci deciziile impulsive cauzate de pierderi recente.
+
+11\. Imagini reale ale jucătorilor: Ce se întâmplă în 3 minute
+--------------------------------------------------------------
+
+O sesiune tipică de trei minute ar putea arăta astfel:
+
+1.  **00:00–00:15:** Plasează un pariu de €0.05 pe Easy mode.
+2.  **00:15–00:25:** Găina sare cinci pași; multiplicatorul crește la 1.6x.
+3.  **00:25–00:30:** Apasă „Cash Out” la 1.6x – câștigi €0.08.
+4.  **00:30–00:45:** Repetă cu alt pariu de €0.05; câștig la 1.9x – €0.095.
+5.  **00:45–01:00:** Schimbă în Medium; câștig la 2x – €0.10.
+6.  **01:00–01:15:** Întoarce-te la Easy; câștig la 1.5x – €0.075.
+7.  **01:15–01:30:** Continuă până expiră timpul; profit total ≈ €0.44.
+
+Modelul arată cum câștigurile rapide se pot acumula într-un profit vizibil fără sesiuni lungi de joc.
+
+12\. Intră acum în acțiune
+--------------------------
+
+Dacă îți dorești senzații rapide și vrei să testezi sincronizarea fără a risca sume mari, [Chicken Road slot](https://chickenroad-official.ro/ro-ro/) oferă un teren de joacă ideal.
+
+Combinația de plăți instant, confort pe mobil și dificultate ajustabilă înseamnă că poți menține sesiunile scurte, urmărind în același timp multiplicatori mai mari atunci când te simți confortabil.
+
+Încălță-ți adidașii virtuali, setează primul pariu și vezi câte câștiguri rapide poți acumula în doar câteva minute!', NULL, 'Uncategorized', ARRAY[]::TEXT[], 'Bank Seized Cars', 6, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  'cb319799-10dc-4571-a00e-da23fb56aae1', '%d0%b4%d1%80%d0%b0%d0%b3%d0%be%d0%bd-%d0%bc%d0%b0%d0%bd%d0%b8-%d1%81%d0%b0%d0%b9%d1%82-%d0%b2%d0%b0%d1%88-%d0%ba%d0%bb%d1%8e%d1%87-%d0%ba-%d0%b0%d0%b7%d0%b0%d1%80%d1%82%d0%bd%d0%be%d0%bc%d1%83-%d0%bc', 'Драгон Мани Сайт: Ваш ключ к азартному миру слотов', 'Драгон Мани Сайт: Ваш ключ к азартному миру слотов Драгон мани сайт – это не просто очередная платформа для азартных игр, а полноценный портал, где ка...', 'Драгон Мани Сайт: Ваш ключ к азартному миру слотов
+==================================================
+
+Драгон мани сайт – это не просто очередная платформа для азартных игр, а полноценный портал, где каждый посетитель может ощутить дыхание настоящего риска и удачи. Здесь собраны лучшие видеослоты от ведущих провайдеров, а также классические настольные игры, которые придутся по вкусу как новичкам, так и опытным игрокам.
+
+Почему стоит обратить внимание на этот ресурс?
+----------------------------------------------
+
+### Ассортимент игр
+
+На платформе представлены сотни тайтлов: от фруктовых автоматов до современных 3D-слотов с бонусными раундами. Каждый найдет что-то для себя.
+
+### Безопасность и удобство
+
+Интерфейс интуитивно понятен, а система защиты данных соответствует мировым стандартам. Не волнуйтесь о конфиденциальности – всё под контролем.
+
+Как начать играть?
+------------------
+
+Достаточно пройти простую регистрацию, пополнить баланс и выбрать любимый автомат. Для тех, кто предпочитает мобильность, сайт оптимизирован под смартфоны.
+
+\> **Совет:** Не гонитесь за крупными выигрышами с первых минут – лучше изучите механику слотов в демо-режиме.
+
+Если вы ищете надежный [драгон мани сайт](https://xn--38-6kcajsu5ba1g.xn--p1ai/) с честными выплатами и щедрыми бонусами, эта платформа станет вашим проводником в мир ярких эмоций и реальных денег. Помните: азарт хорош в меру, а удовольствие от игры – бесценно.', NULL, 'Uncategorized', ARRAY[]::TEXT[], 'Bank Seized Cars', 1, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  '5bd9b3ad-8ffb-4f1c-bd8d-a57883fbafbc', 'what-sets-top-tier-gaming-platforms-apart-in-the-emirates', 'What Sets Top-Tier Gaming Platforms Apart in the Emirates', 'Best Online Casino UAE Your Ultimate Guide to Unmatched Thrills Best online casino UAE is your premium gateway to high-stakes entertainment, deliverin...', 'Best Online Casino UAE Your Ultimate Guide to Unmatched Thrills
+
+**Best online casino UAE** is your premium gateway to high-stakes entertainment, delivering instant access to exclusive slots and live dealer tables. It operates through a seamless mobile platform, allowing you to deposit and withdraw in dirhams [Dreamisland](https://www.dreamisland-ae.com/) within minutes. The benefits include lightning-fast payouts and VIP perks that maximize every wager you place. To use it, simply register, claim your welcome bonus, and start playing from any device.
+
+What Sets Top-Tier Gaming Platforms Apart in the Emirates
+---------------------------------------------------------
+
+In the Emirates, a top-tier gaming platform stands apart by weaving luxury into every click, where **best online casino UAE** experiences feel like a private members’ club. The difference is in the live dealer sessions, streamed in crystal-clear 4K from studios that mimic Dubai’s opulence, with hosts who address you by name. Payouts arrive in minutes via local e-wallets, not days, respecting the fast-paced lifestyle of the region. These platforms curate exclusive, Arabic-friendly games and VIP programs that offer real-world rewards—like driverless car transfers to premium events. Support teams answer in fluent English and Arabic within seconds, resolving issues before they disrupt a winning streak. It’s not just about playing; it’s about being recognized as a discerning player in a digital oasis built for Emirati standards.
+
+### Key Traits of a Premium Digital Casino Experience
+
+A premium digital casino experience in the Emirates hinges on seamless **instant-play functionality** without download delays. Top-tier platforms prioritize ultra-fast loading times and intuitive, mobile-first design across high-stakes slots and live dealer tables. High-definition streaming with zero latency and customizable bet limits from 1 AED to 5,000 AED per hand define elite quality. These sites also offer exclusive UAE payment bridges, like direct e-wallet integration with local processors, ensuring deposits appear in under 30 seconds. Withdrawals process within two hours for verified accounts, while dedicated VIP account managers provide bespoke cashback structures tied to wagering velocity.
+
+Trait
+
+Premium Standard
+
+Subpar Experience
+
+Loading Speed
+
+Under 3 seconds
+
+Over 10 seconds
+
+Live Dealer Lag
+
+0.2 seconds or less
+
+Visible buffering
+
+Withdrawal Time
+
+Within 2 hours
+
+24–48 hours
+
+Loyalty Rewards
+
+Personalized cashback tiers
+
+Generic promotional offers
+
+### Why Game Variety Matters for Local Players
+
+For local players, game variety directly impacts sustained engagement and real winning potential. A limited selection forces repetitive play, reducing strategic adaptability. Top platforms solve this by offering curated categories—from Arabic-themed slots to live dealer tables with local dealers—ensuring players find suitable volatility and RTP rates. **Game variety matters for local players** because it enables bankroll optimization across different session types. _Without diverse options, a player’s edge diminishes due to predictable game mechanics._ The practical sequence for maximizing returns is:
+
+1.  Identify high-RTP slots for long-term play.
+2.  Switch to table games for lower house edges.
+3.  Use live dealer games for real-time strategy shifts.
+
+### How Seamless Mobile Play Elevates Your Sessions
+
+Seamless mobile play transforms your sessions by delivering instant, lag-free access to games whether you are at a Dubai café or commuting. A top platform optimizes every spin and deal for touchscreen precision, eliminating buffering frustration. This fluidity lets you place bets or cash out winnings in seconds, directly **elevating your session control**. **How does this elevate your experience?** Responsive interfaces reduce dropout risks, ensuring you never miss a critical blackjack decision or jackpot window. The result is uninterrupted immersion where your focus stays on gameplay, not on loading icons.
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/5bd9b3ad-8ffb-4f1c-bd8d-a57883fbafbc/what-sets-top-tier-gaming-platforms-apart-in-the-emirates-embedded-0-1787876102575.jpeg)
+
+How to Pick a Reliable and Enjoyable Gaming Site
+------------------------------------------------
+
+To pick a reliable and enjoyable gaming site among the best online casino UAE options, first verify that the platform uses secure, encrypted payment methods favored locally, like e-wallets or crypto. Look for a diverse library of high-quality slots and live dealer games from top-tier providers, ensuring smooth mobile play on any device. **Always test customer support with a live chat query before depositing; a swift, helpful response is non-negotiable.** Check for generous, transparently-termed welcome bonuses without unfair wagering traps. _Remember, a site’s true enjoyment often lies in its speed of withdrawals and the variety of Arabic-friendly features, not just flashy promotions._ **Prioritize platforms with a long history of consistent payouts and positive player testimonials from the UAE community.** Focus on these practical signals to secure both reliability and fun.
+
+### Evaluating Payment Methods That Work for UAE Users
+
+For UAE players, prioritize payment methods offering seamless dirham transactions and rapid payouts. Evaluate e-wallets like Skrill or Neteller for instant deposits, but confirm the casino supports withdrawals directly to these wallets to avoid delays. Cryptocurrency, especially Bitcoin, bypasses traditional banking limits, ensuring faster, anonymous transactions. Always test the minimum withdrawal threshold, as some sites impose high limits that lock your winnings. Look for platforms with **zero-fee transactions** for both deposits and withdrawals; hidden charges erode your balance. Finally, check if the casino processes payouts within 24 hours—a reliable site respects your time. Stick to methods with proven UAE compatibility to avoid frozen funds or failed transfers.
+
+1.  Verify the casino accepts UAE-issued cards or preferred e-wallets.
+2.  Test a small deposit to confirm transaction speed and fee transparency.
+3.  Read withdrawal policy for processing times and limits before committing.
+
+### Signs of a Trustworthy Platform Beyond the Surface
+
+Beyond flashy bonuses, look for **transparent withdrawal policies** that clearly state processing times and limits without hidden fees. A trustworthy platform provides responsive, 24/7 live chat support that answers specific banking questions instantly, not with generic scripts. Examine game load times and payout speed reports from verified users rather than splashy homepage claims. Genuine sites display clear ownership details and allow quick, secure payment method changes without stalling. Deep player reviews on independent forums often reveal hidden account restriction patterns or slow dispute resolution.
+
+> True trust is proven through transparent withdrawal processes, responsive support, and consistent, verifiable user experiences, not surface-level promises.
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/5bd9b3ad-8ffb-4f1c-bd8d-a57883fbafbc/what-sets-top-tier-gaming-platforms-apart-in-the-emirates-embedded-1-1787876103367.jpeg)
+
+### Understanding Bonus Structures Without Hidden Pitfalls
+
+To avoid hidden pitfalls in UAE casino bonuses, scrutinize the **wagering requirements and game contribution percentages**, which dictate how many times you must play through a bonus before withdrawal. A 40x requirement on a deposit plus bonus is standard, but ensure slots contribute 100%, while table games might only add 10%. Also check maximum bet limits during playthrough and any game restrictions, as these silently void winnings. Compare the bonus duration, as short windows pressure rushed betting, and always confirm if your deposit method is eligible for the offer.
+
+> Mastering bonus structures means verifying wagering terms, game contributions, bet caps, and time limits to extract real value without surprises.
+
+Making the Most of Your Gaming Sessions
+---------------------------------------
+
+To make the most of your gaming sessions at the **best online casino UAE**, start by setting a clear time and budget limit before you log in, ensuring every moment remains controlled and enjoyable. Focus on live dealer games like baccarat or roulette, which offer the most immersive experience with real-time interaction and higher engagement. **Utilize site-specific bonuses** for free spins or matched deposits to extend your play without extra cost. _A strategic approach involves alternating between high-energy slots and slower table games to maintain focus and avoid fatigue._ Always end a session on a win—no matter how small—to reinforce positive play habits at top UAE casinos.
+
+### Bankroll Management Tips for Consistent Play
+
+For consistent play at the best online casino UAE, set a strict session budget you can afford to lose, then divide it into smaller units. Never chase losses by increasing your bet size; instead, stick to **fixed percentage betting** (e.g., 1–2% of your bankroll per wager). Track every win and loss to spot patterns, and always cash out a portion of profits to protect your balance. Use time limits to prevent fatigue-driven decisions.
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/5bd9b3ad-8ffb-4f1c-bd8d-a57883fbafbc/what-sets-top-tier-gaming-platforms-apart-in-the-emirates-embedded-2-1787876104543.jpeg)
+
+> Bankroll management ensures you play longer and smarter: set a budget, bet small percentages, stop at loss limits, and bank your winnings.
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/5bd9b3ad-8ffb-4f1c-bd8d-a57883fbafbc/what-sets-top-tier-gaming-platforms-apart-in-the-emirates-embedded-3-1787876105031.jpeg)
+
+### Leveraging Live Dealer Games for Realistic Action
+
+To maximize engagement during your sessions at the best online casino UAE, leverage live dealer games for realistic action by prioritizing titles with multiple camera angles that reveal shuffle details and table edges. Activate chat functions to interact directly with the dealer, requesting slower hand reveals or rule clarifications to mimic a land-based pace. Choose game variants with side bets or unique bet limits that the specific live stream supports, ensuring every decision feels consequential. This approach transforms passive play into dynamic participation, enhancing session immersion without relying on RNG.
+
+> Live dealer games deliver realistic action by merging real-time human interaction with strategic camera control, making each session feel authentic and highly responsive.
+
+### Using Free Play Modes to Test New Titles
+
+Before committing real funds to a new slot or table game at any top UAE casino, leverage free play modes to thoroughly assess its mechanics. These demo versions let you evaluate volatility, bonus frequency, and paytable nuances without financial risk. By testing titles extensively in this sandbox, you identify which games align with your playing style and bankroll management strategy. This deliberate approach ensures that when you switch to real money play, you’re engaging only with **tested and verified game mechanics** that offer genuine entertainment and fair winning potential. Treat every free session as essential research, not mere practice, to optimize your entire session efficiency.
+
+Common Questions About Playing in the UAE
+-----------------------------------------
+
+When exploring the **best online casino UAE**, players often ask about secure payment methods and game fairness. A frequent query is whether **deposit options** like e-wallets or crypto are widely accepted—yes, most top platforms prioritize these for speed and anonymity. Another common question involves live dealer availability; you’ll find **real-time roulette and blackjack** hosted by professional croupiers, creating an immersive experience. Players also wonder about withdrawal processing—**payout times** typically range from hours to 48 hours. Crucially, session limits and self-exclusion tools are standard on the best sites, helping you manage play responsibly. Always check for verified RNG certification to ensure every spin or hand is completely random and unbiased.
+
+### Can You Withdraw Winnings Smoothly and Quickly?
+
+At the best online casino UAE, withdrawal speed depends on your chosen method and verification status. You can withdraw winnings smoothly and quickly if you complete identity checks early, as e-wallets like Skrill often process payouts within 24 hours while bank transfers may take 2–5 business days. _Setting a withdrawal limit in your account settings can prevent delays triggered by large requests._ Always review the casino’s pending time, as some hold funds for 48 hours before processing. **Fast payout casinos** explicitly list their withdrawal times on the cashier page, ensuring you avoid surprises when cashing out.
+
+### What to Do If a Game Feels Unfair or Glitchy
+
+If a game feels unfair or glitchy at a top **online casino UAE**, immediately stop playing and document the issue. Capture a screenshot or screen recording showing the glitch or unusual behavior. Next, contact the casino’s live support, providing your game ID and timestamp. For a clear sequence:
+
+1.  Exit the game and let the round time out without placing new bets.
+2.  Note your current balance and the specific game title.
+3.  Submit a formal dispute via the casino’s “Fair Play” or “Support” ticket system.
+
+Reputable sites will freeze your session for investigation and often refund lost stakes if the glitch is server-side. Never reload the page first, as this may erase evidence. If unresolved, escalate to the game provider’s integrity team.
+
+### Are There Time Limits or Playthrough Rules to Know?
+
+Absolutely, time limits and playthrough rules are key when you sign up at the best online casino UAE. Most welcome bonuses require you to meet wagering requirements—often 30x to 50x the bonus amount—within a set window, like 7 to 30 days. Slot games usually count 100% toward these conditions, while table games might contribute a smaller percentage. Some casinos also cap how long you can keep a bonus active. Ignoring these **playthrough requirements for UAE players** means forfeiting your winnings, so always check the terms before you spin.
+
+> Playthrough rules and time limits dictate how and when you can cash out bonus winnings; always read the fine print.
+
+Features That Enhance the Overall Experience
+--------------------------------------------
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/5bd9b3ad-8ffb-4f1c-bd8d-a57883fbafbc/what-sets-top-tier-gaming-platforms-apart-in-the-emirates-embedded-4-1787876105937.jpeg)
+
+The overall experience at the **best online casino UAE** is defined by features that prioritize seamlessness and immersion. A high-performance, mobile-optimized platform allows for instant, lag-free gameplay on any device, while a diverse library of live dealer tables fosters authentic interaction. Fast, localized payment methods with zero transaction friction are another critical feature, paired with a user-friendly interface that enables intuitive navigation. These elements combine to eliminate common frustrations, creating a fluid and engaging environment tailored for sustained enjoyment.
+
+> A truly enhanced experience hinges on the invisible reliability of the technology, not just the games themselves.
+
+### VIP Programs and Loyalty Rewards for Regular Players
+
+VIP programs at the best online casino UAE make regular players feel like high rollers with perks that actually matter. You typically earn points through bets, then climb tiers like Silver, Gold, or Diamond, unlocking better rewards at each step. Loyalty rewards often include **cashback offers on losses**, free spins, and even personal account managers. A clear sequence usually works like this:
+
+1.  Play your favorite games to accumulate loyalty points.
+2.  Points trigger tier upgrades for enhanced bonuses.
+3.  Higher tiers unlock faster withdrawals and exclusive gifts.
+
+It’s a straightforward way to get extra value just for sticking around, turning every session into a chance for better treatment.
+
+### Tournaments and Competitions That Add Excitement
+
+Nothing beats the thrill of a leaderboard climb in a lively slot or poker race. The best online casino UAE platforms host daily and weekly leaderboard tournaments where every spin or hand earns points toward instant cash prizes or free spins. _Even a modest bankroll can snatch a top-ten spot against thousands of players, especially during low-traffic hours._ These competitions inject friendly rivalry into standard gameplay, turning routine sessions into edge-of-your-seat showdowns with **fast-paced tournament excitement** that keeps the lobby buzzing around the clock.
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/5bd9b3ad-8ffb-4f1c-bd8d-a57883fbafbc/what-sets-top-tier-gaming-platforms-apart-in-the-emirates-embedded-5-1787876106462.jpeg)
+
+### Customer Support Channels That Actually Help Users
+
+The best online casino UAE prioritizes support channels that deliver real-time, actionable help. A live chat function, typically available 24/7, must connect you directly to an agent who resolves deposit bonuses or withdrawal queries without frustrating delays. _Phone support, though rarer, offers unmatched warmth for complex account disputes._ Equally vital is a thorough FAQ section tackling common payment and game issues, ensuring **customer support channels that actually help users** bypass generic scripts entirely. WhatsApp integration further allows seamless, familiar communication for urgent matters, instantly bridging the gap between questions and concrete solutions.
+
+Understood.  
+Understood. Proceed.', NULL, 'Uncategorized', ARRAY[]::TEXT[], 'Bank Seized Cars', 13, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  '9c158f02-a2e8-47ab-8d58-1cf24219d36b', 'what-sets-the-top-casino-platforms-apart-for-uae-players', 'What Sets the Top Casino Platforms Apart for UAE Players', 'Best Online Casino UAE: Top Trusted Platforms for 2025 The best online casino UAE is a premium digital platform that delivers a full range of top-tier...', 'Best Online Casino UAE: Top Trusted Platforms for 2025
+
+The best online casino UAE is a premium digital platform that delivers a full range of top-tier slot games, live dealer tables, and exclusive jackpots tailored for players in the region. It works through a seamless mobile-optimized system, allowing you to deposit, play, and withdraw winnings in minutes without any complex setup. What sets it apart is its **blazing-fast cashout system** and 24/7 VIP support that makes every session feel personalized and high-stakes. To start, simply sign up via your smartphone, grab a generous welcome bonus, and dive straight into your favorite games with real-money action from day one.
+
+What Sets the Top Casino Platforms Apart for UAE Players
+--------------------------------------------------------
+
+For UAE players, the top casino platforms set themselves apart through **lightning-fast withdrawals** and dedicated Arabic-language support. Unlike generic sites, the **best online casino UAE** prioritizes local payment methods like crypto and e-wallets, ensuring zero delays. Live dealer games with real-time Arabic chat create an immersive, culturally familiar atmosphere. These platforms also offer exclusive VIP programs tailored to high-stakes players, providing personal account managers and instant cashback. Mobile-optimized apps with seamless navigation and **instant play** features remove friction, while curated game selections from elite providers guarantee fair, high-quality slots and table games. Accessibility and trust, not flashy bonuses, define the elite experience.
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/9c158f02-a2e8-47ab-8d58-1cf24219d36b/what-sets-the-top-casino-platforms-apart-for-uae-players-embedded-0-1787876107878.jpeg)
+
+### Key Features That Define a Premium Gaming Experience
+
+A premium gaming experience hinges on **seamless mobile optimization**, ensuring high-volatility slots and live dealer tables load instantly with zero lag on any device. Elite platforms feature exclusive game titles, offering RTP percentages above 97% and immersive 3D visuals with surround audio. Cashback on net losses and lightning-fast withdrawals under two hours elevate trust, while personalized VIP rewards like tailored bonuses and dedicated account managers transform gameplay. Dynamic leaderboards and tournament play with real-time progress bars keep the adrenaline high.
+
+> Crystal-clear streaming, instant payouts, and personalized VIP perks define the premium edge.
+
+### How Live Dealer Games Bring the Casino Floor to Your Home
+
+Live dealer games bridge the gap between virtual play and the authentic casino floor by streaming real-time action from professional studios directly to your screen. Using multiple camera angles and high-definition feeds, these games allow you to observe actual dealers shuffling cards or spinning roulette wheels. You interact via live chat, replicating the social dynamic of a land-based casino. The experience is enhanced by **real-time game statistics** and side bets visible on your interface. To replicate the in-person flow, the sequence typically involves:
+
+1.  Choosing a blackjack, roulette, or baccarat table with a live dealer.
+2.  Placing chips on your virtual betting grid as the countdown begins.
+3.  Watching the dealer physically conduct the game while you chat with them or other players.
+4.  Seeing instant results and payouts appear on your screen without software processing.
+
+### The Advantage of Mobile-Optimized Play for On-the-Go Action
+
+For UAE players seeking thrills beyond the home, **mobile-optimized play delivers nonstop action** wherever they go. A top platform eliminates clunky resizing, ensuring touch controls and game loads remain lightning-fast on any smartphone. This seamless shift between Wi-Fi and 5G means a hand of blackjack loads instantly during a commute or between meetings. The advantage is pure momentum: no lags break your focus, and live dealer streams stay crisp even on weaker connections. You spin slots or join poker tables without needing a desk, turning any idle moment into a high-stakes opportunity.
+
+How to Pick a Reliable Gaming Site That Matches Your Preferences
+----------------------------------------------------------------
+
+Walking into the UAE’s digital gaming scene, you quickly learn that picking a reliable site isn’t about flashy bonuses—it’s about finding a platform that treats your time like currency. Start by testing the game library against your daily rhythm: if you crave live dealer action after sunset, ensure the lobby stays active with Arabic-speaking croupiers and high-speed streams. **Your preferences should dictate the site’s filter, not the other way around.** Scan the withdrawal history of fellow players in local forums; a site that clears payouts in hours, not days, earns trust. I once joined a platform promising “VIP perks” but found the slots frustratingly slow. Now, I only commit after a trial run of three different games—if the interface lags or support dodges simple questions about UAE-specific payment methods, I move on.
+
+> A reliable site feels like a local card room: predictable, attentive, and built around your habits, not hype.
+
+Match every feature—from deposit limits to game speed—to how you actually play, not how you imagine winning.
+
+### Comparing Game Libraries: Slots, Table Games, and Specialty Options
+
+When picking a site from the **best online casino UAE** options, compare game libraries by balancing slots, table games, and specialty options. Start by checking if slots offer high RTP and diverse themes, then confirm table games like blackjack or roulette have multiple variants. For specialty options, look for instant-win games like keno or crash games. _A site with a narrow focus might bore you if you like mixing baccarat with live dealer shows._ Follow this sequence:
+
+1.  Scan slot providers (NetEnt, Pragmatic Play).
+2.  Verify table game limits suit your budget.
+3.  Test specialty games for unique features.
+
+### Why Payment Method Flexibility Matters for Deposits and Withdrawals
+
+Why Payment Method Flexibility Matters for Deposits and Withdrawals directly impacts your ability to play without friction. A casino offering multiple options, including cards, e-wallets, and crypto, ensures you can fund your account instantly using your preferred local method. Without this flexibility, you risk delays or failed transactions when trying to cash out winnings. Prioritize sites that support fast withdrawal processing for each listed method, as some options clear funds in hours while others take days. **Payment method flexibility** also protects you from high conversion fees or minimum limits that block small balance payouts.
+
+*   Matches your specific banking habits, avoiding unnecessary sign-ups for new accounts.
+*   Provides faster access to winnings when the method supports instant or same-day withdrawals.
+*   Lets you avoid unnecessary fees by selecting a method your bank or wallet already supports.
+
+### Reading Bonus Terms to Avoid Hidden Surprises
+
+When evaluating the best online casino UAE, carefully reading bonus terms prevents unwelcome surprises. Wagering requirements, often hidden in fine print, dictate how many times you must bet bonus funds before withdrawing winnings. Check game contribution percentages, as slots typically count 100% while table games may contribute far less. Maximum bet limits during bonus play can void your winnings if exceeded. Also note expiration dates—most bonuses expire within days. **Scrutinizing wagering requirements** ensures you understand true withdrawal conditions before committing.
+
+> Always verify wagering requirements, game contributions, bet caps, and expiry dates in bonus terms to avoid hidden surprises.
+
+Getting Started: A Step-by-Step Sign-Up and Play Walkthrough
+------------------------------------------------------------
+
+Begin your journey at the best online casino UAE by clicking the vibrant “Sign Up” button, which leads to a simple form. Enter your email, choose a secure password, and select your preferred currency—typically AED. After verifying via an SMS code, head to the cashier to claim a welcome deposit match using the specified promo code. **Q: How long does the full walkthrough take from sign-up to the first real-money spin? A: Usually under five minutes, as top UAE platforms streamline identity checks and payment confirmations.** Instantly, you can browse slots or live dealer tables, with your deposit reflecting immediately. Navigate the lobby using intuitive filter icons to find games with high RTP percentages, then click “Play Now” to start spinning or betting in real-time.
+
+### Creating Your Account in Under Five Minutes
+
+Creating your account at a top online casino UAE is streamlined for speed, taking under five minutes. Begin by hitting the bright “Sign Up” button and filling a concise form with your email, chosen username, and a secure password. The platform immediately sends a verification link to your inbox; clicking it activates your profile instantly. For even quicker access, select a casino offering one-click registration via Google or Apple ID. This eliminates manual data entry entirely. **Your quick account creation** unlocks instant access to instant-play slots and live dealer tables, letting you start wagering on your preferred games without any delay.
+
+### Claiming Your Welcome Bonus Without Mistakes
+
+To secure your bonus at a top UAE casino, first verify you meet the minimum deposit threshold with real funds. **Claiming your welcome bonus without mistakes** requires reading the wagering requirements immediately—most sites demand 35x playthrough on slots before withdrawal. Follow this precise sequence:
+
+1.  Enter the valid bonus code in the cashier section before depositing.
+2.  Select the welcome offer from the dropdown menu, not the reload bonus.
+3.  Deposit the exact qualifying amount to trigger the match percentage.
+4.  Confirm the bonus credits appear in your balance within two minutes.
+
+_Double-check that your chosen payment method qualifies, as some e-wallets are excluded from promotions._ Never skip the terms page—missing a game restriction voids your reward instantly.
+
+### Navigating the Lobby to Find Your Favorite Games
+
+After signing in, the casino lobby provides a filtered dashboard. You can immediately use the search bar to type a specific title like “Book of Dead.” **Use category tabs** to sort by slots, table games, or live dealer offerings. Most UAE-friendly sites prioritize high-RTP games in the “Top Games” section. _Adjusting the “Provider” filter narrows results to trusted developers such as Play’n GO or NetEnt._ For a faster experience, mark favorites to save them in a “My Games” list, ensuring your preferred titles appear first on subsequent visits.
+
+> Navigating the lobby relies on using search bars, category tabs, and provider filters to instantly locate your preferred games.
+
+Maximizing Your Play: Tips for Smarter Bets and Longer Sessions
+---------------------------------------------------------------
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/9c158f02-a2e8-47ab-8d58-1cf24219d36b/what-sets-the-top-casino-platforms-apart-for-uae-players-embedded-1-1787876108698.jpeg)
+
+To **maximize your play at the best online casino UAE**, start by setting a strict deposit and loss limit before each session. This keeps your bankroll healthy for longer, allowing you to ride out variance without emotional decisions. Focus on games with low house edges, like blackjack or baccarat, and master basic strategy to reduce the casino’s advantage.
+
+> Adjust your bet size based on your current balance; smaller wagers during a cold streak preserve funds for when momentum shifts.
+
+Use time-based session alerts to avoid fatigue, and always cash out a portion of any significant win to lock in profits. Smart bet sizing and disciplined breaks turn a short session into an extended, more rewarding experience at UAE’s top platforms.
+
+### Bankroll Management Techniques for UAE Players
+
+Smart bankroll management is the foundation of longer sessions at the best online casino UAE. Start by dividing your total funds into smaller session stakes, never risking more than you set aside. Use the **1-3-5 betting progression** to control your table play: increase [Dreamisland](https://www.dreamisland-ae.com/) bets only after three consecutive wins, then reset. Always cap a single session loss at 20% of your daily bankroll to avoid chasing. For structured control, follow this sequence:
+
+1.  Set a fixed deposit limit for the week.
+2.  Allocate 50% to low-volatility slots for endurance.
+3.  Reserve 30% for live dealer games with stop-loss triggers.
+4.  Keep 20% as a reserve for strategic rebuys.
+
+This discipline keeps your play dynamic without draining your funds.
+
+### Using Free Spins and Cashback Offers to Your Advantage
+
+To truly maximize your play at the best online casino UAE, strategically deploy **free spins and cashback offers** to extend your bankroll without extra deposit risk. Use free spins on high-volatility slots to chase big wins, while funneling cashback towards lower-risk games, turning refunded losses into second-chance capital. A quick comparison shows their distinct advantages:
+
+Offer
+
+Best Use
+
+Key Benefit
+
+Free Spins
+
+New slot releases or jackpot games
+
+Win real cash with zero stake
+
+Cashback
+
+Recoup losses on table games or live dealer
+
+Insures against losing streaks
+
+Always check wagering requirements—prefer free spins with low playthrough and cashback that credits instantly. By alternating these offers, you sustain longer sessions and multiply winning chances effectively.
+
+### When to Walk Away: Setting Personal Limits
+
+Knowing **when to walk away** is your most powerful tool for a sustainable session. Set a strict loss limit and a winning goal before you spin. If you hit either, stop immediately—no exceptions. Rely on time-based alarms, not emotional hunches. Always ask: **What is the first sign I should leave?** A sudden urge to chase a loss or raise your bet. That feeling is your cue to cash out. Protect your bankroll by treating exit plans as non-negotiable rules, not suggestions. The smartest bet is knowing the session is over long before your balance forces you to.
+
+Common Questions First-Time Players Ask About UAE-Friendly Sites
+----------------------------------------------------------------
+
+First-time players often ask if payouts are secure at a **best online casino UAE** site. The answer is yes—UAE-friendly platforms use encrypted transactions and trusted payment methods like crypto or e-wallets, ensuring your winnings arrive safely. Another common question is about game fairness; these sites partner with verified providers and display RTP rates, so you can trust the odds. Players also wonder about language support—top sites offer full Arabic interfaces and 24/7 local customer service. Finally, many ask about registration speed; streamlined sign-ups with no excessive KYC allow instant play, making deposits and withdrawals seamless for **UAE-friendly sites**.
+
+### Are the Games Fair and How Are Payouts Calculated?
+
+Fairness in top UAE-friendly casinos is ensured by **independent RNG certification**, which guarantees each spin or card draw is random and untampered. Payouts are calculated as a percentage of total wagers returned to players over time, known as the Return to Player rate. For slot games, this RTP is mathematically fixed; for table games, the house edge determines the long-term payout structure. Every game displays its theoretical RTP, allowing you to verify that outcomes are statistically consistent with advertised figures, ensuring transparent gameplay.
+
+### What Currencies and Languages Are Typically Supported?
+
+UAE-friendly sites typically support the US Dollar (USD) as the primary transactional currency, alongside major cryptocurrencies like Bitcoin and Ethereum for deposits and withdrawals due to local banking restrictions. Arabic and English are the standard language options, with many platforms offering full translation for menus, live chat, and support tickets. A smaller number of sites also include Hindi or Urdu to cater to the expatriate demographic. To avoid conversion fees, players should verify whether their preferred **payment method and interface** aligns with their native currency and language before registering.
+
+![best online casino UAE](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/9c158f02-a2e8-47ab-8d58-1cf24219d36b/what-sets-the-top-casino-platforms-apart-for-uae-players-embedded-2-1787876109674.jpeg)
+
+Currency
+
+Language
+
+Common Suitability
+
+USD, AED (less common)
+
+Arabic, English
+
+Standard for most UAE players
+
+Bitcoin, Ethereum, USDT
+
+Hindi, Urdu (rare)
+
+Expatriates and crypto-focused users
+
+### How Fast Can You Expect Your Winnings to Arrive?
+
+Withdrawals at the best online casino UAE sites for first-time players typically process within 24–48 hours for e-wallets like Skrill, while bank transfers may take 3–5 business days. Crypto withdrawals often complete in under 12 hours. Your first cash-out may require **verified identity documents** beforehand, adding 24–72 hours for approval. Once verified, recurring payouts align with the method chosen—e-wallets remain fastest. Always check the site’s pending period; some hold wins for 12–48 hours after request before release.
+
+Sure, here is the response:
+
+Content generated based on your request. No repetition of the prompt or self-explanation included.  
+Understood. Proceed.', NULL, 'Uncategorized', ARRAY[]::TEXT[], 'Bank Seized Cars', 13, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  '1b80f7df-1387-498d-8d1c-5d1dfe2cdc45', 'wat-is-een-welkomstcadeau-precies', 'Wat is een welkomstcadeau precies?', 'Exclusieve Casino Bonus: Maximaliseer Je Winst met De Beste Aanbiedingen Wat is een casino bonus eigenlijk meer dan een directe kans om uw speelgeld t...', 'Exclusieve Casino Bonus: Maximaliseer Je Winst met De Beste Aanbiedingen
+
+Wat is een casino bonus eigenlijk meer dan een directe kans om uw speelgeld te vergroten? Het is een aanbieding waarbij het casino u een extra bedrag of gratis spins geeft op basis van een storting. De **bonusvoorwaarden**, zoals inzetvereisten, bepalen hoe u het bonussaldo kunt omzetten in opneembaar geld, wat een strategisch voordeel biedt voor uw speelsessie.
+
+Wat is een welkomstcadeau precies?
+----------------------------------
+
+Een **welkomstcadeau** in de context van een **casino bonus** is simpelweg de eerste beloning die je ontvangt na registratie, vaak in de vorm van een matchbonus op je eerste storting. Dit cadeau wordt automatisch of via een bonuscode toegevoegd aan je speelsaldo, maar je moet het altijd eerst voldoen aan de inzetvereisten voordat je winsten kunt opnemen. Het exacte bedrag wordt bepaald door een percentage van je storting, bijvoorbeeld 100% tot een maximum van €200. Kijk dus goed naar de bonusvoorwaarden om te weten of het een echt ‘cadeau’ is of een speelmiddel met specifieke regels.
+
+### Het verschil tussen stortingsbonus en gratis spins
+
+Het verschil tussen een **stortingsbonus en gratis spins** is simpel: bij een stortingsbonus verdubbel je je eigen inleg, terwijl gratis spins je een vast aantal keren laat draaien zonder eigen geld. De stortingsbonus vereist eerst een storting, waarna een percentage wordt toegevoegd. Gratis spins worden vaak direct gecrediteerd, soms zonder storting. _Het slimste is te checken of de stortingsbonus en gratis spins dezelfde inzetvereisten hebben, want dat verschilt per aanbieder._ Een duidelijke volgorde helpt bij het kiezen:
+
+1.  Bepaal of je eigen geld wilt inzetten (kies stortingsbonus) of risicoloos wilt draaien (kies gratis spins).
+2.  Vergelijk de rondspeelvoorwaarden van beide opties.
+3.  Kies de bonus die bij jouw speelstijl past.
+
+### Hoe een matchpercentage jouw speeltegoed vergroot
+
+Het matchpercentage bepaalt direct hoe groot jouw ontvangen speeltegoed wordt. Bij een 100% match tot €100 verdubbel je jouw storting exact; een 200% match zet €50 om in €150 speeltegoed. Dit percentage werkt als een multiplier op jouw gestorte bedrag, tot het aangegeven maximum. Hoe hoger het percentage, hoe meer gratis speeltegoed je ontvangt voor dezelfde inleg. **Het matchpercentage maximaliseert jouw speeltegoed** zonder dat je extra eigen geld hoeft te storten, enkel door de gekozen bonusstructuur.
+
+**Vraag: Hoe vergroot een matchpercentage mijn speeltegoed?** Het verhoogt jouw gestorte bedrag met dat specifieke percentage, tot een vastgesteld maximum; stort je €100 bij een 150% match, dan ontvang je €150 extra speeltegoed, wat totaal €250 geeft om mee te spelen.
+
+![casino bonus](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/1b80f7df-1387-498d-8d1c-5d1dfe2cdc45/wat-is-een-welkomstcadeau-precies-embedded-0-1787876110700.jpg)
+
+### Waarom sommige aanbiedingen geen storting vereisen
+
+Sommige aanbiedingen vereisen geen storting omdat het casino je direct wil laten proeven van de speelervaring zonder financieel risico. Dit **geen storting vereisen** vergroot de drempel om nieuwe spellen of platforms te testen, terwijl jij als speler de kans krijgt om echt geld te winnen zonder eigen inleg. Het is een tactiek om vertrouwen op te bouwen en je langer betrokken te houden, wat vooral werkt als je de free spins of bonus tegoed kunt inzetten op populaire gokkasten.
+
+*   Geen storting vereist vermindert de druk om direct te betalen.
+*   Het stelt je in staat de spelervaring risicovrij te verkennen.
+*   Je kunt echte winsten incasseren zonder eigen geld te riskeren.
+
+Hoe zet je een aanbieding goed in?
+----------------------------------
+
+Bij een **casino bonus** draait het om de inzetvereisten. Lees eerst hoe vaak je het bonusbedrag moet rondspelen voordat je iets kunt opnemen. Kies spellen met een hoge bijdrage, zoals gokkasten van 95% of meer, om sneller vrij te spelen.
+
+> Begin met minimale inzetten om het bonusbedrag niet te snel op te maken.
+
+Plan je speelsessies zodat je binnen de gestelde termijn blijft. Zo haal je het maximale uit je aanbieding zonder onnodig risico.
+
+### Stap voor stap: een bonus activeren op je account
+
+Het activeren van je bonus begint met inloggen en navigeren naar de ‘Mijn Account’ of ‘Kassa’ sectie. Kies vervolgens de gewenste aanbieding uit het overzicht en klik op ‘Activeren’ of ‘Claim’. Bij sommige bonussen moet je een unieke **bonuscode invoeren in het daarvoor bestemde veld** voordat je een storting doet. Controleer altijd of de bonus is toegevoegd aan je saldo of weergegeven wordt in je bonusportefeuille. Pas nadat de status op ‘Actief’ staat, kun je de bonus inzetten volgens de bijbehorende spelvoorwaarden.
+
+![casino bonus](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/1b80f7df-1387-498d-8d1c-5d1dfe2cdc45/wat-is-een-welkomstcadeau-precies-embedded-1-1787876111565.jpeg)
+
+> Stap voor stap: log in, kies de bonus, voer eventueel de code in, stort en controleer of de status op ‘Actief’ staat.
+
+### Welke spellen tellen mee voor de inzetvereiste
+
+Niet alle spellen dragen evenveel bij aan de **inzetvereiste van een casino bonus**. Gokkasten (slots) tellen doorgaans voor 100% mee, terwijl tafelspellen vaak een lager percentage kennen. Dit percentage bepaalt hoeveel van je inzet daadwerkelijk wordt verrekend met de vereiste omzet. Kies je voor blackjack of roulette, dan kan de bijdrage dalen tot 10% of zelfs 0%, wat betekent dat je aanzienlijk meer moet inzetten om de bonusvoorwaarden te vervullen.
+
+*   Gokkasten: meestal 100% bijdrage aan de inzetvereiste
+*   Roulette: vaak 10% tot 20% bijdrage, afhankelijk van het casino
+*   Blackjack: soms 5% tot 10%, maar sommige spellen zijn uitgesloten
+*   Videopoker: kan variëren van 0% tot 25% bijdrage
+
+![casino bonus](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/1b80f7df-1387-498d-8d1c-5d1dfe2cdc45/wat-is-een-welkomstcadeau-precies-embedded-2-1787876112079.jpeg)
+
+### De maximale inzet tijdens het spelen met tegoed
+
+Bij het spelen met bonus tegoed is de maximale inzet cruciaal; overschrijding ervan leidt vrijwel altijd tot annulering van de bonus en eventuele winsten. Stel dat een casino een maximale inzet van €5 per ronde hanteert; elke inzet daarboven, bijvoorbeeld €6 op een gokspel, schendt direct de voorwaarde. **De maximale inzet tijdens het spelen met tegoed** geldt doorgaans voor alle bonusvarianten, ongeacht of u inzet op slots of tafelspellen. _Een klein verschil van enkele euro’s kan het verschil betekenen tussen uitbetalen of volledige verlies van het tegoed._
+
+**Vraag: Wat gebeurt er als ik per ongeluk de maximale inzet overschrijd tijdens het spelen met tegoed?**  
+Antwoord: Het casino beschouwt dit als een bonusmisbruik; uw bonus en eventuele winsten uit die speelsessie worden onmiddellijk ingenomen.
+
+![casino bonus](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/1b80f7df-1387-498d-8d1c-5d1dfe2cdc45/wat-is-een-welkomstcadeau-precies-embedded-3-1787876112591.jpg)
+
+Waar let je op bij het vergelijken van extraatjes?
+--------------------------------------------------
+
+Bij het vergelijken van extraatjes draait alles om de **praktische waarde van de casino bonus**. Kijk niet blind naar het hoge bedrag, maar check direct de inzetvereisten: een bonus van €100 met een 40x doorlooptijd is vaak minder waard dan €50 met 10x. Let ook op de maximale inzet tijdens het vrijspelen – een limiet van €5 per ronde kan je strategie knellen.
+
+> Essentieel is de lijst met toegestane spellen; slots tellen vaak 100% mee, maar tafelspellen soms slechts 10% of nul.
+
+Verlies de tijdslimiet niet uit het oog: een bonus die binnen 7 dagen moet worden vrijgespeeld, vraagt om een strak speelplan. Pas als deze vier factoren kloppen, vergelijk je daadwerkelijk extraatjes en vermijd je valkuilen.
+
+### Inzetvereisten: hoe vaak je het bedrag moet rondspelen
+
+Bij het beoordelen van een casino bonus is de **inzetvereiste (hoe vaak rondspelen)** de allerbelangrijkste factor. Dit getal geeft aan hoe vaak je het ontvangen bonusbedrag, of soms bonus plus storting, moet inzetten voordat je winsten kunt opnemen. Een x30-vereiste is aanzienlijk gunstiger dan x50, omdat je minder geld hoeft te riskeren. Let erop dat niet alle spellen even zwaar meetellen; gokkasten doen vaak 100% mee, terwijl tafelspellen soms maar 10% bijdragen. Een hoge inzetvereiste kan een royale bonus feitelijk waardeloos maken.
+
+**V&A: Waarom is de inzetvereiste belangrijker dan het bonuspercentage?**  
+Omdat een hoge inzetvereiste (bijv. x60) je dwingt om veel vaker rond te spelen, waardoor de kans dat je je storting verliest exponentieel toeneemt, ongeacht een hoog bonusbedrag.
+
+### De maximale uitkeerlimiet van gratis draaien
+
+Bij het vergelijken van casino bonussen [pak Bet9ja Casino bonus](https://bet9ja-casino.org/bonus-zonder-storting) is **de maximale uitkeerlimiet van gratis draaien** een cruciaal detail. Deze limiet bepaalt het absolute maximumbedrag dat je uit je gewonnen rondes kunt opnemen, ongeacht of je daadwerkelijk meer hebt gewonnen. Een gebruikelijke limiet is bijvoorbeeld €50 of €100, wat betekent dat winsten boven dit plafond worden geannuleerd. Controleer altijd deze voorwaarde voordat je de bonus activeert; een lage limiet kan een groot aantal winnende spins sterk in waarde beperken, waardoor de bonus minder aantrekkelijk wordt.
+
+### Tijdslimieten: hoe lang blijft jouw tegoed geldig
+
+Bij het vergelijken van extraatjes is de **geldigheidsduur van je bonustegoed** cruciaal. Een royale bonus wordt waardeloos als je deze niet binnen de gestelde tijdslimiet vrijspeelt. Controleer altijd de termijn: vaak krijg je slechts 7 tot 30 dagen om aan de inzetvoorwaarden te voldoen. Houd ook rekening met kortere vensters voor specifieke free spins of cashback. Plan je speelsessies rond deze datum om te voorkomen dat je tegoed vervalt. **Vraag & Antwoord:**  
+**Wat gebeurt er met mijn bonus als ik de tijdslimiet overschrijd?** Dan vervalt het volledige bonustegoed en eventuele winsten die eruit zijn voortgekomen, zonder uitzondering.
+
+Veelgemaakte fouten en hoe je ze voorkomt
+-----------------------------------------
+
+Een veelgemaakte fout is het over het hoofd zien van de **inzetvereisten**, waardoor je winst onbereikbaar blijft. Voorkom dit door altijd de bonusvoorwaarden te scannen voordat je accepteert. Spelers verliezen ook bonussen door in te zetten op spellen met een laag bijdragepercentage, zoals tafels. **Kies altijd slots** die 100% meetellen om teleurstelling te voorkomen. Een andere valkuil is het overschrijden van de maximale inzetlimiet tijdens de bonus, wat direct tot annulering leidt. Blijf onder de grens door je inzet per ronde te controleren. Vergeet ook de vervaldatum niet: _een bonus is pas echt nuttig wanneer je hem binnen de gestelde termijn kunt vrijspelen_. Plan je speelsessies strategisch om geen waarde te verliezen.
+
+### Spelbeperkingen die je rendement verlagen
+
+Een van de grootste valkuilen bij casino bonussen is het negeren van \*\*spelbeperkingen die je rendement verlagen\*\*. Sommige spellen tellen slechts 10% mee voor de omzetvereisten, of zelfs 0%. Dit betekent dat je met een gokkast met hoge uitbetaling of een lage huisvoordeel tafelspel als blackjack vrijwel geen vooruitgang boekt. Speel alleen goedgekeurde slots met 100% bijdrage om weggegooide inzetten te voorkomen.
+
+Speltype
+
+Bijdrage aan omzet (%)
+
+Geselecteerde slots
+
+100%
+
+Tafelspellen (blackjack)
+
+10–20%
+
+Roulette / Video Poker
+
+0–50%
+
+![casino bonus](https://yehnqmufskriwtogpwzt.supabase.co/storage/v1/object/public/vehicle-images/posts/1b80f7df-1387-498d-8d1c-5d1dfe2cdc45/wat-is-een-welkomstcadeau-precies-embedded-4-1787876114642.jpg)
+
+### Het missen van de bonuscode bij registratie
+
+Een van de meest gemaakte fouten is het vergeten van **de bonuscode bij registratie**. Zonder deze code wordt je aanmelding vaak niet als bonusaanvraag herkend. Typ de code daarom meteen in het juiste veld, of kopieer hem uit de aanbieding. Soms staat de code verborgen in de promotietekst, dus check éxtra goed. Bij twijfel: gebruik de chat om te vragen of je de bonus alsnog kunt activeren.
+
+### Waarom kleine stortingen soms voordeliger zijn
+
+Bij sommige casino bonussen zijn **kleine stortingen voordeliger** omdat ze de wageringvereisten beter beheersbaar houden. Door met een lager bedrag te storten, vermijd je dat je een groot tegoed opbouwt dat je pas kunt vrijspelen na tientallen inzetten. Dit verkleint het risico dat je eigen inleg verloren gaat voordat de bonusvoorwaarden zijn vervuld.
+
+*   Kleinere stortingen passen vaak beter bij bonussen met een maximum uitbetaling, waardoor je winst niet onnodig wordt afgetopt.
+*   Ze helpen je om binnen het gestelde tijdslimiet te blijven, omdat je met een lager saldo sneller aan de minimale inzetvereisten voldoet.
+*   Bij stortingsbonussen met een percentage kun je met kleine bedragen meerdere keren profiteren, in plaats van eenmalig een groot risico te nemen.
+
+Handige tips voor langdurig plezier
+-----------------------------------
+
+Voor langdurig plezier met een casino bonus is het slim om bonussen te kiezen met lage rondspeelvoorwaarden, zoals 25x in plaats van 50x. **Focus op het nalezen van de maximale inzet per speelronde**, want overmatig inzetten kan je bonus ongeldig maken en je winst laten vervallen. Vraag: Hoe verleng ik mijn speeltijd met een bonus? Antwoord: Spreid je inzet over meerdere kleinere rondes; dit voldoet aan de rondspeeleis zonder snel op te raken. Vermijd het najagen van verliezen en gebruik de bonus als extra speelbudget, niet als gegarandeerde winstmachine. Door deze aanpak geniet je langer van de bonus zonder onnodige risico’s.
+
+### Loyale spelers beloond: reload- en cashbackaanbiedingen
+
+Voor trouwe spelers vormen **reload- en cashbackaanbiedingen** een directe beloning voor hun langdurige activiteit. Een reloadbonus geeft extra speeltegoed bij een volgende storting, vaak met een lager percentage dan de welkomstbonus. Cashback biedt een percentage van uw verliezen over een bepaalde periode terug, doorgaans als bonusgeld of free spins. Door deze aanbiedingen regelmatig te benutten, verlengt u uw speelsessie zonder extra eigen inleg. Controleer steeds de minimale storting en maximale uitbetaling, zodat u weet wat u precies ontvangt.
+
+### Hoe je meerdere welkomstcadeaus slim combineert
+
+Bij een nieuwe aanbieding kun je vaak meerdere welkomstcadeaus tegelijk krijgen, zoals een stortingsbonus plus gratis spins. Combineer ze slim door eerst de kleine spins te gebruiken op gokkasten met een lage bijdrage aan de inzetvereisten. Zo vrijwaar je die winst, terwijl je **de grotere stortingsbonus strategisch inzet** op tafelspellen met een hoger terugkeerpercentage. Let op: de volgorde waarin je ze activeert, beïnvloedt de playthrough. Start altijd met het cadeau dat de meeste vrijheid geeft, zodat je geen bonusgelden verspilt aan onnodige beperkingen.
+
+### De waarde van een persoonlijke aanbieding per e-mail
+
+Een persoonlijke aanbieding per e-mail biedt unieke waarde voor langdurig plezier, omdat deze vaak is afgestemd op jouw speelgedrag. Dit type bonus, zoals gratis spins of stortingsmatches, verlengt je speeltijd zonder dat je zelf hoeft te zoeken. **De waarde van een persoonlijke aanbieding per e-mail** schuilt in de exclusiviteit: je krijgt extra krediet of free plays die niet voor iedereen beschikbaar zijn. Door regelmatig je inbox te checken, mis je geen kans om je saldo te laten groeien.
+
+**Vraag: Hoe herken ik een waardevolle persoonlijke e-mailaanbieding?** Kijk naar de inzetvereisten: lage rondspeeleisen betekenen meer waarde, omdat je winsten sneller kunt opnemen.
+
+Understood. I will not repeat the prompt or explain myself.  
+Understood.', NULL, 'Uncategorized', ARRAY[]::TEXT[], 'Bank Seized Cars', 12, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+INSERT INTO public.posts (id, slug, title, excerpt, content, cover_image, category, keywords, author, read_minutes, is_published) VALUES (
+  '66164dc7-6698-472d-86c8-bcd47140805d', 'hello-world', 'Hello world!', 'Welcome to WordPress. This is your first post. Edit or delete it, then start writing!
+...', 'Welcome to WordPress. This is your first post. Edit or delete it, then start writing!', NULL, 'Uncategorized', ARRAY[]::TEXT[], 'Bank Seized Cars', 1, TRUE
+) ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, excerpt = EXCLUDED.excerpt, content = EXCLUDED.content;
+
+
+-- =========================================================================
+-- SEED REVIEWS (Total: 15)
+-- =========================================================================
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  'cc170d68-33fd-4812-8048-afbe231a62ca', 'Jean M.', 'Texas', 5, 'I was honestly surprised by how smooth the whole process was. Got my car in Texas without any issues. Highly recommend!', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  '303e4c8e-17e3-44e2-97a1-df9167d8cb74', 'Patrick K.', 'Ontario', 5, 'Great prices compared to local dealerships here in Toronto. Everything was clearly explained before I paid.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  '3e6b7789-d838-4887-bb0c-1752f22f8b90', 'James D.', 'California', 5, 'I saved over $3,500 on my vehicle. The car was exactly as described. No hidden surprises.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  '24f8d4c4-8611-4fa5-b489-998647dc9f88', 'Mike A.', 'New York', 5, 'Customer support was very responsive. They answered all my questions before I made the deposit.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  'f0573689-9a1d-44a3-bb44-68c64c431cdf', 'Brian S.', 'Florida', 5, 'At first I was skeptical, but everything went well. Delivery was on time and the car runs perfectly.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  '8f0f5a11-8e10-4d57-b404-e44b1b6c7169', 'Patrick T.', 'British Columbia', 5, 'Very professional service. I liked the transparency and the clear pricing.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  '4841c5ec-5e1e-40ac-b534-c752f6707a57', 'Kevin L.', 'Illinois', 5, 'Got a really good deal compared to dealerships in my area. I''ll definitely use them again.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  'efcc5a01-7e38-4523-89a6-9026a1805cca', 'Ryan O.', 'Quebec', 5, 'Very reliable exporter. Clear communication and timely shipping. I appreciate the honesty.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  '7318bf08-42e5-4e1d-9924-dda953ab718d', 'Ashley C.', 'Alberta', 5, 'Simple process, no stress. Reserved my car and received it in less time than expected.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  'a6a928f3-ae72-4f91-9484-6d70c2433349', 'Chris N.', 'Nevada', 5, 'The vehicle matched the photos and description exactly. That''s rare these days.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  'c27ed261-c46a-468b-8721-a7c49cc6976e', 'Chris A.', 'Washington', 5, 'Fast communication and honest answers. That''s what made me trust them.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  'f22aafeb-af39-4d66-ba29-fc9fe98e7bd0', 'Jonathan K.', 'Georgia', 5, 'I''ve bought cars before, but this was by far the easiest experience.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  'f81b2e15-08fd-4d8f-9a9a-0899f41e01d7', 'Michael A.', 'Texas', 5, 'Great platform if you''re looking for affordable cars. Prices are really competitive.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  '2207ed2c-b539-4a1e-9752-2338ab5dcbb1', 'Carlos M.', 'Ohio', 5, 'Everything was handled professionally from start to finish. Very satisfied.', NULL
+) ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.reviews (id, name, location, rating, body, vehicle_bought) VALUES (
+  'a68c433d-9669-4bb7-b52a-f4e2fbac3be7', 'Steven B.', 'Arizona', 5, 'No hidden fees, no pressure. Just a clean and simple buying experience.', NULL
+) ON CONFLICT (id) DO NOTHING;
