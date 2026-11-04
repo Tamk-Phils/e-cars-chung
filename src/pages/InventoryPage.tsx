@@ -242,6 +242,26 @@ export const InventoryPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Mobile Filter Toggle Button */}
+        <div className="mobile-filter-bar" style={{ marginBottom: '16px' }}>
+          <button
+            type="button"
+            onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
+            className="btn btn-secondary"
+            style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', fontWeight: 700 }}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <SlidersHorizontal size={16} color="var(--accent-purple)" />
+              {mobileFilterOpen ? 'Hide Search Filters' : 'Refine & Filter Inventory'}
+            </span>
+            {hasActiveFilters && (
+              <span style={{ background: 'var(--accent-purple)', color: '#fff', fontSize: '0.72rem', fontWeight: 800, padding: '2px 8px', borderRadius: 'var(--radius-full)' }}>
+                Active
+              </span>
+            )}
+          </button>
+        </div>
+
         {/* Main Content Layout: Sidebar Filters + Vehicles Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '28px', alignItems: 'start' }} className="inventory-grid-wrapper">
           {/* Left Sidebar Filter Panel */}
@@ -254,7 +274,7 @@ export const InventoryPage: React.FC = () => {
               position: 'sticky',
               top: '84px',
             }}
-            className="filter-sidebar"
+            className={`filter-sidebar ${mobileFilterOpen ? 'mobile-open' : ''}`}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #e5e7eb' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '0.95rem' }}>

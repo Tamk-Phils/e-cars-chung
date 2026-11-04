@@ -156,7 +156,7 @@ export const VehicleDetailPage: React.FC = () => {
           </div>
 
           {/* Pricing & Primary Action */}
-          <div style={{ textAlign: 'right' }}>
+          <div className="vehicle-detail-pricing" style={{ textAlign: 'right' }}>
             <div style={{ fontSize: '2rem', fontWeight: 800, color: '#111827' }}>
               {formatPrice(vehicle.price)}
             </div>
@@ -211,6 +211,7 @@ export const VehicleDetailPage: React.FC = () => {
           <div>
             {/* Main Stage Image */}
             <div
+              className="vehicle-gallery-stage"
               style={{
                 background: '#000000',
                 borderRadius: 'var(--radius-lg)',

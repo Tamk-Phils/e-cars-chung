@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
+import { DirectImageUploader } from './DirectImageUploader';
 import type { Vehicle, VehicleCondition, Order, Post } from '../types';
 import {
   X,
@@ -65,7 +66,7 @@ export const AdminPortal: React.FC = () => {
   const [vBodyType, setVBodyType] = useState('Sedan');
   const [vVin, setVVin] = useState('1HGCR2F8X9281029');
   const [vTitleStatus, setVTitleStatus] = useState('Clean Title');
-  const [vImageUrl, setVImageUrl] = useState('https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80');
+  const [vImages, setVImages] = useState<string[]>(['https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80']);
   const [vDesc, setVDesc] = useState('Pristine vehicle with complete service history, clean title, and full warranty.');
 
   // Search filter inside admin inventory
@@ -97,7 +98,7 @@ export const AdminPortal: React.FC = () => {
     setVBodyType('Coupe');
     setVVin('WP0AB' + Math.floor(10000000 + Math.random() * 90000000));
     setVTitleStatus('Clean Title');
-    setVImageUrl('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80');
+    setVImages(['https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80']);
     setVDesc('Brand new high-performance model. Unregistered with complete factory warranty and enclosed nationwide delivery.');
     setIsEditingVehicle(true);
   };
@@ -116,13 +117,14 @@ export const AdminPortal: React.FC = () => {
     setVBodyType(v.body_type || 'Sedan');
     setVVin(v.vin || '');
     setVTitleStatus(v.title_status || 'Clean Title');
-    setVImageUrl(v.images?.[0] || '');
+    setVImages(v.images && v.images.length > 0 ? v.images : []);
     setVDesc(v.description || '');
     setIsEditingVehicle(true);
   };
 
   const handleSaveVehicle = (e: React.FormEvent) => {
     e.preventDefault();
+    const imgsToSave = vImages.length > 0 ? vImages : ['https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&q=80'];
     if (editingId) {
       updateVehicle(editingId, {
         name: vName,
@@ -137,7 +139,7 @@ export const AdminPortal: React.FC = () => {
         body_type: vBodyType,
         vin: vVin,
         title_status: vTitleStatus,
-        images: [vImageUrl],
+        images: imgsToSave,
         description: vDesc,
       });
     } else {
@@ -162,7 +164,7 @@ export const AdminPortal: React.FC = () => {
         trim: 'Premium Edition',
         description: vDesc,
         features: ['Certified 150-Point Inspection', 'Clean Title Guarantee', 'Enclosed Delivery'],
-        images: [vImageUrl],
+        images: imgsToSave,
         is_hot_deal: vCondition === 'Bank Seized / Repo',
         is_sold: false,
         is_featured: true,
@@ -793,15 +795,11 @@ export const AdminPortal: React.FC = () => {
                 </div>
               </div>
 
-              <div>
-                <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px' }}>High-Res Image URL</label>
-                <input
-                  type="url"
-                  className="input"
-                  value={vImageUrl}
-                  onChange={e => setVImageUrl(e.target.value)}
-                />
-              </div>
+              <DirectImageUploader
+                images={vImages}
+                onChange={setVImages}
+                maxImages={30}
+              />
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.75rem', marginBottom: '4px' }}>Vehicle Description</label>

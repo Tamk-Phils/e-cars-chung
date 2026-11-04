@@ -26,6 +26,7 @@ export const Navbar: React.FC = () => {
     wishlist,
     compareList,
     orders,
+    vehicles,
     setIsCompareOpen,
     setIsWishlistOpen,
     currency,
@@ -135,7 +136,7 @@ export const Navbar: React.FC = () => {
                     onMouseEnter={e => (e.currentTarget.style.background = '#f3f4f6')}
                     onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                   >
-                    All 51 Vehicles (In Stock)
+                    All Vehicles ({vehicles.length})
                   </button>
                   <button
                     onClick={() => handleConditionNav('Brand New')}
@@ -394,7 +395,7 @@ export const Navbar: React.FC = () => {
             onClick={() => setMobileMenuOpen(false)}
             style={{ fontSize: '1rem', fontWeight: 700, color: '#111827', textDecoration: 'none', padding: '8px 0' }}
           >
-            Shop All Vehicles (51)
+            Shop All Vehicles ({vehicles.length})
           </Link>
           <button
             onClick={() => handleConditionNav('Brand New')}

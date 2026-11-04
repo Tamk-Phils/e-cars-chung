@@ -283,3 +283,96 @@ button, input, select, textarea {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* ==========================================================================
+   Comprehensive Mobile & Tablet Responsiveness System
+   ========================================================================== */
+
+/* Desktop Breakpoints (>= 992px) */
+@media (min-width: 992px) {
+  .desktop-nav {
+    display: flex !important;
+  }
+  .desk-only {
+    display: inline !important;
+  }
+  .mobile-menu-btn {
+    display: none !important;
+  }
+  .mobile-filter-bar {
+    display: none !important;
+  }
+  .filter-sidebar {
+    display: block !important;
+  }
+}
+
+/* Tablet & Mobile Breakpoints (< 992px) */
+@media (max-width: 991px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .desk-only {
+    display: none !important;
+  }
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+  .inventory-grid-wrapper {
+    grid-template-columns: 1fr !important;
+  }
+  .mobile-filter-bar {
+    display: block !important;
+  }
+  .filter-sidebar {
+    display: none !important;
+    position: static !important;
+    width: 100% !important;
+    margin-bottom: 20px !important;
+  }
+  .filter-sidebar.mobile-open {
+    display: block !important;
+    animation: fadeIn 0.2s ease-out;
+  }
+  .vehicle-details-layout {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Mobile Small Devices (< 768px) */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+  .modal-backdrop {
+    padding: 10px;
+  }
+  .modal-content {
+    max-height: 95vh;
+    padding: 16px !important;
+    border-radius: var(--radius-lg);
+  }
+  .vehicle-detail-pricing {
+    text-align: left !important;
+  }
+  .vehicle-detail-pricing > div:last-child {
+    justify-content: flex-start !important;
+  }
+  .vehicle-gallery-stage {
+    height: 280px !important;
+  }
+}
+
+/* Ultra Small Screens (< 640px) */
+@media (max-width: 640px) {
+  .vehicle-card-list {
+    flex-direction: column !important;
+  }
+  .vehicle-card-list-img {
+    width: 100% !important;
+    height: 200px !important;
+  }
+  .admin-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

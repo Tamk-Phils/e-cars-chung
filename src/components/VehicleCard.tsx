@@ -70,7 +70,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, viewMode = 'g
 
   return (
     <div
-      className="card-panel"
+      className={`card-panel ${viewMode === 'list' ? 'vehicle-card-list' : ''}`}
       style={{
         display: 'flex',
         flexDirection: viewMode === 'list' ? 'row' : 'column',
@@ -94,6 +94,7 @@ export const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, viewMode = 'g
     >
       {/* Image Container */}
       <div
+        className={viewMode === 'list' ? 'vehicle-card-list-img' : ''}
         style={{
           position: 'relative',
           width: viewMode === 'list' ? '320px' : '100%',

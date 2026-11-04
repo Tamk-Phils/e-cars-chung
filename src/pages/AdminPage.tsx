@@ -30,6 +30,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { syncBatchToSupabase, SUPABASE_URL } from '../services/supabaseClient';
+import { DirectImageUploader } from '../components/DirectImageUploader';
 
 export const AdminPage: React.FC = () => {
   const {
@@ -90,7 +91,7 @@ export const AdminPage: React.FC = () => {
   const [vVin, setVVin] = useState('WP0AB2A99TR928104');
   const [vTitleStatus, setVTitleStatus] = useState('MSO / Clean Title');
   const [vTrim, setVTrim] = useState('Weissach Package');
-  const [vImages, setVImages] = useState('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80');
+  const [vImages, setVImages] = useState<string[]>(['https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80']);
   const [vDesc, setVDesc] = useState('Pristine vehicle with complete service history, clean title, and full warranty.');
   const [vIsHotDeal, setVIsHotDeal] = useState(false);
   const [vIsFeatured, setVIsFeatured] = useState(true);
@@ -173,7 +174,7 @@ export const AdminPage: React.FC = () => {
     setVVin('WP0AB' + Math.floor(10000000 + Math.random() * 90000000));
     setVTitleStatus('MSO / Clean Title');
     setVTrim('Weissach Package');
-    setVImages('https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80');
+    setVImages(['https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=1200&q=80']);
     setVDesc('Unregistered factory fresh unit with complete manufacturer warranty.');
     setVIsHotDeal(false);
     setVIsFeatured(true);
@@ -201,7 +202,7 @@ export const AdminPage: React.FC = () => {
     setVVin(v.vin);
     setVTitleStatus(v.title_status);
     setVTrim(v.trim || '');
-    setVImages(v.images ? v.images.join(', ') : '');
+    setVImages(v.images && v.images.length > 0 ? v.images : []);
     setVDesc(v.description);
     setVIsHotDeal(v.is_hot_deal);
     setVIsFeatured(v.is_featured);
@@ -211,10 +212,7 @@ export const AdminPage: React.FC = () => {
   // Save Vehicle
   const handleSaveVehicle = async (e: React.FormEvent) => {
     e.preventDefault();
-    const imgList = vImages
-      .split(',')
-      .map(s => s.trim())
-      .filter(s => s.length > 0);
+    const imgList = vImages.length > 0 ? vImages : ['https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1200&q=80'];
 
     const vehiclePayload = {
       slug: (vName || `${vYear}-${vMake}-${vModel}`).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
@@ -257,7 +255,7 @@ export const AdminPage: React.FC = () => {
 
   // Push local data to Supabase
   const handleSyncToSupabase = async () => {
-    setSyncStatus({ loading: true, message: 'Syncing 51 vehicles, 9 articles, and 15 reviews to Supabase...' });
+    setSyncStatus({ loading: true, message: `Syncing ${vehicles.length} vehicles, ${posts.length} articles, and ${reviews.length} reviews to Supabase...` });
     const res = await syncBatchToSupabase(vehicles, posts, reviews);
     setSyncStatus({ loading: false, message: res.message, success: res.success });
     await refreshSupabaseStatus();
@@ -520,7 +518,7 @@ export const AdminPage: React.FC = () => {
                 <div style={{ fontSize: '1.85rem', fontWeight: 800, color: '#111827', margin: '6px 0' }}>
                   {formatPrice(totalValuation)}
                 </div>
-                <span style={{ fontSize: '0.75rem', color: '#059669', fontWeight: 600 }}>51 active catalog units</span>
+                <span style={{ fontSize: '0.75rem', color: '#059669', fontWeight: 600 }}>{vehicles.length} active catalog units</span>
               </div>
 
               <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '24px' }}>
@@ -1015,7 +1013,7 @@ export const AdminPage: React.FC = () => {
                   Sync Local to Supabase
                 </div>
                 <p style={{ fontSize: '0.75rem', color: '#6b7280', margin: '4px 0 14px' }}>
-                  Push 51 vehicles, 9 articles, and 15 reviews into your Supabase database.
+                  Push {vehicles.length} vehicles, {posts.length} articles, and {reviews.length} reviews into your Supabase database.
                 </p>
                 <button onClick={handleSyncToSupabase} className="btn btn-secondary" style={{ width: '100%', fontSize: '0.8rem', padding: '8px' }}>
                   Push Local Data to Supabase
@@ -1053,7 +1051,7 @@ export const AdminPage: React.FC = () => {
                 onClick={() => {
                   if (confirm('Reset all vehicle data, posts, reviews, and orders back to initial defaults?')) {
                     resetAllData();
-                    alert('System data reset to initial 51 vehicles.');
+                    alert(`System data reset to initial ${vehicles.length} vehicles.`);
                   }
                 }}
                 className="btn btn-danger"
@@ -1090,7 +1088,7 @@ export const AdminPage: React.FC = () => {
                   />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                <div className="admin-form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, marginBottom: '4px' }}>Make *</label>
                     <input type="text" required className="input" value={vMake} onChange={e => setVMake(e.target.value)} />
@@ -1105,7 +1103,7 @@ export const AdminPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                <div className="admin-form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, marginBottom: '4px' }}>Condition *</label>
                     <select className="select" value={vCondition} onChange={e => setVCondition(e.target.value as any)}>
@@ -1125,7 +1123,7 @@ export const AdminPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="admin-form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, marginBottom: '4px' }}>Transmission</label>
                     <input type="text" className="input" value={vTransmission} onChange={e => setVTransmission(e.target.value)} />
@@ -1136,15 +1134,11 @@ export const AdminPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, marginBottom: '4px' }}>Image URLs (comma separated for gallery)</label>
-                  <input
-                    type="text"
-                    className="input"
-                    value={vImages}
-                    onChange={e => setVImages(e.target.value)}
-                  />
-                </div>
+                <DirectImageUploader
+                  images={vImages}
+                  onChange={setVImages}
+                  maxImages={30}
+                />
 
                 <div>
                   <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, marginBottom: '4px' }}>Description</label>

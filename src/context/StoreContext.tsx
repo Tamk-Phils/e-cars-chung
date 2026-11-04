@@ -105,7 +105,17 @@ const CURRENCY_RATES: Record<Currency, { symbol: string; rate: number }> = {
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>(() => {
     const saved = localStorage.getItem('uc_vehicles');
-    return saved ? JSON.parse(saved) : INITIAL_VEHICLES;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length >= INITIAL_VEHICLES.length) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Failed to parse cached vehicles', e);
+      }
+    }
+    return INITIAL_VEHICLES;
   });
 
   const [posts, setPosts] = useState<Post[]>(() => {

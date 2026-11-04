@@ -188,7 +188,7 @@ export const OrdersPage: React.FC = () => {
               You haven't reserved any vehicles yet. Explore our inventory and reserve any car with a refundable $500 hold.
             </p>
             <Link to="/inventory" className="btn btn-primary" style={{ padding: '10px 24px' }}>
-              Browse 51 Vehicles For Sale
+              Browse All Vehicles For Sale
             </Link>
           </div>
         )}

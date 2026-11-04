@@ -67,7 +67,7 @@ export const Footer: React.FC = () => {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
               <li>
                 <Link to="/inventory" style={{ color: '#4b5563', textDecoration: 'none' }}>
-                  All 51 Vehicles For Sale
+                  Browse All Vehicles For Sale
                 </Link>
               </li>
               <li>
