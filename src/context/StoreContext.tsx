@@ -104,22 +104,20 @@ const CURRENCY_RATES: Record<Currency, { symbol: string; rate: number }> = {
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>(() => {
+    const version = localStorage.getItem('uc_inventory_version');
     const saved = localStorage.getItem('uc_vehicles');
-    if (saved) {
+    if (saved && version === 'bankrepossessedautos_v1') {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          // If cached vehicles have old demo/synthetic items or length mismatch, purge and reset
-          const hasOldDemo = parsed.some((v: any) => v.id && (v.id.startsWith('bn-') || v.id.startsWith('veh-')));
-          if (!hasOldDemo && parsed.length === INITIAL_VEHICLES.length) {
-            return parsed;
-          }
+        if (Array.isArray(parsed) && parsed.length === INITIAL_VEHICLES.length) {
+          return parsed;
         }
       } catch (e) {
         console.error('Failed to parse cached vehicles', e);
       }
     }
-    // Set to clean 64 authentic vehicles
+    // Set strictly to bankrepossessedautos.com inventory
+    localStorage.setItem('uc_inventory_version', 'bankrepossessedautos_v1');
     localStorage.setItem('uc_vehicles', JSON.stringify(INITIAL_VEHICLES));
     return INITIAL_VEHICLES;
   });
