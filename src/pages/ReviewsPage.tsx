@@ -60,33 +60,33 @@ export const ReviewsPage: React.FC = () => {
   };
 
   return (
-    <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '36px 0 80px' }}>
+    <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '24px 0 60px' }}>
       <div className="container" style={{ maxWidth: '1000px' }}>
         {/* Breadcrumb */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
           <Link to="/" style={{ color: '#6b7280', textDecoration: 'none' }}>Home</Link>
           <span>/</span>
           <span style={{ color: '#111827', fontWeight: 600 }}>Customer Reviews</span>
         </div>
 
         {/* Header & Rating Breakdown Banner */}
-        <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '36px', marginBottom: '32px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '24px' }}>
-            <div>
+        <div className="card-panel" style={{ padding: '28px 20px', marginBottom: '28px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
+            <div style={{ flex: '1 1 300px' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-purple)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Customer Trust & Verification
               </span>
-              <h1 style={{ fontSize: '2.1rem', fontWeight: 800, color: '#111827', marginTop: '4px', marginBottom: '8px' }}>
+              <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 2.1rem)', fontWeight: 800, color: '#111827', marginTop: '4px', marginBottom: '8px', lineHeight: 1.25 }}>
                 Verified Buyer Reviews
               </h1>
-              <p style={{ color: '#4b5563', fontSize: '0.95rem', maxWidth: '520px', lineHeight: 1.5 }}>
+              <p style={{ color: '#4b5563', fontSize: '0.92rem', maxWidth: '520px', lineHeight: 1.5 }}>
                 Every review represents a real vehicle transaction with verified VIN and escrow settlement.
               </p>
             </div>
 
             {/* Score Box */}
-            <div style={{ textAlign: 'center', background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: 'var(--radius-lg)', padding: '24px 32px' }}>
-              <div style={{ fontSize: '2.8rem', fontWeight: 800, color: 'var(--accent-purple)', lineHeight: 1 }}>
+            <div style={{ textAlign: 'center', background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: 'var(--radius-lg)', padding: '20px 24px', flex: '1 1 200px' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent-purple)', lineHeight: 1 }}>
                 4.95
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', gap: '3px', margin: '8px 0' }}>
@@ -94,14 +94,14 @@ export const ReviewsPage: React.FC = () => {
                   <Star key={i} size={18} fill="#f59e0b" color="#f59e0b" />
                 ))}
               </div>
-              <span style={{ fontSize: '0.85rem', color: '#6b7280', fontWeight: 600 }}>
+              <span style={{ fontSize: '0.82rem', color: '#6b7280', fontWeight: 600 }}>
                 Based on {reviews.length} Verified Purchases
               </span>
             </div>
           </div>
 
           {/* Action Row: Filters + Write Review Button */}
-          <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '24px', marginTop: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+          <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '20px', marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
             {/* Filter by Location */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontSize: '0.85rem', color: '#6b7280', fontWeight: 600 }}>Filter Location:</span>
@@ -122,7 +122,7 @@ export const ReviewsPage: React.FC = () => {
             <button
               onClick={() => setIsModalOpen(true)}
               className="btn btn-primary"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', fontSize: '0.9rem' }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '10px 20px', fontSize: '0.9rem' }}
             >
               <Plus size={16} /> Write a Customer Review
             </button>
@@ -130,7 +130,7 @@ export const ReviewsPage: React.FC = () => {
         </div>
 
         {/* Reviews Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
           {filteredReviews.map((rev, idx) => (
             <div
               key={rev.id || idx}

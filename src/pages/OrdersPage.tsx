@@ -76,7 +76,7 @@ export const OrdersPage: React.FC = () => {
 
         {/* If an active order is selected/found */}
         {activeDisplayOrder ? (
-          <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '36px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)', marginBottom: '32px' }}>
+          <div className="card-panel" style={{ padding: '28px 20px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)', marginBottom: '32px' }}>
             {/* Top Bar: Order ID + Status Badge + Print */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', paddingBottom: '20px', borderBottom: '1px solid #e5e7eb', marginBottom: '28px' }}>
               <div>
@@ -179,7 +179,7 @@ export const OrdersPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div style={{ textAlign: 'center', padding: '60px 20px', background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', marginBottom: '32px' }}>
+          <div className="card-panel" style={{ textAlign: 'center', padding: '48px 16px', background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', marginBottom: '32px' }}>
             <Package size={44} style={{ color: '#9ca3af', marginBottom: '12px' }} />
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', marginBottom: '6px' }}>
               No Orders Found Matching "{searchQuery}"
@@ -195,7 +195,7 @@ export const OrdersPage: React.FC = () => {
 
         {/* All Recent Orders List */}
         {orders.length > 1 && (
-          <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '28px' }}>
+          <div className="card-panel" style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '24px 18px' }}>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#111827', marginBottom: '16px' }}>
               All System Orders ({orders.length})
             </h3>

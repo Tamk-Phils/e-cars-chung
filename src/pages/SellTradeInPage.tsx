@@ -64,56 +64,56 @@ export const SellTradeInPage: React.FC = () => {
   };
 
   return (
-    <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '36px 0 80px' }}>
+    <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '24px 0 60px' }}>
       <div className="container" style={{ maxWidth: '960px' }}>
         {/* Breadcrumb */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
           <Link to="/" style={{ color: '#6b7280', textDecoration: 'none' }}>Home</Link>
           <span>/</span>
           <span style={{ color: '#111827', fontWeight: 600 }}>Sell or Trade In</span>
         </div>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-purple)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Instant Vehicle Appraisal
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginTop: '4px', marginBottom: '10px' }}>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 2.25rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginTop: '4px', marginBottom: '10px', lineHeight: 1.25 }}>
             Sell or Trade In Your Vehicle Online
           </h1>
-          <p style={{ color: '#4b5563', fontSize: '0.95rem', maxWidth: '620px', margin: '0 auto', lineHeight: 1.6 }}>
+          <p style={{ color: '#4b5563', fontSize: '0.92rem', maxWidth: '620px', margin: '0 auto', lineHeight: 1.6 }}>
             Get a 100% transparent, data-driven cash offer in 2 minutes. Guaranteed for 7 days or 500 miles. We pick up from your doorstep and wire funds directly.
           </p>
 
           {/* Stepper */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '28px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px', marginTop: '24px', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: step >= 1 ? 'var(--accent-purple)' : '#e5e7eb', color: '#fff', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: step >= 1 ? 'var(--accent-purple)' : '#e5e7eb', color: '#fff', fontWeight: 800, fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 1
               </div>
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: step >= 1 ? '#111827' : '#9ca3af' }}>Vehicle Specs</span>
+              <span style={{ fontSize: '0.82rem', fontWeight: 700, color: step >= 1 ? '#111827' : '#9ca3af' }}>Vehicle Specs</span>
             </div>
-            <div style={{ width: '40px', height: '2px', background: step >= 2 ? 'var(--accent-purple)' : '#e5e7eb' }} />
+            <div style={{ width: '24px', height: '2px', background: step >= 2 ? 'var(--accent-purple)' : '#e5e7eb' }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: step >= 2 ? 'var(--accent-purple)' : '#e5e7eb', color: '#fff', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: step >= 2 ? 'var(--accent-purple)' : '#e5e7eb', color: '#fff', fontWeight: 800, fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 2
               </div>
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: step >= 2 ? '#111827' : '#9ca3af' }}>Instant Offer</span>
+              <span style={{ fontSize: '0.82rem', fontWeight: 700, color: step >= 2 ? '#111827' : '#9ca3af' }}>Instant Offer</span>
             </div>
-            <div style={{ width: '40px', height: '2px', background: step >= 3 ? 'var(--accent-purple)' : '#e5e7eb' }} />
+            <div style={{ width: '24px', height: '2px', background: step >= 3 ? 'var(--accent-purple)' : '#e5e7eb' }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: step >= 3 ? '#059669' : '#e5e7eb', color: '#fff', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: step >= 3 ? '#059669' : '#e5e7eb', color: '#fff', fontWeight: 800, fontSize: '0.82rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 3
               </div>
-              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: step >= 3 ? '#059669' : '#9ca3af' }}>Lock & Pickup</span>
+              <span style={{ fontSize: '0.82rem', fontWeight: 700, color: step >= 3 ? '#059669' : '#9ca3af' }}>Lock & Pickup</span>
             </div>
           </div>
         </div>
 
         {/* Step 1: Enter Vehicle Specs */}
         {step === 1 && (
-          <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '36px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#111827', marginBottom: '20px' }}>
+          <div className="card-panel" style={{ padding: '28px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
+            <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#111827', marginBottom: '18px' }}>
               Step 1: Tell Us About Your Vehicle
             </h2>
 
@@ -240,11 +240,11 @@ export const SellTradeInPage: React.FC = () => {
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
+              <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  style={{ padding: '14px 32px', fontSize: '1rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}
+                  style={{ width: '100%', maxWidth: '380px', padding: '14px 20px', fontSize: '0.95rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
                   <span>Generate Instant Cash Valuation</span>
                   <ArrowRight size={18} />
@@ -256,12 +256,12 @@ export const SellTradeInPage: React.FC = () => {
 
         {/* Step 2: Instant Offer & Payout Selection */}
         {step === 2 && (
-          <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '36px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
+          <div className="card-panel" style={{ padding: '28px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
             <div style={{ textAlign: 'center', marginBottom: '32px' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 ✓ Official Real-Time Valuation
               </span>
-              <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#111827', marginTop: '4px' }}>
+              <h2 style={{ fontSize: 'clamp(1.25rem, 4vw, 2rem)', fontWeight: 800, color: '#111827', marginTop: '4px', lineHeight: 1.3 }}>
                 Estimated Offer Range: ${estimatedOfferMin.toLocaleString()} – ${estimatedOfferMax.toLocaleString()}
               </h2>
               <p style={{ color: '#4b5563', fontSize: '0.9rem', marginTop: '6px' }}>
@@ -369,11 +369,12 @@ export const SellTradeInPage: React.FC = () => {
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                 <button
                   type="button"
                   onClick={() => setStep(1)}
                   className="btn btn-secondary"
+                  style={{ width: 'auto' }}
                 >
                   ← Edit Vehicle Info
                 </button>
@@ -391,14 +392,14 @@ export const SellTradeInPage: React.FC = () => {
 
         {/* Step 3: Confirmation */}
         {step === 3 && (
-          <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '48px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
+          <div className="card-panel" style={{ padding: '32px 18px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
             <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#d1fae5', color: '#059669', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <CheckCircle size={36} />
             </div>
             <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#059669', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Offer Confirmed & Locked
             </span>
-            <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#111827', marginTop: '6px', marginBottom: '10px' }}>
+            <h2 style={{ fontSize: 'clamp(1.3rem, 4vw, 2rem)', fontWeight: 800, color: '#111827', marginTop: '6px', marginBottom: '10px', wordBreak: 'break-word' }}>
               Offer Reference: {confirmationCode}
             </h2>
             <p style={{ color: '#4b5563', fontSize: '0.95rem', maxWidth: '540px', margin: '0 auto 28px', lineHeight: 1.6 }}>

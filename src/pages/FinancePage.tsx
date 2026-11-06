@@ -50,37 +50,37 @@ export const FinancePage: React.FC = () => {
   };
 
   return (
-    <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '36px 0 80px' }}>
+    <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '24px 0 60px' }}>
       <div className="container" style={{ maxWidth: '1040px' }}>
         {/* Breadcrumb */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
           <Link to="/" style={{ color: '#6b7280', textDecoration: 'none' }}>Home</Link>
           <span>/</span>
           <span style={{ color: '#111827', fontWeight: 600 }}>Auto Financing & Loan Center</span>
         </div>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-purple)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Competitive Rates & Direct Lending
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginTop: '4px', marginBottom: '10px' }}>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 2.25rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginTop: '4px', marginBottom: '10px', lineHeight: 1.25 }}>
             Auto Financing & Loan Payment Estimator
           </h1>
-          <p style={{ color: '#4b5563', fontSize: '0.95rem', maxWidth: '640px', margin: '0 auto', lineHeight: 1.6 }}>
+          <p style={{ color: '#4b5563', fontSize: '0.92rem', maxWidth: '640px', margin: '0 auto', lineHeight: 1.6 }}>
             Calculate monthly payments, compare APR rates by credit score, or apply for instant pre-qualification without impacting your credit score.
           </p>
         </div>
 
         {/* Main 2-Column: Loan Calculator + Tier Chart */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '32px', marginBottom: '48px', alignItems: 'start' }} className="finance-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', marginBottom: '36px', alignItems: 'start' }} className="finance-grid">
           {/* Calculator Card */}
-          <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '32px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '24px' }}>
+          <div className="card-panel" style={{ padding: '28px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
               <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#ede9fe', color: 'var(--accent-purple)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Calculator size={20} />
               </div>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#111827', margin: 0 }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', margin: 0 }}>
                 Payment Calculator
               </h2>
             </div>
@@ -300,12 +300,12 @@ export const FinancePage: React.FC = () => {
         </div>
 
         {/* Pre-Qualification Application Section */}
-        <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '36px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
-          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 28px' }}>
+        <div className="card-panel" style={{ padding: '28px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
+          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 24px' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-purple)', textTransform: 'uppercase' }}>
               Instant Online Pre-Approval
             </span>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#111827', marginTop: '4px' }}>
+            <h2 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, color: '#111827', marginTop: '4px' }}>
               Get Pre-Qualified in 60 Seconds
             </h2>
             <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
@@ -314,14 +314,14 @@ export const FinancePage: React.FC = () => {
           </div>
 
           {preQualSubmitted && preQualResult ? (
-            <div style={{ textAlign: 'center', padding: '32px', background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: 'var(--radius-lg)' }}>
+            <div style={{ textAlign: 'center', padding: '28px 16px', background: '#f5f3ff', border: '1px solid #ddd6fe', borderRadius: 'var(--radius-lg)' }}>
               <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#059669', color: '#fff', margin: '0 auto 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <CheckCircle size={32} />
               </div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#111827' }}>
+              <h3 style={{ fontSize: 'clamp(1.2rem, 3.5vw, 1.5rem)', fontWeight: 800, color: '#111827' }}>
                 Congratulations, {fullName || 'Customer'}! You Are Pre-Qualified!
               </h3>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', margin: '20px 0' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', margin: '20px 0', flexWrap: 'wrap' }}>
                 <div>
                   <span style={{ fontSize: '0.85rem', color: '#6b7280', display: 'block' }}>Pre-Approved Budget</span>
                   <span style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent-purple)' }}>
@@ -336,15 +336,15 @@ export const FinancePage: React.FC = () => {
                 </div>
               </div>
               <p style={{ color: '#4b5563', fontSize: '0.85rem', maxWidth: '480px', margin: '0 auto 24px' }}>
-                Your certificate has been sent to <strong>{email}</strong>. This approval is valid for 30 days and applies to any brand new or pre-owned car in our inventory.
+                Your certificate has been sent to <strong>{email}</strong>. This approval is valid for 30 days and applies to any vehicle in our inventory.
               </p>
-              <Link to="/inventory" className="btn btn-primary" style={{ padding: '12px 28px' }}>
+              <Link to="/inventory" className="btn btn-primary" style={{ padding: '12px 24px', width: '100%', maxWidth: '380px' }}>
                 Browse Inventory With Pre-Approved Financing
               </Link>
             </div>
           ) : (
             <form onSubmit={handlePreQualSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+              <div className="finance-inputs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, marginBottom: '4px' }}>Full Legal Name *</label>
                   <input
@@ -392,7 +392,7 @@ export const FinancePage: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.75rem', color: '#6b7280', marginTop: '6px' }}>
-                <Lock size={14} style={{ color: '#059669' }} />
+                <Lock size={14} style={{ color: '#059669', flexShrink: 0 }} />
                 <span>256-bit bank-grade SSL encryption. We never sell your personal information.</span>
               </div>
 
@@ -400,7 +400,7 @@ export const FinancePage: React.FC = () => {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  style={{ padding: '12px 36px', fontSize: '0.95rem', fontWeight: 700 }}
+                  style={{ width: '100%', maxWidth: '420px', padding: '12px 20px', fontSize: '0.92rem', fontWeight: 700 }}
                 >
                   Submit Soft Pre-Qualification Application
                 </button>

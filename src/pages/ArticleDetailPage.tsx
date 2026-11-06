@@ -92,7 +92,7 @@ export const ArticleDetailPage: React.FC = () => {
         </div>
 
         {/* Article Container Card */}
-        <article style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', overflow: 'hidden', padding: '40px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)', marginBottom: '40px' }}>
+        <article className="card-panel" style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', overflow: 'hidden', padding: '32px 20px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)', marginBottom: '36px' }}>
           {/* Header Meta */}
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--accent-purple)', background: '#ede9fe', padding: '4px 10px', borderRadius: 'var(--radius-full)', textTransform: 'uppercase' }}>
@@ -106,11 +106,11 @@ export const ArticleDetailPage: React.FC = () => {
             </span>
           </div>
 
-          <h1 style={{ fontSize: '2.1rem', fontWeight: 800, color: '#111827', lineHeight: 1.25, letterSpacing: '-0.025em', marginBottom: '18px' }}>
+          <h1 style={{ fontSize: 'clamp(1.35rem, 5vw, 2.1rem)', fontWeight: 800, color: '#111827', lineHeight: 1.25, letterSpacing: '-0.025em', marginBottom: '16px' }}>
             {post.title}
           </h1>
 
-          <div style={{ height: '360px', borderRadius: 'var(--radius-lg)', overflow: 'hidden', margin: '24px 0 32px' }}>
+          <div style={{ height: 'clamp(180px, 45vw, 360px)', borderRadius: 'var(--radius-lg)', overflow: 'hidden', margin: '20px 0 28px' }}>
             <img
               src={post.cover_image || 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80'}
               alt={post.title}

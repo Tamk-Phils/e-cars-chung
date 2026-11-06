@@ -47,7 +47,7 @@ export const ResearchPage: React.FC = () => {
     <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '36px 0 80px' }}>
       <div className="container">
         {/* Breadcrumb */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
           <Link to="/" style={{ color: '#6b7280', textDecoration: 'none' }}>Home</Link>
           <span>/</span>
           <span style={{ color: '#111827', fontWeight: 600 }}>Research & Buyer Guides</span>
@@ -58,15 +58,15 @@ export const ResearchPage: React.FC = () => {
           <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-purple)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Automotive Knowledge Hub
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginTop: '4px', marginBottom: '10px' }}>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 2.25rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginTop: '4px', marginBottom: '10px', lineHeight: 1.25 }}>
             Buyer Guides, Market Research & Advice
           </h1>
-          <p style={{ color: '#4b5563', fontSize: '0.95rem', lineHeight: 1.6 }}>
+          <p style={{ color: '#4b5563', fontSize: '0.92rem', lineHeight: 1.6 }}>
             In-depth guides transferred from certified automotive appraisers. Master the nuances of clean titles, repo auctions, financing calculations, and avoiding online vehicle scams.
           </p>
 
           {/* Search bar */}
-          <div style={{ position: 'relative', maxWidth: '480px', margin: '24px auto 0' }}>
+          <div style={{ position: 'relative', maxWidth: '480px', margin: '20px auto 0' }}>
             <Search size={18} style={{ position: 'absolute', left: '14px', top: '14px', color: '#9ca3af' }} />
             <input
               type="text"
@@ -80,15 +80,15 @@ export const ResearchPage: React.FC = () => {
         </div>
 
         {/* Categories Pills */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '36px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '32px' }}>
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
               style={{
-                padding: '8px 18px',
+                padding: '6px 14px',
                 borderRadius: 'var(--radius-full)',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 fontWeight: 600,
                 textTransform: 'capitalize',
                 border: activeCategory === cat ? '1px solid var(--accent-purple)' : '1px solid #d1d5db',
@@ -104,7 +104,7 @@ export const ResearchPage: React.FC = () => {
         </div>
 
         {/* Articles Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '28px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))', gap: '20px' }}>
           {filteredPosts.map(post => (
             <article
               key={post.id}

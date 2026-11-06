@@ -10,6 +10,7 @@ import {
   CheckCircle,
   Lock,
   ArrowRight,
+  Flame,
 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
@@ -33,26 +34,28 @@ export const Footer: React.FC = () => {
           {/* Brand Info */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-              <Link to="/" style={{ textDecoration: 'none' }}>
+              <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div
                   style={{
-                    background: 'var(--accent-purple)',
-                    color: '#ffffff',
-                    padding: '4px 14px',
-                    borderRadius: '9999px',
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '50%',
+                    background: '#0a0a0a',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.15)',
                   }}
                 >
-                  <span style={{ fontSize: '1.15rem', fontWeight: 800, fontStyle: 'italic', letterSpacing: '-0.03em' }}>
-                    cars.com
-                  </span>
+                  <Flame size={18} color="#3b82f6" fill="#3b82f6" />
                 </div>
+                <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em' }}>
+                  Chung Motors
+                </span>
               </Link>
             </div>
             <p style={{ fontSize: '0.85rem', color: '#4b5563', lineHeight: 1.6, marginBottom: '16px' }}>
-              UsedCars.com™ is your premier digital automotive dealership for verified brand new 2026 factory allocations, certified pre-owned vehicles, and bank repossessions.
+              Chung Motors™ is your premier digital automotive dealership for verified brand new 2026 factory allocations, certified pre-owned vehicles, and bank repossessions.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: '#059669', fontWeight: 600 }}>
               <ShieldCheck size={16} /> 100% Clean Title & 72-Hour Hold Guarantee
@@ -195,7 +198,7 @@ export const Footer: React.FC = () => {
           }}
         >
           <div>
-            © {new Date().getFullYear()} UsedCars.com™ LLC. All rights reserved. Clean Title & Online Hold Guaranteed.
+            © {new Date().getFullYear()} Chung Motors™ LLC. All rights reserved. Clean Title & Online Hold Guaranteed.
           </div>
 
           <div style={{ display: 'flex', gap: '16px' }}>

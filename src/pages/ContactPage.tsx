@@ -61,33 +61,33 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '36px 0 80px' }}>
+    <div style={{ background: '#f7f7f8', minHeight: '85vh', padding: '24px 0 60px' }}>
       <div className="container" style={{ maxWidth: '1040px' }}>
         {/* Breadcrumb */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#6b7280', marginBottom: '20px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
           <Link to="/" style={{ color: '#6b7280', textDecoration: 'none' }}>Home</Link>
           <span>/</span>
           <span style={{ color: '#111827', fontWeight: 600 }}>Showroom & Customer Support</span>
         </div>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-purple)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Get in Touch
           </span>
-          <h1 style={{ fontSize: '2.25rem', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginTop: '4px', marginBottom: '10px' }}>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 5vw, 2.25rem)', fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginTop: '4px', marginBottom: '10px', lineHeight: 1.25 }}>
             We're Here to Assist Your Purchase
           </h1>
-          <p style={{ color: '#4b5563', fontSize: '0.95rem', maxWidth: '620px', margin: '0 auto', lineHeight: 1.6 }}>
-            Have questions about vehicle specs, bank wire escrow, title registration, or scheduling a VIP showroom pickup? Our automotive concierge team is ready to help.
+          <p style={{ color: '#4b5563', fontSize: '0.92rem', maxWidth: '620px', margin: '0 auto', lineHeight: 1.6 }}>
+            Have questions about vehicle specs, payment instructions, title registration, or scheduling a VIP showroom pickup? Our automotive concierge team is ready to help.
           </p>
         </div>
 
         {/* 2-Column: Info & Hours + Contact Form */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: '32px', marginBottom: '56px', alignItems: 'start' }} className="contact-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: '32px', marginBottom: '48px', alignItems: 'start' }} className="contact-grid">
           {/* Info Card */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '28px' }}>
+            <div className="card-panel" style={{ padding: '24px 20px' }}>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#111827', marginBottom: '18px' }}>
                 Showroom & Operations HQ
               </h3>
@@ -106,7 +106,7 @@ export const ContactPage: React.FC = () => {
                   <Phone size={20} style={{ color: 'var(--accent-purple)', flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <strong style={{ color: '#111827', display: 'block' }}>Toll-Free Support Line:</strong>
-                    1-800-849-2019 (24/7 Buyer Concierge)
+                    (800) 845-2886 (24/7 Buyer Concierge)
                   </div>
                 </div>
 
@@ -114,7 +114,7 @@ export const ContactPage: React.FC = () => {
                   <Mail size={20} style={{ color: 'var(--accent-purple)', flexShrink: 0, marginTop: '2px' }} />
                   <div>
                     <strong style={{ color: '#111827', display: 'block' }}>Email Inquiries:</strong>
-                    support@usedcars.com / sales@usedcars.com
+                    sales@chungmotors.com / support@chungmotors.com
                   </div>
                 </div>
 
@@ -142,7 +142,7 @@ export const ContactPage: React.FC = () => {
           </div>
 
           {/* Contact Inquiry Form */}
-          <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '36px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
+          <div className="card-panel" style={{ padding: '28px 20px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#111827', marginBottom: '8px' }}>
               Send an Inquiry Message
             </h3>
@@ -160,7 +160,7 @@ export const ContactPage: React.FC = () => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div className="contact-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="contact-form-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, marginBottom: '4px' }}>Full Name *</label>
                     <input
@@ -185,7 +185,7 @@ export const ContactPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="contact-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="contact-form-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, marginBottom: '4px' }}>Phone Number</label>
                     <input
@@ -224,7 +224,7 @@ export const ContactPage: React.FC = () => {
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    style={{ padding: '12px 28px', fontSize: '0.9rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}
+                    style={{ width: '100%', maxWidth: '280px', padding: '12px 24px', fontSize: '0.9rem', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                   >
                     <Send size={16} /> Send Message
                   </button>
@@ -235,12 +235,12 @@ export const ContactPage: React.FC = () => {
         </div>
 
         {/* FAQ Accordion Section */}
-        <div style={{ background: '#ffffff', border: '1px solid #e5e7eb', borderRadius: 'var(--radius-xl)', padding: '36px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
+        <div className="card-panel" style={{ padding: '32px 20px', boxShadow: '0 4px 6px rgba(0,0,0,0.03)' }}>
           <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 28px' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--accent-purple)', textTransform: 'uppercase' }}>
               Common Questions
             </span>
-            <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#111827', marginTop: '4px' }}>
+            <h2 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, color: '#111827', marginTop: '4px' }}>
               Frequently Asked Questions
             </h2>
           </div>
