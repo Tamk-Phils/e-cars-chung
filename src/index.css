@@ -366,8 +366,8 @@ button, input, select, textarea {
     padding: 10px;
   }
   .modal-content {
-    max-height: 95vh;
-    padding: 16px !important;
+    max-height: 92vh;
+    padding: 18px 14px !important;
     border-radius: var(--radius-lg);
   }
   .vehicle-detail-pricing {
@@ -398,6 +398,74 @@ button, input, select, textarea {
   }
   .order-details-grid {
     grid-template-columns: 1fr !important;
+  }
+
+  /* Admin Portal Responsive Overhauls (< 768px) */
+  .admin-card-panel {
+    padding: 18px 14px !important;
+    border-radius: 16px !important;
+  }
+  .admin-header-bar {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .admin-header-actions {
+    width: 100% !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+  .admin-header-actions > * {
+    flex: 1 !important;
+    justify-content: center !important;
+  }
+  .admin-tabs-nav {
+    padding: 4px !important;
+    gap: 4px !important;
+    margin-bottom: 18px !important;
+  }
+  .admin-tabs-nav button {
+    padding: 8px 12px !important;
+    font-size: 0.8rem !important;
+  }
+  .admin-search-wrapper {
+    width: 100% !important;
+  }
+  .admin-tab-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .admin-tab-header > * {
+    width: 100% !important;
+  }
+  .admin-tab-header button {
+    justify-content: center !important;
+  }
+  .admin-table-desktop {
+    display: none !important;
+  }
+  .admin-mobile-cards {
+    display: flex !important;
+  }
+  .admin-form-grid-3,
+  .admin-form-grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .admin-order-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+  .admin-order-controls {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+  }
+  .admin-order-controls select {
+    flex: 1 !important;
   }
 
   /* Compact Hero Search Card on Mobile - Keeps Background Car Visible */
