@@ -60,17 +60,17 @@ export const Hero: React.FC = () => {
         className="hero-banner-container"
         style={{
           position: 'relative',
-          minHeight: '520px',
+          minHeight: '540px',
           backgroundImage:
             'linear-gradient(to right, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.1) 60%), url("https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1920&q=85")',
           backgroundSize: 'cover',
-          backgroundPosition: 'center 40%',
+          backgroundPosition: 'center 35%',
           display: 'flex',
           alignItems: 'center',
           padding: '48px 0',
         }}
       >
-        <div className="container" style={{ position: 'relative', zIndex: 5 }}>
+        <div className="container hero-container-inner" style={{ position: 'relative', zIndex: 5, width: '100%' }}>
           {/* Floating White Card */}
           <div
             className="hero-search-card"
@@ -85,6 +85,7 @@ export const Hero: React.FC = () => {
           >
             {/* Header Title */}
             <h1
+              className="hero-search-title"
               style={{
                 fontSize: '1.75rem',
                 fontWeight: 800,
@@ -94,11 +95,11 @@ export const Hero: React.FC = () => {
                 lineHeight: 1.15,
               }}
             >
-              Imagine the<br />possibilities
+              Imagine the<br className="hero-title-br" />possibilities
             </h1>
 
             {/* Top Tabs: Shop cars for sale vs Sell your car */}
-            <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '18px' }}>
+            <div className="hero-tabs" style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '18px' }}>
               <button
                 type="button"
                 onClick={() => setHeroTab('shop')}
@@ -138,14 +139,14 @@ export const Hero: React.FC = () => {
             {heroTab === 'shop' ? (
               <form onSubmit={handleSearchSubmit}>
                 {/* Natural Language Search Input */}
-                <div style={{ position: 'relative', marginBottom: '16px' }}>
+                <div className="hero-natural-search" style={{ position: 'relative', marginBottom: '14px' }}>
                   <Search
                     size={17}
                     style={{ position: 'absolute', left: '12px', top: '12px', color: 'var(--text-muted)' }}
                   />
                   <input
                     type="text"
-                    className="input"
+                    className="input hero-search-input"
                     placeholder="Try using your own words"
                     value={naturalQuery}
                     onChange={e => setNaturalQuery(e.target.value)}
@@ -177,11 +178,12 @@ export const Hero: React.FC = () => {
 
                 {/* Divider: — Or search by — */}
                 <div
+                  className="hero-divider"
                   style={{
                     textAlign: 'center',
                     fontSize: '0.75rem',
                     color: 'var(--text-muted)',
-                    margin: '14px 0',
+                    margin: '12px 0',
                     fontWeight: 500,
                   }}
                 >
@@ -189,91 +191,97 @@ export const Hero: React.FC = () => {
                 </div>
 
                 {/* Dropdowns Grid */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
-                  {/* New / Used */}
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 600 }}>
-                      New/Used
-                    </label>
-                    <select
-                      className="select"
-                      value={filters.condition}
-                      onChange={e => setFilters(prev => ({ ...prev, condition: e.target.value }))}
-                      style={{ height: '40px', fontSize: '0.85rem' }}
-                    >
-                      <option value="all">All Conditions</option>
-                      <option value="Brand New">New (2026 Models)</option>
-                      <option value="Used">Used & Certified Pre-Owned</option>
-                      <option value="Bank Seized / Repo">Bank Repos & Hot Deals</option>
-                    </select>
-                  </div>
-
-                  {/* Make */}
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 600 }}>
-                      Make
-                    </label>
-                    <select
-                      className="select"
-                      value={filters.make}
-                      onChange={e => setFilters(prev => ({ ...prev, make: e.target.value }))}
-                      style={{ height: '40px', fontSize: '0.85rem' }}
-                    >
-                      <option value="all">All Makes</option>
-                      {makes.map(m => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Model */}
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 600 }}>
-                      Model
-                    </label>
-                    <select
-                      className="select"
-                      value={filters.search}
-                      onChange={e => setFilters(prev => ({ ...prev, search: e.target.value === 'all' ? '' : e.target.value }))}
-                      style={{ height: '40px', fontSize: '0.85rem' }}
-                    >
-                      <option value="all">All Models</option>
-                      {models.slice(0, 15).map(mod => (
-                        <option key={mod} value={mod}>{mod}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Distance and ZIP */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '8px' }}>
+                <div className="hero-dropdowns-container" style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
+                  {/* New / Used and Make in responsive row */}
+                  <div className="hero-select-row" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '10px' }}>
+                    {/* New / Used */}
                     <div>
                       <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 600 }}>
-                        Distance
+                        Condition
                       </label>
                       <select
-                        className="select"
-                        value={distance}
-                        onChange={e => setDistance(e.target.value)}
+                        className="select hero-compact-select"
+                        value={filters.condition}
+                        onChange={e => setFilters(prev => ({ ...prev, condition: e.target.value }))}
                         style={{ height: '40px', fontSize: '0.85rem' }}
                       >
-                        <option value="50 miles">50 miles</option>
-                        <option value="100 miles">100 miles</option>
-                        <option value="All (Nationwide)">Nationwide (Free Delivery)</option>
+                        <option value="all">All Conditions</option>
+                        <option value="Brand New">New (2026 Models)</option>
+                        <option value="Used">Used & CPO</option>
+                        <option value="Bank Seized / Repo">Bank Repos</option>
                       </select>
                     </div>
 
+                    {/* Make */}
                     <div>
                       <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 600 }}>
-                        ZIP
+                        Make
                       </label>
-                      <input
-                        type="text"
-                        className="input"
-                        placeholder="ZIP"
-                        value={zipCode}
-                        onChange={e => setZipCode(e.target.value)}
+                      <select
+                        className="select hero-compact-select"
+                        value={filters.make}
+                        onChange={e => setFilters(prev => ({ ...prev, make: e.target.value }))}
                         style={{ height: '40px', fontSize: '0.85rem' }}
-                      />
+                      >
+                        <option value="all">All Makes</option>
+                        {makes.map(m => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Desktop Only Extra Fields: Model, Distance, ZIP */}
+                  <div className="hero-desktop-extra" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {/* Model */}
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 600 }}>
+                        Model
+                      </label>
+                      <select
+                        className="select"
+                        value={filters.search}
+                        onChange={e => setFilters(prev => ({ ...prev, search: e.target.value === 'all' ? '' : e.target.value }))}
+                        style={{ height: '40px', fontSize: '0.85rem' }}
+                      >
+                        <option value="all">All Models</option>
+                        {models.slice(0, 15).map(mod => (
+                          <option key={mod} value={mod}>{mod}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Distance and ZIP */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '8px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 600 }}>
+                          Distance
+                        </label>
+                        <select
+                          className="select"
+                          value={distance}
+                          onChange={e => setDistance(e.target.value)}
+                          style={{ height: '40px', fontSize: '0.85rem' }}
+                        >
+                          <option value="50 miles">50 miles</option>
+                          <option value="100 miles">100 miles</option>
+                          <option value="All (Nationwide)">Nationwide</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--text-muted)', marginBottom: '2px', fontWeight: 600 }}>
+                          ZIP
+                        </label>
+                        <input
+                          type="text"
+                          className="input"
+                          placeholder="ZIP"
+                          value={zipCode}
+                          onChange={e => setZipCode(e.target.value)}
+                          style={{ height: '40px', fontSize: '0.85rem' }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -281,7 +289,7 @@ export const Hero: React.FC = () => {
                 {/* Primary Search Button */}
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-primary hero-submit-btn"
                   style={{
                     width: '100%',
                     height: '46px',

@@ -67,6 +67,14 @@ export interface Review {
   updated_at?: string;
 }
 
+export type PaymentMethod =
+  | 'Zelle'
+  | 'Cash App'
+  | 'PayPal'
+  | 'Apple Pay'
+  | 'Chime'
+  | 'Crypto (USDC/BTC)';
+
 export interface Order {
   id: string;
   order_number: string;
@@ -92,7 +100,7 @@ export interface Order {
   };
   type: 'Full Payment' | 'Reservation Deposit' | 'Finance Application';
   amount: number;
-  paymentMethod: 'Credit Card (Stripe simulation)' | 'Bank Wire' | 'Crypto (USDC/USDT)' | 'Dealership Financing';
+  paymentMethod: PaymentMethod | string;
   deliveryOption: 'Nationwide Home Delivery' | 'Showroom Pickup';
   hasTradeIn: boolean;
   tradeInDetails?: string;

@@ -377,14 +377,98 @@ button, input, select, textarea {
     justify-content: flex-start !important;
   }
   .vehicle-gallery-stage {
-    height: 280px !important;
+    height: 260px !important;
+  }
+  .vehicle-details-layout {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .inspection-check-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .vehicle-cta-buttons {
+    flex-direction: column !important;
+  }
+  .vehicle-cta-buttons > * {
+    width: 100% !important;
+  }
+  .vehicle-specs-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
   }
   .order-details-grid {
     grid-template-columns: 1fr !important;
   }
-  .hero-search-card {
-    padding: 20px 16px !important;
+
+  /* Compact Hero Search Card on Mobile - Keeps Background Car Visible */
+  .hero-banner-container {
+    min-height: 580px !important;
+    align-items: flex-end !important;
+    padding: 110px 0 20px 0 !important;
+    background-position: center 22% !important;
   }
+  .hero-container-inner {
+    display: flex !important;
+    justify-content: flex-start !important;
+  }
+  .hero-search-card {
+    max-width: 360px !important;
+    width: 100% !important;
+    padding: 14px 16px !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+  .hero-search-title {
+    font-size: 1.15rem !important;
+    margin-bottom: 8px !important;
+    line-height: 1.2 !important;
+  }
+  .hero-title-br {
+    display: none !important;
+  }
+  .hero-tabs {
+    margin-bottom: 10px !important;
+  }
+  .hero-tabs button {
+    padding: 4px 8px 6px !important;
+    font-size: 0.8rem !important;
+  }
+  .hero-natural-search {
+    margin-bottom: 8px !important;
+  }
+  .hero-search-input {
+    height: 38px !important;
+    font-size: 0.8rem !important;
+  }
+  .hero-divider {
+    display: none !important;
+  }
+  .hero-dropdowns-container {
+    gap: 6px !important;
+    margin-bottom: 10px !important;
+  }
+  .hero-select-row {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .hero-compact-select {
+    height: 36px !important;
+    font-size: 0.8rem !important;
+    padding: 4px 8px !important;
+  }
+  .hero-desktop-extra {
+    display: none !important;
+  }
+  .hero-submit-btn {
+    height: 40px !important;
+    font-size: 0.875rem !important;
+  }
+
   .table-responsive {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
