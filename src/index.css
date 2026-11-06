@@ -296,6 +296,9 @@ button, input, select, textarea {
   .desk-only {
     display: inline !important;
   }
+  .mobile-only {
+    display: none !important;
+  }
   .mobile-menu-btn {
     display: none !important;
   }
@@ -314,6 +317,9 @@ button, input, select, textarea {
   }
   .desk-only {
     display: none !important;
+  }
+  .mobile-only {
+    display: inline !important;
   }
   .mobile-menu-btn {
     display: flex !important;

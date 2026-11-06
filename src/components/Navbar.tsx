@@ -3,25 +3,15 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '../context/StoreContext';
 import type { Currency } from '../types';
 import {
-  Car,
+  Flame,
   Heart,
   Scale,
   Menu,
   X,
-  ChevronDown,
-  ShieldCheck,
-  PhoneCall,
-  Clock,
-  Truck,
-  Sparkles,
-  Flame,
-  Search,
   Lock,
-  Compass,
-  DollarSign,
-  FileText,
-  Star,
-  MapPin,
+  PhoneCall,
+  Mail,
+  ChevronRight,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -33,636 +23,547 @@ export const Navbar: React.FC = () => {
     setIsWishlistOpen,
     currency,
     setCurrency,
-    setFilters,
   } = useStore();
 
   const navigate = useNavigate();
   const location = useLocation();
-
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [inventoryDropdownOpen, setInventoryDropdownOpen] = useState(false);
-
-  const handleCategoryNav = (filterUpdate: Record<string, any>) => {
-    setInventoryDropdownOpen(false);
-    setMobileMenuOpen(false);
-    setFilters(prev => ({ ...prev, ...filterUpdate }));
-    navigate('/inventory');
-  };
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
 
+  const navLinks = [
+    { label: 'Home', path: '/' },
+    { label: 'Inventory', path: '/inventory', count: vehicles.length },
+    { label: 'Financing', path: '/finance' },
+    { label: 'Sell / Trade', path: '/sell' },
+    { label: 'Reviews', path: '/reviews' },
+    { label: 'Contact', path: '/contact' },
+  ];
+
   return (
-    <header style={{ position: 'sticky', top: 0, zIndex: 1000, background: '#ffffff', boxShadow: '0 2px 10px rgba(0,0,0,0.06)' }}>
-      {/* ─── 1. TOP UTILITY BAR (Executive Dealership Bar) ─────────────────────────── */}
-      <div
-        className="top-utility-bar"
+    <header
+      style={{
+        position: 'sticky',
+        top: '14px',
+        zIndex: 1000,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '0 16px',
+        pointerEvents: 'none',
+      }}
+    >
+      {/* ─── FLOATING PILL NAVBAR CONTAINER ─────────────────────────── */}
+      <nav
         style={{
-          background: '#0f172a',
-          color: '#cbd5e1',
-          fontSize: '0.78rem',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          padding: '6px 0',
+          pointerEvents: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: '#09090b',
+          borderRadius: '9999px',
+          padding: '8px 12px 8px 8px',
+          width: '100%',
+          maxWidth: '1180px',
+          boxShadow: '0 16px 36px -6px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.12)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          transition: 'all 0.25s ease',
         }}
       >
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {/* Left: Contact & Showroom Hours */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-            <a
-              href="tel:8008452886"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                color: '#ffffff',
-                fontWeight: 700,
-                textDecoration: 'none',
-              }}
-            >
-              <PhoneCall size={13} style={{ color: '#38bdf8' }} />
-              <span>(800) 845-2886</span>
-            </a>
-            <span style={{ display: 'none', alignItems: 'center', gap: '5px' }} className="top-hours">
-              <Clock size={12} style={{ color: '#94a3b8' }} />
-              Mon–Sat: 8:30 AM – 7:30 PM EST
-            </span>
-            <span style={{ display: 'none', alignItems: 'center', gap: '5px' }} className="top-delivery">
-              <Truck size={12} style={{ color: '#34d399' }} />
-              Nationwide Enclosed Delivery Available
-            </span>
-          </div>
-
-          {/* Right: Guarantee, Currency, Track, Admin */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#10b981', fontWeight: 600 }}>
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
-              <span>150-Pt Inspected</span>
-            </div>
-
-            {/* Currency Switcher */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <select
-                value={currency}
-                onChange={e => setCurrency(e.target.value as Currency)}
-                style={{
-                  background: '#1e293b',
-                  color: '#f8fafc',
-                  border: '1px solid #334155',
-                  borderRadius: '4px',
-                  padding: '2px 6px',
-                  fontSize: '0.72rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  outline: 'none',
-                }}
-                title="Select Display Currency"
-              >
-                <option value="USD">$ USD</option>
-                <option value="EUR">€ EUR</option>
-                <option value="GBP">£ GBP</option>
-              </select>
-            </div>
-
-            {/* Track Orders Link */}
-            <Link
-              to="/orders"
-              style={{
-                color: '#cbd5e1',
-                textDecoration: 'none',
-                fontWeight: 600,
-                fontSize: '0.75rem',
-                display: 'none',
-              }}
-              className="top-track-link"
-            >
-              Track Order
-            </Link>
-
-            {/* Admin Link */}
-            <Link
-              to="/admin"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                color: '#cbd5e1',
-                textDecoration: 'none',
-                fontWeight: 600,
-                fontSize: '0.75rem',
-                background: 'rgba(255,255,255,0.08)',
-                padding: '2px 8px',
-                borderRadius: '4px',
-              }}
-            >
-              <Lock size={11} style={{ color: '#a78bfa' }} />
-              <span>Admin</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── 2. MAIN NAVIGATION BAR ──────────────────────────────────────────────── */}
-      <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
-        <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '72px' }}>
-          {/* Dealership Logo & Brand Monogram */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+        {/* Left: Circular White Disc with Blue Flame Icon + Brand Name */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <Link
+            to="/"
+            title="Chung Motors Certified"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
+              gap: '12px',
+            }}
+          >
+            {/* Circular White Disc with Blue Flame matching reference */}
             <div
               style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '10px',
-                background: 'linear-gradient(135deg, #7427c7 0%, #431407 100%, #1e1b4b 100%)',
-                color: '#ffffff',
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 10px rgba(116, 39, 199, 0.3)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
                 flexShrink: 0,
+                transition: 'transform 0.2s ease',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
+              onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              <Flame size={22} fill="#2563eb" color="#2563eb" />
+            </div>
+
+            <span
+              style={{
+                color: '#ffffff',
+                fontWeight: 800,
+                fontSize: '1.05rem',
+                letterSpacing: '-0.025em',
+                fontFamily: 'var(--font-heading)',
+                whiteSpace: 'nowrap',
               }}
             >
-              <Car size={24} />
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.03em', fontFamily: 'var(--font-heading)' }}>
-                  CHUNG <span style={{ color: 'var(--accent-purple)' }}>MOTORS</span>
-                </span>
-                <span style={{ background: '#ecfdf5', color: '#059669', fontSize: '0.65rem', fontWeight: 800, padding: '2px 6px', borderRadius: '4px', border: '1px solid #a7f3d0' }}>
-                  CERTIFIED
-                </span>
-              </div>
-              <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                Direct Automotive Exchange • {vehicles.length} Units In Stock
-              </div>
-            </div>
+              Chung Motors
+            </span>
           </Link>
+        </div>
 
-          {/* Desktop Navigation Links */}
-          <nav style={{ display: 'none', alignItems: 'center', gap: '26px' }} className="desktop-nav">
-            {/* Inventory Menu with Dropdown */}
-            <div
-              style={{ position: 'relative' }}
-              onMouseEnter={() => setInventoryDropdownOpen(true)}
-              onMouseLeave={() => setInventoryDropdownOpen(false)}
-            >
-              <button
-                onClick={() => {
-                  setFilters(prev => ({ ...prev, condition: 'all', make: 'all', bodyType: 'all', onlyHotDeals: false }));
-                  navigate('/inventory');
-                }}
+        {/* Center: Clean Minimalist Nav Links (Desktop) */}
+        <div
+          className="desktop-nav"
+          style={{
+            display: 'none',
+            alignItems: 'center',
+            gap: '6px',
+          }}
+        >
+          {navLinks.map(link => {
+            const active = isActive(link.path);
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  fontSize: '0.94rem',
-                  fontWeight: 700,
-                  color: isActive('/inventory') ? 'var(--accent-purple)' : '#1e293b',
+                  color: active ? '#ffffff' : '#9ca3af',
+                  fontSize: '0.92rem',
+                  fontWeight: active ? 700 : 500,
+                  textDecoration: 'none',
+                  padding: '8px 16px',
+                  borderRadius: '9999px',
+                  background: active ? 'rgba(255, 255, 255, 0.12)' : 'transparent',
+                  transition: 'all 0.15s ease',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '5px',
-                  cursor: 'pointer',
-                  padding: '10px 0',
+                  gap: '6px',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => {
+                  if (!active) {
+                    e.currentTarget.style.color = '#ffffff';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!active) {
+                    e.currentTarget.style.color = '#9ca3af';
+                    e.currentTarget.style.background = 'transparent';
+                  }
                 }}
               >
-                <span>Inventory</span>
-                <span
-                  style={{
-                    background: 'var(--accent-purple-light)',
-                    color: 'var(--accent-purple)',
-                    fontSize: '0.68rem',
-                    fontWeight: 800,
-                    padding: '1px 6px',
-                    borderRadius: '10px',
-                  }}
-                >
-                  {vehicles.length}
-                </span>
-                <ChevronDown size={14} style={{ color: '#94a3b8' }} />
-              </button>
-
-              {/* Hover Mega Dropdown */}
-              {inventoryDropdownOpen && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '100%',
-                    left: 0,
-                    width: '320px',
-                    background: '#ffffff',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: 'var(--radius-lg)',
-                    boxShadow: '0 16px 36px rgba(0,0,0,0.12)',
-                    padding: '14px',
-                    zIndex: 200,
-                  }}
-                >
-                  <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '8px', paddingLeft: '8px' }}>
-                    Browse By Category
-                  </div>
-                  <button
-                    onClick={() => handleCategoryNav({ condition: 'all', bodyType: 'all', onlyHotDeals: false })}
-                    style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 'none', padding: '8px 10px', borderRadius: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                <span>{link.label}</span>
+                {link.count !== undefined && (
+                  <span
+                    style={{
+                      background: active ? '#ffffff' : 'rgba(255, 255, 255, 0.16)',
+                      color: active ? '#09090b' : '#cbd5e1',
+                      fontSize: '0.68rem',
+                      fontWeight: 800,
+                      padding: '1px 6px',
+                      borderRadius: '9999px',
+                    }}
                   >
-                    <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#1e293b' }}>All In-Stock Inventory</span>
-                    <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>{vehicles.length} cars</span>
-                  </button>
-                  <button
-                    onClick={() => handleCategoryNav({ onlyHotDeals: true })}
-                    style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 'none', padding: '8px 10px', borderRadius: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#fef2f2')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#e11d48', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <Flame size={14} /> Hot Deals Under $8k
-                    </span>
-                    <span style={{ fontSize: '0.75rem', color: '#e11d48', fontWeight: 700 }}>
-                      {vehicles.filter(v => v.price <= 8000).length} cars
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => handleCategoryNav({ bodyType: 'Sedan' })}
-                    style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 'none', padding: '8px 10px', borderRadius: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    <span style={{ fontWeight: 600, fontSize: '0.85rem', color: '#334155' }}>Sedans & Commuters</span>
-                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{vehicles.filter(v => v.body_type === 'Sedan').length}</span>
-                  </button>
-                  <button
-                    onClick={() => handleCategoryNav({ bodyType: 'SUV' })}
-                    style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 'none', padding: '8px 10px', borderRadius: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    <span style={{ fontWeight: 600, fontSize: '0.85rem', color: '#334155' }}>SUVs & Crossovers</span>
-                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{vehicles.filter(v => v.body_type === 'SUV').length}</span>
-                  </button>
-                  <button
-                    onClick={() => handleCategoryNav({ bodyType: 'Truck' })}
-                    style={{ width: '100%', textAlign: 'left', background: 'transparent', border: 'none', padding: '8px 10px', borderRadius: '6px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#f8fafc')}
-                    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                  >
-                    <span style={{ fontWeight: 600, fontSize: '0.85rem', color: '#334155' }}>Trucks & Heavy Duty</span>
-                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{vehicles.filter(v => v.body_type === 'Truck').length}</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Sell / Trade-In */}
-            <Link
-              to="/sell"
-              style={{
-                fontSize: '0.94rem',
-                fontWeight: 700,
-                color: isActive('/sell') ? 'var(--accent-purple)' : '#1e293b',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-              }}
-            >
-              <span>Sell & Trade</span>
-              <span style={{ background: '#ecfdf5', color: '#059669', fontSize: '0.65rem', fontWeight: 800, padding: '1px 5px', borderRadius: '4px' }}>
-                Instant Offer
-              </span>
-            </Link>
-
-            {/* Financing */}
-            <Link
-              to="/finance"
-              style={{
-                fontSize: '0.94rem',
-                fontWeight: 700,
-                color: isActive('/finance') ? 'var(--accent-purple)' : '#1e293b',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-              }}
-            >
-              <span>Financing</span>
-              <span style={{ background: '#ede9fe', color: 'var(--accent-purple)', fontSize: '0.65rem', fontWeight: 800, padding: '1px 5px', borderRadius: '4px' }}>
-                Low APR
-              </span>
-            </Link>
-
-            {/* Research */}
-            <Link
-              to="/research"
-              style={{
-                fontSize: '0.94rem',
-                fontWeight: 700,
-                color: isActive('/research') ? 'var(--accent-purple)' : '#1e293b',
-                textDecoration: 'none',
-              }}
-            >
-              Buyer Guides
-            </Link>
-
-            {/* Reviews */}
-            <Link
-              to="/reviews"
-              style={{
-                fontSize: '0.94rem',
-                fontWeight: 700,
-                color: isActive('/reviews') ? 'var(--accent-purple)' : '#1e293b',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
-              <span>Reviews</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '2px', color: '#f59e0b', fontSize: '0.75rem', fontWeight: 800 }}>
-                <Star size={11} fill="#f59e0b" /> 4.9
-              </span>
-            </Link>
-
-            {/* Contact */}
-            <Link
-              to="/contact"
-              style={{
-                fontSize: '0.94rem',
-                fontWeight: 700,
-                color: isActive('/contact') ? 'var(--accent-purple)' : '#1e293b',
-                textDecoration: 'none',
-              }}
-            >
-              Showroom
-            </Link>
-          </nav>
-
-          {/* Right Header Controls: Saved, Compare, CTA */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            {/* Wishlist Heart */}
-            <button
-              onClick={() => setIsWishlistOpen(true)}
-              title="Saved Vehicles"
-              style={{
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                width: '38px',
-                height: '38px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                position: 'relative',
-              }}
-            >
-              <Heart size={18} fill={wishlist.length > 0 ? '#ef4444' : 'none'} color={wishlist.length > 0 ? '#ef4444' : '#475569'} />
-              {wishlist.length > 0 && (
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '-4px',
-                    right: '-4px',
-                    background: '#ef4444',
-                    color: '#fff',
-                    borderRadius: '50%',
-                    width: '16px',
-                    height: '16px',
-                    fontSize: '0.65rem',
-                    fontWeight: 800,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {wishlist.length}
-                </span>
-              )}
-            </button>
-
-            {/* Compare Scale */}
-            <button
-              onClick={() => setIsCompareOpen(true)}
-              title="Compare Vehicles"
-              style={{
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                width: '38px',
-                height: '38px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                position: 'relative',
-              }}
-            >
-              <Scale size={18} color={compareList.length > 0 ? 'var(--accent-purple)' : '#475569'} />
-              {compareList.length > 0 && (
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '-4px',
-                    right: '-4px',
-                    background: 'var(--accent-purple)',
-                    color: '#fff',
-                    borderRadius: '50%',
-                    width: '16px',
-                    height: '16px',
-                    fontSize: '0.65rem',
-                    fontWeight: 800,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {compareList.length}
-                </span>
-              )}
-            </button>
-
-            {/* Primary Browse Inventory Button */}
-            <Link
-              to="/inventory"
-              className="btn btn-primary nav-browse-btn"
-              style={{
-                padding: '8px 16px',
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                textDecoration: 'none',
-              }}
-            >
-              <Search size={14} />
-              <span>Browse All ({vehicles.length})</span>
-            </Link>
-
-            {/* Mobile Hamburger Menu Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle Navigation Menu"
-              className="mobile-menu-btn"
-              style={{
-                background: '#f8fafc',
-                border: '1px solid #e2e8f0',
-                borderRadius: '8px',
-                width: '40px',
-                height: '40px',
-                cursor: 'pointer',
-                color: '#1e293b',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
+                    {link.count}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </div>
-      </div>
 
-      {/* ─── 3. MOBILE SLIDE-DOWN DRAWER ─────────────────────────────────────────── */}
+        {/* Right: Utility Buttons & Signature White Pill Button */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Wishlist Button (Desktop) */}
+          <button
+            onClick={() => setIsWishlistOpen(true)}
+            title="Saved Vehicles"
+            className="desk-only"
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '38px',
+              height: '38px',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              position: 'relative',
+              color: wishlist.length > 0 ? '#ef4444' : '#cbd5e1',
+              transition: 'background 0.15s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.16)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)')}
+          >
+            <Heart size={16} fill={wishlist.length > 0 ? '#ef4444' : 'none'} />
+            {wishlist.length > 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '-2px',
+                  right: '-2px',
+                  background: '#ef4444',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  width: '15px',
+                  height: '15px',
+                  fontSize: '0.62rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {wishlist.length}
+              </span>
+            )}
+          </button>
+
+          {/* Compare Button (Desktop) */}
+          <button
+            onClick={() => setIsCompareOpen(true)}
+            title="Compare Vehicles"
+            className="desk-only"
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '38px',
+              height: '38px',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              position: 'relative',
+              color: compareList.length > 0 ? '#a855f7' : '#cbd5e1',
+              transition: 'background 0.15s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.16)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)')}
+          >
+            <Scale size={16} />
+            {compareList.length > 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: '-2px',
+                  right: '-2px',
+                  background: '#a855f7',
+                  color: '#fff',
+                  borderRadius: '50%',
+                  width: '15px',
+                  height: '15px',
+                  fontSize: '0.62rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {compareList.length}
+              </span>
+            )}
+          </button>
+
+          {/* Admin Link (Desktop Only) */}
+          <Link
+            to="/admin"
+            title="Staff Admin Portal"
+            className="desk-only"
+            style={{
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '38px',
+              height: '38px',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#cbd5e1',
+              textDecoration: 'none',
+              transition: 'background 0.15s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.16)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)')}
+          >
+            <Lock size={15} />
+          </Link>
+
+          {/* Signature White Capsule Button (Matching Reference) */}
+          <Link
+            to="/contact"
+            title="Contact Sales Team"
+            style={{
+              background: '#ffffff',
+              color: '#09090b',
+              borderRadius: '9999px',
+              padding: '9px 20px',
+              fontWeight: 700,
+              fontSize: '0.88rem',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = '#f3f4f6';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = '#ffffff';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+          >
+            <Mail size={14} style={{ color: '#2563eb' }} />
+            <span className="desk-only">sales@chungmotors.com</span>
+            <span className="mobile-only">Contact</span>
+          </Link>
+
+          {/* Mobile Hamburger Menu Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle Navigation Menu"
+            className="mobile-menu-btn"
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              cursor: 'pointer',
+              color: '#ffffff',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* ─── MOBILE SLIDE-DOWN CAPSULE DRAWER ─────────────────────────── */}
       {mobileMenuOpen && (
         <div
           style={{
-            background: '#ffffff',
-            borderTop: '1px solid #e2e8f0',
-            boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)',
-            padding: '16px 20px 24px',
+            pointerEvents: 'auto',
+            background: '#09090b',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '24px',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.6)',
+            padding: '20px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '12px',
-            maxHeight: '82vh',
+            gap: '10px',
+            width: '100%',
+            maxWidth: '1180px',
+            marginTop: '8px',
+            maxHeight: '80vh',
             overflowY: 'auto',
+            animation: 'fadeIn 0.2s ease-out',
           }}
         >
-          {/* Quick Call Button on Mobile */}
+          {/* Direct Phone Call Button */}
           <a
             href="tel:8008452886"
             style={{
-              background: '#0f172a',
+              background: '#2563eb',
               color: '#ffffff',
-              padding: '12px 16px',
-              borderRadius: '8px',
+              padding: '12px 18px',
+              borderRadius: '9999px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              fontWeight: 800,
+              fontWeight: 700,
               fontSize: '0.9rem',
               textDecoration: 'none',
+              marginBottom: '6px',
             }}
           >
-            <PhoneCall size={16} style={{ color: '#38bdf8' }} />
+            <PhoneCall size={16} />
             <span>Call Showroom: (800) 845-2886</span>
           </a>
 
-          {/* Quick Category Buttons */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '6px' }}>
+          {/* Nav Links */}
+          {navLinks.map(link => {
+            const active = isActive(link.path);
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  color: active ? '#ffffff' : '#cbd5e1',
+                  background: active ? 'rgba(255, 255, 255, 0.12)' : 'transparent',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  fontSize: '0.95rem',
+                  fontWeight: active ? 700 : 500,
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <span>{link.label}</span>
+                {link.count !== undefined ? (
+                  <span
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.16)',
+                      color: '#ffffff',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      padding: '2px 8px',
+                      borderRadius: '9999px',
+                    }}
+                  >
+                    {link.count}
+                  </span>
+                ) : (
+                  <ChevronRight size={16} style={{ color: '#64748b' }} />
+                )}
+              </Link>
+            );
+          })}
+
+          {/* Mobile Saved & Compare Quick Triggers */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', margin: '4px 0' }}>
             <button
-              onClick={() => handleCategoryNav({ condition: 'all', onlyHotDeals: false, bodyType: 'all' })}
-              style={{ padding: '10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', textAlign: 'left', cursor: 'pointer', fontWeight: 700, fontSize: '0.82rem', color: '#1e293b' }}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setIsWishlistOpen(true);
+              }}
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '10px 14px',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
             >
-              🚗 All Cars ({vehicles.length})
+              <Heart size={16} fill={wishlist.length > 0 ? '#ef4444' : 'none'} color={wishlist.length > 0 ? '#ef4444' : '#cbd5e1'} />
+              <span>Saved ({wishlist.length})</span>
             </button>
             <button
-              onClick={() => handleCategoryNav({ onlyHotDeals: true })}
-              style={{ padding: '10px', background: '#fef2f2', border: '1px solid #fecdd3', borderRadius: '6px', textAlign: 'left', cursor: 'pointer', fontWeight: 700, fontSize: '0.82rem', color: '#e11d48' }}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setIsCompareOpen(true);
+              }}
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '10px 14px',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
             >
-              🔥 Hot Deals Under $8k
-            </button>
-            <button
-              onClick={() => handleCategoryNav({ bodyType: 'SUV' })}
-              style={{ padding: '10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', textAlign: 'left', cursor: 'pointer', fontWeight: 700, fontSize: '0.82rem', color: '#1e293b' }}
-            >
-              🚙 SUVs & Crossovers
-            </button>
-            <button
-              onClick={() => handleCategoryNav({ bodyType: 'Sedan' })}
-              style={{ padding: '10px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', textAlign: 'left', cursor: 'pointer', fontWeight: 700, fontSize: '0.82rem', color: '#1e293b' }}
-            >
-              🏎️ Sedans & Coupes
+              <Scale size={16} color={compareList.length > 0 ? '#a855f7' : '#cbd5e1'} />
+              <span>Compare ({compareList.length})</span>
             </button>
           </div>
 
-          <div style={{ height: '1px', background: '#e2e8f0', margin: '4px 0' }}></div>
+          <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.08)', margin: '6px 0' }} />
 
-          {/* Core Page Links */}
+          {/* Secondary Links: Orders, Research, Admin */}
           <Link
-            to="/inventory"
+            to="/orders"
             onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b', textDecoration: 'none', padding: '6px 0' }}
+            style={{
+              color: '#94a3b8',
+              padding: '10px 16px',
+              fontSize: '0.88rem',
+              fontWeight: 500,
+              textDecoration: 'none',
+            }}
           >
-            Full Vehicle Inventory ({vehicles.length})
-          </Link>
-          <Link
-            to="/sell"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b', textDecoration: 'none', padding: '6px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <span>Sell & Trade-In Appraisal</span>
-            <span style={{ fontSize: '0.7rem', color: '#059669', background: '#ecfdf5', padding: '2px 6px', borderRadius: '4px' }}>Instant Cash</span>
-          </Link>
-          <Link
-            to="/finance"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b', textDecoration: 'none', padding: '6px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <span>Auto Loan Calculator & Pre-Qualify</span>
-            <span style={{ fontSize: '0.7rem', color: 'var(--accent-purple)', background: '#ede9fe', padding: '2px 6px', borderRadius: '4px' }}>From 4.9%</span>
+            Track My Vehicle Order
           </Link>
           <Link
             to="/research"
             onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b', textDecoration: 'none', padding: '6px 0' }}
+            style={{
+              color: '#94a3b8',
+              padding: '10px 16px',
+              fontSize: '0.88rem',
+              fontWeight: 500,
+              textDecoration: 'none',
+            }}
           >
-            Car Buying Guides & Tips
-          </Link>
-          <Link
-            to="/reviews"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b', textDecoration: 'none', padding: '6px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-          >
-            <span>Customer Testimonials</span>
-            <span style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: 800 }}>★ 4.9 Rating</span>
-          </Link>
-          <Link
-            to="/orders"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b', textDecoration: 'none', padding: '6px 0' }}
-          >
-            Track Existing Reservation
-          </Link>
-          <Link
-            to="/contact"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: '0.95rem', fontWeight: 700, color: '#1e293b', textDecoration: 'none', padding: '6px 0' }}
-          >
-            Showroom Hours & Directions
+            Car Buying Guides & Articles
           </Link>
           <Link
             to="/admin"
             onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: '0.9rem', fontWeight: 700, color: '#7c3aed', textDecoration: 'none', padding: '6px 0', display: 'flex', alignItems: 'center', gap: '6px' }}
+            style={{
+              color: '#a855f7',
+              padding: '10px 16px',
+              fontSize: '0.88rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
           >
-            <Lock size={14} /> Staff Admin Dashboard
+            <Lock size={14} /> Staff Admin Portal
           </Link>
 
-          {/* Currency selection on mobile */}
-          <div style={{ marginTop: '8px', paddingTop: '12px', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Currency:</span>
+          {/* Currency Switcher on Mobile */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '12px 16px',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              marginTop: '4px',
+            }}
+          >
+            <span style={{ fontSize: '0.82rem', color: '#94a3b8', fontWeight: 600 }}>Currency:</span>
             <div style={{ display: 'flex', gap: '6px' }}>
               {(['USD', 'EUR', 'GBP'] as Currency[]).map(cur => (
                 <button
                   key={cur}
                   onClick={() => setCurrency(cur)}
                   style={{
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    border: '1px solid #cbd5e1',
+                    padding: '4px 10px',
+                    borderRadius: '9999px',
+                    border: 'none',
                     fontSize: '0.75rem',
                     fontWeight: 700,
-                    background: currency === cur ? 'var(--accent-purple)' : '#f8fafc',
-                    color: currency === cur ? '#fff' : '#1e293b',
+                    background: currency === cur ? '#ffffff' : 'rgba(255, 255, 255, 0.1)',
+                    color: currency === cur ? '#09090b' : '#cbd5e1',
                     cursor: 'pointer',
                   }}
                 >
