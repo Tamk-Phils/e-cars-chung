@@ -23,6 +23,8 @@ import { CheckoutModal } from './components/CheckoutModal';
 import { CompareDrawer } from './components/CompareDrawer';
 import { WishlistDrawer } from './components/WishlistDrawer';
 import { AdminPortal } from './components/AdminPortal';
+import { AuthModal } from './components/AuthModal';
+import { LiveChatWidget } from './components/LiveChatWidget';
 
 // Component to scroll to top on page route transition
 const ScrollToTop: React.FC = () => {
@@ -66,6 +68,8 @@ const MainLayout: React.FC = () => {
       <CompareDrawer />
       <WishlistDrawer />
       <AdminPortal />
+      <AuthModal />
+      <LiveChatWidget />
     </div>
   );
 };

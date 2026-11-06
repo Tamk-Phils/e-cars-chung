@@ -12,6 +12,9 @@ import {
   PhoneCall,
   Mail,
   ChevronRight,
+  User as UserIcon,
+  MessageCircle,
+  LogOut,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -23,6 +26,10 @@ export const Navbar: React.FC = () => {
     setIsWishlistOpen,
     currency,
     setCurrency,
+    currentUser,
+    openLoginModal,
+    logoutUser,
+    setIsChatOpen,
   } = useStore();
 
   const navigate = useNavigate();
@@ -278,6 +285,78 @@ export const Navbar: React.FC = () => {
             )}
           </button>
 
+          {/* User Sign In / Account Dropdown */}
+          {currentUser ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <button
+                onClick={() => setIsChatOpen(true)}
+                title="Open Live Concierge Chat"
+                style={{
+                  background: 'rgba(37, 99, 235, 0.25)',
+                  border: '1px solid rgba(59, 130, 246, 0.4)',
+                  borderRadius: '9999px',
+                  padding: '7px 12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                <MessageCircle size={14} color="#60a5fa" />
+                <span className="desk-only">Live Chat</span>
+              </button>
+
+              <button
+                onClick={logoutUser}
+                title={`Signed in as ${currentUser.name} (${currentUser.email}). Click to sign out.`}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: 'none',
+                  borderRadius: '9999px',
+                  padding: '7px 12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                <UserIcon size={14} color="#10b981" />
+                <span className="desk-only">{currentUser.name.split(' ')[0]}</span>
+                <LogOut size={12} color="#94a3b8" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={openLoginModal}
+              title="Sign in or create account to live chat with admin"
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
+                borderRadius: '9999px',
+                padding: '7px 14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: '#ffffff',
+                fontSize: '0.82rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)')}
+            >
+              <UserIcon size={14} color="#60a5fa" />
+              <span className="desk-only">Sign In</span>
+            </button>
+          )}
+
           {/* Admin Link (Desktop Only) */}
           <Link
             to="/admin"
@@ -494,6 +573,85 @@ export const Navbar: React.FC = () => {
           </div>
 
           <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.08)', margin: '6px 0' }} />
+
+          {/* User Account / Live Chat in Mobile Menu */}
+          {currentUser ? (
+            <div style={{ padding: '8px 12px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '12px', margin: '6px 12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fff', fontSize: '0.88rem', fontWeight: 700 }}>
+                  <UserIcon size={16} color="#10b981" />
+                  <span>{currentUser.name}</span>
+                </div>
+                <button
+                  onClick={() => {
+                    logoutUser();
+                    setMobileMenuOpen(false);
+                  }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#f87171',
+                    fontSize: '0.75rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  <LogOut size={12} /> Sign Out
+                </button>
+              </div>
+              <button
+                onClick={() => {
+                  setIsChatOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                style={{
+                  width: '100%',
+                  background: '#2563eb',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '8px',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px',
+                }}
+              >
+                <MessageCircle size={15} /> Open Live Concierge Chat
+              </button>
+            </div>
+          ) : (
+            <div style={{ padding: '6px 12px' }}>
+              <button
+                onClick={() => {
+                  openLoginModal();
+                  setMobileMenuOpen(false);
+                }}
+                style={{
+                  width: '100%',
+                  background: '#2563eb',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '10px',
+                  padding: '10px 14px',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                }}
+              >
+                <UserIcon size={16} /> Sign In / Register for Live Chat
+              </button>
+            </div>
+          )}
 
           {/* Secondary Links: Orders, Research, Admin */}
           <Link

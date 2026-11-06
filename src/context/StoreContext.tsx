@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { Vehicle, Post, Review, Order, FilterState, VehicleCondition } from '../types';
+import type { Vehicle, Post, Review, Order, FilterState, VehicleCondition, User, ChatMessage } from '../types';
 import { INITIAL_VEHICLES, INITIAL_POSTS, INITIAL_REVIEWS } from '../data/initialData';
 import {
   checkSupabaseHealth,
@@ -77,6 +77,30 @@ interface StoreContextType {
   deleteReview: (id: string) => void;
   resetAllData: () => void;
   refreshSupabaseStatus: () => Promise<void>;
+
+  // User Authentication & Management
+  currentUser: User | null;
+  users: User[];
+  isAuthModalOpen: boolean;
+  authModalMode: 'login' | 'register';
+  setIsAuthModalOpen: (open: boolean) => void;
+  setAuthModalMode: (mode: 'login' | 'register') => void;
+  openLoginModal: () => void;
+  openRegisterModal: () => void;
+  loginUser: (email: string, password?: string) => Promise<{ success: boolean; message?: string }>;
+  registerUser: (name: string, email: string, phone?: string, password?: string) => Promise<{ success: boolean; message?: string }>;
+  logoutUser: () => void;
+  addUser: (u: Omit<User, 'id' | 'created_at'>) => void;
+  updateUser: (id: string, updates: Partial<User>) => void;
+  deleteUser: (id: string) => void;
+  toggleUserStatus: (id: string) => void;
+
+  // Live Chat System
+  isChatOpen: boolean;
+  setIsChatOpen: (open: boolean) => void;
+  chatMessages: ChatMessage[];
+  sendChatMessage: (message: string, overrideSender?: 'user' | 'admin', targetUserId?: string) => void;
+  markChatRead: (userId: string) => void;
 }
 
 const defaultFilters: FilterState = {
@@ -101,6 +125,82 @@ const CURRENCY_RATES: Record<Currency, { symbol: string; rate: number }> = {
   EUR: { symbol: '€', rate: 0.92 },
   GBP: { symbol: '£', rate: 0.79 },
 };
+
+const INITIAL_USERS: User[] = [
+  {
+    id: 'usr-1',
+    name: 'Michael Reed',
+    email: 'michael.reed@example.com',
+    phone: '(555) 234-5678',
+    role: 'user',
+    status: 'active',
+    created_at: new Date(Date.now() - 86400000 * 5).toISOString(),
+    last_login: new Date(Date.now() - 3600000 * 2).toISOString(),
+  },
+  {
+    id: 'usr-2',
+    name: 'Sarah Jenkins',
+    email: 'sarah.j@example.com',
+    phone: '(555) 876-5432',
+    role: 'user',
+    status: 'active',
+    created_at: new Date(Date.now() - 86400000 * 12).toISOString(),
+    last_login: new Date(Date.now() - 86400000 * 1).toISOString(),
+  },
+  {
+    id: 'usr-3',
+    name: 'David Kim',
+    email: 'david.kim@example.com',
+    phone: '(555) 432-1098',
+    role: 'user',
+    status: 'active',
+    created_at: new Date(Date.now() - 86400000 * 20).toISOString(),
+    last_login: new Date(Date.now() - 86400000 * 4).toISOString(),
+  },
+  {
+    id: 'usr-admin',
+    name: 'Chung Motors Admin',
+    email: 'admin@chungmotors.com',
+    phone: '(800) 845-2886',
+    role: 'admin',
+    status: 'active',
+    created_at: new Date(Date.now() - 86400000 * 60).toISOString(),
+    last_login: new Date().toISOString(),
+  },
+];
+
+const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
+  {
+    id: 'chat-1',
+    userId: 'usr-1',
+    userName: 'Michael Reed',
+    userEmail: 'michael.reed@example.com',
+    sender: 'user',
+    message: 'Hello, is the 2024 Porsche 911 GT3 RS still available for nationwide enclosed transport to Texas?',
+    created_at: new Date(Date.now() - 3600000 * 3).toISOString(),
+    read: true,
+  },
+  {
+    id: 'chat-2',
+    userId: 'usr-1',
+    userName: 'Chung Motors Concierge',
+    userEmail: 'sales@chungmotors.com',
+    sender: 'admin',
+    message: 'Hello Michael! Yes, the 911 GT3 RS is in our Beverly Hills VIP showroom with a clean title. Enclosed transport to Texas takes approximately 3-4 business days. Would you like to lock in a 72-hour hold reservation?',
+    created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
+    read: true,
+  },
+  {
+    id: 'chat-3',
+    userId: 'usr-1',
+    userName: 'Michael Reed',
+    userEmail: 'michael.reed@example.com',
+    sender: 'user',
+    message: 'That sounds perfect. What payment methods are accepted for the $500 reservation hold?',
+    created_at: new Date(Date.now() - 3600000 * 1).toISOString(),
+    read: false,
+  },
+];
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [vehicles, setVehicles] = useState<Vehicle[]>(() => {
@@ -158,6 +258,28 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isAdmin, setIsAdmin] = useState<boolean>(() => {
     return localStorage.getItem('uc_is_admin') === 'true';
   });
+
+  // Users state
+  const [users, setUsers] = useState<User[]>(() => {
+    const saved = localStorage.getItem('uc_users');
+    return saved ? JSON.parse(saved) : INITIAL_USERS;
+  });
+
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('uc_current_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+
+  // Live Chat state
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => {
+    const saved = localStorage.getItem('uc_chat_messages');
+    return saved ? JSON.parse(saved) : INITIAL_CHAT_MESSAGES;
+  });
+
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
@@ -253,6 +375,153 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     localStorage.setItem('uc_is_admin', isAdmin ? 'true' : 'false');
   }, [isAdmin]);
+
+  useEffect(() => {
+    localStorage.setItem('uc_users', JSON.stringify(users));
+  }, [users]);
+
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem('uc_current_user', JSON.stringify(currentUser));
+    } else {
+      localStorage.removeItem('uc_current_user');
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    localStorage.setItem('uc_chat_messages', JSON.stringify(chatMessages));
+  }, [chatMessages]);
+
+  const openLoginModal = () => {
+    setAuthModalMode('login');
+    setIsAuthModalOpen(true);
+  };
+
+  const openRegisterModal = () => {
+    setAuthModalMode('register');
+    setIsAuthModalOpen(true);
+  };
+
+  const loginUser = async (email: string, password?: string): Promise<{ success: boolean; message?: string }> => {
+    const cleanEmail = email.trim().toLowerCase();
+    const user = users.find(u => u.email.toLowerCase() === cleanEmail);
+    if (!user) {
+      return { success: false, message: 'Account not found with this email. Please create an account.' };
+    }
+    if (user.status === 'suspended') {
+      return { success: false, message: 'Your account is suspended. Please contact support.' };
+    }
+    const updatedUser: User = { ...user, last_login: new Date().toISOString() };
+    setCurrentUser(updatedUser);
+    setUsers(prev => prev.map(u => (u.id === user.id ? updatedUser : u)));
+    setIsAuthModalOpen(false);
+    return { success: true };
+  };
+
+  const registerUser = async (name: string, email: string, phone?: string, password?: string): Promise<{ success: boolean; message?: string }> => {
+    const cleanEmail = email.trim().toLowerCase();
+    if (users.some(u => u.email.toLowerCase() === cleanEmail)) {
+      return { success: false, message: 'An account with this email already exists. Please sign in.' };
+    }
+    const newUser: User = {
+      id: 'usr-' + Date.now(),
+      name: name.trim(),
+      email: cleanEmail,
+      phone: phone?.trim() || '',
+      role: 'user',
+      status: 'active',
+      created_at: new Date().toISOString(),
+      last_login: new Date().toISOString(),
+    };
+    setUsers(prev => [newUser, ...prev]);
+    setCurrentUser(newUser);
+    setIsAuthModalOpen(false);
+    return { success: true };
+  };
+
+  const logoutUser = () => {
+    setCurrentUser(null);
+  };
+
+  const addUser = (u: Omit<User, 'id' | 'created_at'>) => {
+    const newUser: User = {
+      ...u,
+      id: 'usr-' + Date.now(),
+      created_at: new Date().toISOString(),
+      last_login: new Date().toISOString(),
+    };
+    setUsers(prev => [newUser, ...prev]);
+  };
+
+  const updateUser = (id: string, updates: Partial<User>) => {
+    setUsers(prev => prev.map(u => (u.id === id ? { ...u, ...updates } : u)));
+    if (currentUser?.id === id) {
+      setCurrentUser(prev => (prev ? { ...prev, ...updates } : null));
+    }
+  };
+
+  const deleteUser = (id: string) => {
+    setUsers(prev => prev.filter(u => u.id !== id));
+    if (currentUser?.id === id) {
+      setCurrentUser(null);
+    }
+  };
+
+  const toggleUserStatus = (id: string) => {
+    setUsers(prev =>
+      prev.map(u => {
+        if (u.id === id) {
+          const newStatus = u.status === 'active' ? 'suspended' : 'active';
+          return { ...u, status: newStatus };
+        }
+        return u;
+      })
+    );
+  };
+
+  const sendChatMessage = (message: string, overrideSender?: 'user' | 'admin', targetUserId?: string) => {
+    const sender = overrideSender || (isAdmin ? 'admin' : 'user');
+    const uId = targetUserId || currentUser?.id || 'guest';
+    const uName = currentUser ? currentUser.name : sender === 'admin' ? 'Chung Motors Concierge' : 'Customer';
+    const uEmail = currentUser ? currentUser.email : sender === 'admin' ? 'sales@chungmotors.com' : 'customer@example.com';
+
+    const newMsg: ChatMessage = {
+      id: 'msg-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+      userId: uId,
+      userName: uName,
+      userEmail: uEmail,
+      sender,
+      message: message.trim(),
+      created_at: new Date().toISOString(),
+      read: sender === 'admin',
+    };
+
+    setChatMessages(prev => [...prev, newMsg]);
+
+    // Simulated automated concierge response if regular user sent message
+    if (sender === 'user') {
+      const existingUserMsgs = chatMessages.filter(m => m.userId === uId);
+      if (existingUserMsgs.length === 0 || Math.random() > 0.5) {
+        setTimeout(() => {
+          const automatedReply: ChatMessage = {
+            id: 'msg-' + (Date.now() + 1),
+            userId: uId,
+            userName: 'Chung Motors Concierge',
+            userEmail: 'sales@chungmotors.com',
+            sender: 'admin',
+            message: `Hello ${uName}! Thank you for your inquiry. A senior dealership concierge is reviewing your request and will provide all specific details, shipping schedule, or hold options right away.`,
+            created_at: new Date().toISOString(),
+            read: false,
+          };
+          setChatMessages(prev => [...prev, automatedReply]);
+        }, 1200);
+      }
+    }
+  };
+
+  const markChatRead = (userId: string) => {
+    setChatMessages(prev => prev.map(m => (m.userId === userId ? { ...m, read: true } : m)));
+  };
 
   const toggleTheme = () => {
     setThemeState(prev => (prev === 'dark' ? 'light' : 'dark'));
@@ -416,12 +685,18 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.removeItem('uc_orders');
     localStorage.removeItem('uc_wishlist');
     localStorage.removeItem('uc_compare');
+    localStorage.removeItem('uc_users');
+    localStorage.removeItem('uc_current_user');
+    localStorage.removeItem('uc_chat_messages');
     setVehicles(INITIAL_VEHICLES);
     setPosts(INITIAL_POSTS);
     setReviews(INITIAL_REVIEWS);
     setOrders([]);
     setWishlist([]);
     setCompareList([]);
+    setUsers(INITIAL_USERS);
+    setCurrentUser(null);
+    setChatMessages(INITIAL_CHAT_MESSAGES);
     setFilters(defaultFilters);
   };
 
@@ -479,6 +754,30 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         deleteReview,
         resetAllData,
         refreshSupabaseStatus,
+
+        // User Auth & Management
+        currentUser,
+        users,
+        isAuthModalOpen,
+        authModalMode,
+        setIsAuthModalOpen,
+        setAuthModalMode,
+        openLoginModal,
+        openRegisterModal,
+        loginUser,
+        registerUser,
+        logoutUser,
+        addUser,
+        updateUser,
+        deleteUser,
+        toggleUserStatus,
+
+        // Live Chat System
+        isChatOpen,
+        setIsChatOpen,
+        chatMessages,
+        sendChatMessage,
+        markChatRead,
       }}
     >
       {children}

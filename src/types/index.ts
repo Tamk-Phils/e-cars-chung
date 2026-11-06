@@ -121,3 +121,25 @@ export interface FilterState {
   sortBy: 'featured' | 'price-asc' | 'price-desc' | 'year-desc' | 'mileage-asc';
   onlyHotDeals: boolean;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role: 'user' | 'admin';
+  status: 'active' | 'suspended';
+  created_at: string;
+  last_login?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  userId: string;
+  userName: string;
+  userEmail: string;
+  sender: 'user' | 'admin';
+  message: string;
+  created_at: string;
+  read: boolean;
+}
